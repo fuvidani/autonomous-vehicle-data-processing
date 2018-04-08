@@ -1,4 +1,4 @@
 rootProject.name = 'autonomous-vehicle-data-processing'
-include 'gateway'
 include 'vehicle-service'
+include 'gateway'
 

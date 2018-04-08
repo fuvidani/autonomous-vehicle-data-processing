@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: dev
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+logging:
+  level:
+    org.springframework.security: INFO
+
