@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  data:
+    mongodb:
+      port: 27017
+      database: notificationDatabase
+      host: localhost
+      username: notificationService
+      password: notificationDatabasePassword
