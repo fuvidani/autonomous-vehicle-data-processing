@@ -4,7 +4,7 @@ spring:
   data:
     mongodb:
       port: 27017
-      database: statistiscsDatabase
+      database: statisticsDatabase
       host: localhost
-      username: statistiscsService
-      password: statistiscsDatabasePassword
+      username: statisticsService
+      password: statisticsDatabasePassword
