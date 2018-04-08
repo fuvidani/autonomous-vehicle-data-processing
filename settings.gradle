@@ -1,4 +1,5 @@
 rootProject.name = 'autonomous-vehicle-data-processing'
 include 'vehicle-service'
 include 'gateway'
+include 'tracker-service'
 

@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  data:
+    mongodb:
+      port: 27017
+      database: trackerDatabase
+      host: localhost
+      username: trackerService
+      password: trackerDatabasePassword

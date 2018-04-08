@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+  data:
+    mongodb:
+      port: 27017
+      database: vehicleDatabase
+      host: localhost
+      username: vehicleService
+      password: vehicleDatabasePassword
