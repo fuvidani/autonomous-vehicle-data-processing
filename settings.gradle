@@ -3,4 +3,5 @@ include 'vehicle-service'
 include 'gateway'
 include 'tracker-service'
 include 'notification-service'
+include 'statistics-service'
 
