@@ -1,3 +1,4 @@
-rootProject.name = 'web-app-engineering'
-include 'backend'
+rootProject.name = 'autonomous-vehicle-data-processing'
+include 'gateway'
+include 'vehicle-service'
 
