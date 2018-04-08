@@ -4,4 +4,5 @@ include 'gateway'
 include 'tracker-service'
 include 'notification-service'
 include 'statistics-service'
+include 'data-simulator'
 
