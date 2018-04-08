@@ -1,0 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+
+allprojects {
+    group 'at.ac.tuwien.waecm.ss18.group09'
+    apply plugin: 'idea'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
