@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    compile 'io.projectreactor:reactor-test:3.1.6.RELEASE'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.3'
 }
 
