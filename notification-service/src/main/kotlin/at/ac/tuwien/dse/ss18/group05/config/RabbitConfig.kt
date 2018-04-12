@@ -55,7 +55,7 @@ class RabbitConfig {
     }
 
     @Bean
-    fun listenerAdapter(receiver: Receiver): MessageListenerAdapter {
+    fun listenerAdapter(receiver: Receiver<out Any>): MessageListenerAdapter {
         return MessageListenerAdapter(receiver, "receiveMessage")
     }
 }

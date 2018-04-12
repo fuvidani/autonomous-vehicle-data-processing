@@ -33,11 +33,15 @@ class NotificationGenerator(
             client.get()
                 .uri("notifications/{id}", vehicle)
                 .accept(MediaType.TEXT_EVENT_STREAM)
-                .retrieve().bodyToFlux(String::class.java)
-                .take(11)
-                .subscribe {
-                    println("[$vehicle] - Notification received: $it")
+                .retrieve()
+                .bodyToFlux(Notification::class.java)
+                .take(10)
+                .doOnNext {
+                    println("[$vehicle] - Notification received: ${it.message}")
                 }
+                .doOnComplete { println("Complete") }
+                .doOnError { e -> println("Error: $e") }
+                .subscribe()
         }
         placeNotificationsPeriodicallyOnEventBus()
     }
