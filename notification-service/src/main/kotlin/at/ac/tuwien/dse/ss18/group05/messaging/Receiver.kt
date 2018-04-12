@@ -1,6 +1,9 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
+import at.ac.tuwien.dse.ss18.group05.web.Notification
 import at.ac.tuwien.dse.ss18.group05.web.NotificationListener
+import at.ac.tuwien.dse.ss18.group05.web.NotificationRepository
+import com.google.gson.Gson
 import org.springframework.stereotype.Component
 import kotlin.collections.ArrayList
 
@@ -23,7 +26,8 @@ interface Receiver {
 }
 
 @Component
-class NotificationDataReceiver : Receiver {
+class NotificationDataReceiver(private val notificationRepository: NotificationRepository, private val gson: Gson) :
+    Receiver {
 
     override fun removeListener(listener: NotificationListener) {
         listeners.remove(listener)
@@ -36,7 +40,8 @@ class NotificationDataReceiver : Receiver {
     }
 
     override fun receiveMessage(message: String) {
-        println("Received <$message>")
-        listeners.forEach { it.onNotification(message) }
+        println(message)
+        val notification = gson.fromJson(message, Notification::class.java)
+        notificationRepository.save(notification).subscribe()
     }
 }

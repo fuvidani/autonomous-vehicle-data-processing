@@ -1,12 +1,15 @@
 package at.ac.tuwien.dse.ss18.group05
 
+import at.ac.tuwien.dse.ss18.group05.notifications.NotificationGenerator
+import com.google.gson.Gson
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.context.event.EventListener
+import org.springframework.context.annotation.Bean
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.boot.CommandLineRunner
 
 /**
  * <h4>About this class</h4>
@@ -19,6 +22,7 @@ import org.springframework.context.event.EventListener
  */
 @SpringBootApplication
 @EnableAutoConfiguration
+@EnableScheduling
 class DataSimulatorApplication {
 
     companion object {
@@ -28,12 +32,15 @@ class DataSimulatorApplication {
         }
     }
 
-    @Autowired
-    private lateinit var rabbitTemplate: RabbitTemplate
+    @Bean
+    fun client(): WebClient {
+        return WebClient.create("http://localhost:4000/")
+    }
 
-    @EventListener(ApplicationReadyEvent::class)
-    fun applicationReady() {
-        println("Sending message")
-        rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle.data.bla", "Hello from RabbitMQ!")
+    @Bean
+    fun run(client: WebClient, rabbitTemplate: RabbitTemplate, gson: Gson): CommandLineRunner {
+        return CommandLineRunner {
+            NotificationGenerator(client, rabbitTemplate, gson).run()
+        }
     }
 }

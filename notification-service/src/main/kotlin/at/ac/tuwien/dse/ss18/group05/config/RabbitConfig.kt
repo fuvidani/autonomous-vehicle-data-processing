@@ -25,7 +25,7 @@ class RabbitConfig {
 
     val topicExchange = "vehicle-data-exchange"
     val queueName = "traffic"
-    val routingKey = "vehicle.data.#"
+    val routingKey = "notifications.#"
 
     @Bean
     fun queue(): Queue {

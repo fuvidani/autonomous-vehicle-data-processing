@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: ""
 
+localhost: localhost
+
 spring:
   rabbitmq:
     host: localhost
@@ -13,7 +15,7 @@ spring:
     gateway:
       routes:
       - id: vehicle_route
-        uri: http://localhost:5000
+        uri: http://${localhost}:5000
         predicates:
         - Path=/vehicle/**
         filters:
@@ -22,7 +24,7 @@ spring:
             name: fallback
             fallbackUri: forward:/vehicleFallback
       - id: tracker_route
-        uri: http://localhost:6000
+        uri: http://${localhost}:6000
         predicates:
         - Path=/tracking/**
         filters:
@@ -31,7 +33,7 @@ spring:
             name: fallback
             fallbackUri: forward:/trackingFallback
       - id: notifications_route
-        uri: http://localhost:7000
+        uri: http://${localhost}:7000
         predicates:
         - Path=/notifications/**
         filters:
@@ -40,7 +42,7 @@ spring:
             name: fallback
             fallbackUri: forward:/notificationFallback
       - id: statistics_route
-        uri: http://localhost:8000
+        uri: http://${localhost}:8000
         predicates:
         - Path=/statistics/**
         filters:
