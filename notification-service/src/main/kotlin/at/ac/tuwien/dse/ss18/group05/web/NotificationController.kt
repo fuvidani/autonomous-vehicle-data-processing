@@ -3,10 +3,11 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.dto.Notification
 import at.ac.tuwien.dse.ss18.group05.service.NotificationService
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.PathVariable
 import reactor.core.publisher.Flux
 
 /**
@@ -18,6 +19,7 @@ import reactor.core.publisher.Flux
  * @version 1.0.0
  * @since 1.0.0
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/notifications/{id}")
 class NotificationController(private val notificationService: NotificationService) {
@@ -30,5 +32,8 @@ class NotificationController(private val notificationService: NotificationServic
         return notificationService
             .getNotificationForVehicle(vehicleId)
             .startWith(pingNotification)
+//        val notification = Notification("someID", listOf("vehicle1", "vehicle2"), "Surprise mothafucka")
+//        return Flux.interval(Duration.ofSeconds(1))
+//                .map { notification }
     }
 }

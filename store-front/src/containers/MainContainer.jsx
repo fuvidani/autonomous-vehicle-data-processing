@@ -1,17 +1,20 @@
 import {connect} from "react-redux";
 import MainComponent from "../components/MainComponent";
-import {cancelServerEvents, fetchServerEvents} from "../actions/actions";
+import {cancelNotifications, cancelServerEvents, fetchNotification, fetchServerEvents} from "../actions/actions";
 
 const mapStateToProps = (state) => {
   return {
-    randomNumber: state.ServerEventReducer.randomNumber
+    randomNumber: state.ServerEventReducer.randomNumber,
+    notification: state.ServerEventReducer.notification
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchServerEvents: () => dispatch(fetchServerEvents()),
-    cancelServerEvents: () => dispatch(cancelServerEvents())
+    cancelServerEvents: () => dispatch(cancelServerEvents()),
+    fetchNotification: () => dispatch(fetchNotification()),
+    cancelNotifications: () => dispatch(cancelNotifications())
   };
 };
 

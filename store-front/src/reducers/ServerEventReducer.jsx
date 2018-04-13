@@ -1,5 +1,6 @@
 export default function reducer(state = {
-  randomNumber: null
+  randomNumber: null,
+  notification: null
 }, action) {
 
   switch (action.type) {
@@ -7,6 +8,12 @@ export default function reducer(state = {
       return {
         ...state,
         randomNumber: action.payload
+      };
+
+    case 'NOTIFICATION_EVENT':
+      return {
+        ...state,
+        notification: action.payload
       };
 
     default:
