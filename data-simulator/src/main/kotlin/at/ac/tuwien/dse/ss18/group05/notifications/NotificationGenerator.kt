@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.time.Duration
 import java.util.Random
 import java.util.UUID
@@ -26,32 +27,55 @@ class NotificationGenerator(
 ) {
     private val random = Random()
     private var counter = 0
-    private val vehicles = listOf("firstVehicle", "secondVehicle", "thirdVehicle", "fourthVehicle")
+    private val vehicles = listOf(
+        "firstVehicle",
+        "secondVehicle",
+        "thirdVehicle",
+        "fourthVehicle",
+        "firstVehicle1",
+        "firstVehicle2",
+        "firstVehicle3",
+        "firstVehicle4",
+        "firstVehicle5",
+        "firstVehicle6",
+        "firstVehicle7",
+        "firstVehicle8",
+        "firstVehicle9",
+        "firstVehicle10"
+    )
 
     fun run() {
         vehicles.forEach { vehicle ->
+            Thread.sleep(500)
             client.get()
                 .uri("notifications/{id}", vehicle)
                 .accept(MediaType.TEXT_EVENT_STREAM)
+                /*.exchange()
+                .flatMapMany { response ->
+                    response.headers().asHttpHeaders().forEach { println("${it.key} : ${it.value}") }
+                    // log the response however you like
+                    response.bodyToFlux(Notification::class.java) }*/
                 .retrieve()
                 .bodyToFlux(Notification::class.java)
-                .take(10)
+                .takeUntilOther(Mono.delay(Duration.ofSeconds(60)))
                 .doOnNext {
                     println("[$vehicle] - Notification received: ${it.message}")
                 }
-                .doOnComplete { println("Complete") }
-                .doOnError { e -> println("Error: $e") }
+                .doOnComplete { println("Completed") }
+                .doOnError { e -> e.printStackTrace() }
                 .subscribe()
         }
-        placeNotificationsPeriodicallyOnEventBus()
+        Thread.sleep(2000)
+        println("------------------------------------- START EMITTING NOTIFICATIONS -------------------------------------")
+        placeNotificationsPeriodicallyOnEventBus(2, 40)
     }
 
-    private fun placeNotificationsPeriodicallyOnEventBus() {
+    private fun placeNotificationsPeriodicallyOnEventBus(intervalInSeconds: Long, durationInSeconds: Long) {
         Flux
-            .interval(Duration.ofSeconds(2))
-            .take(11)
-            .subscribe {
-                val numberOfVehicles = random.nextInt(5)
+            .interval(Duration.ofSeconds(intervalInSeconds))
+            .takeUntilOther(Mono.delay(Duration.ofSeconds(durationInSeconds)))
+            .doOnNext {
+                val numberOfVehicles = random.nextInt(vehicles.size + 1)
                 if (numberOfVehicles > 0) {
                     val notification = Notification(
                         UUID.randomUUID().toString(),
@@ -63,5 +87,11 @@ class NotificationGenerator(
                     counter++
                 }
             }
+            .doOnComplete {
+                println("------------------------------------- STOP EMITTING NOTIFICATIONS -------------------------------------")
+                println("--------------------------- ! WAIT FOR ${vehicles.size} CLIENTS TO COMPLETE ! -------------------------")
+            }
+            .doOnError { e -> e.printStackTrace() }
+            .subscribe()
     }
 }
