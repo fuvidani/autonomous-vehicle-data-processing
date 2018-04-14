@@ -50,11 +50,6 @@ class NotificationGenerator(
             client.get()
                 .uri("notifications/{id}", vehicle)
                 .accept(MediaType.TEXT_EVENT_STREAM)
-                /*.exchange()
-                .flatMapMany { response ->
-                    response.headers().asHttpHeaders().forEach { println("${it.key} : ${it.value}") }
-                    // log the response however you like
-                    response.bodyToFlux(Notification::class.java) }*/
                 .retrieve()
                 .bodyToFlux(Notification::class.java)
                 .takeUntilOther(Mono.delay(Duration.ofSeconds(60)))
