@@ -2,6 +2,7 @@ buildscript {
     ext.kotlin_version = '1.2.30'
     ext.spring_version = '2.0.0.RELEASE'
     ext.springCloudVersion = 'Finchley.M9'
+    ext.reactorAddonsVersion = '3.1.6.RELEASE'
     repositories {
         jcenter()
         mavenCentral()
@@ -70,11 +71,14 @@ subprojects {
         compile 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
         compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
         compile 'com.google.code.gson:gson:2.8.2'
+        compile "io.projectreactor.addons:reactor-adapter:$reactorAddonsVersion"
+        compile "io.projectreactor.addons:reactor-extra:$reactorAddonsVersion"
         compile 'org.hibernate.validator:hibernate-validator:6.0.9.Final'
         compile 'org.glassfish:javax.el:3.0.0'
         compile 'javax.el:javax.el-api:3.0.0'
 
         testCompile 'org.springframework.boot:spring-boot-starter-test'
+        testCompile "io.projectreactor:reactor-test:$reactorAddonsVersion"
     }
 
     compileKotlin {
