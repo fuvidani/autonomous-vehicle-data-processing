@@ -1,0 +1,38 @@
+= Spring REST Docs Notification Service
+DSE Group 05 - Version 1.0.0.RELEASE;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+Sample application demonstrating how to use Spring REST Docs with Spring Framework's
+WebTestClient.
+
+`SampleWebTestClientApplicationTests` makes a call to a very simple service. Six
+snippets are produced. One showing how to make a request using cURL:
+
+include::{snippets}/notifications/curl-request.adoc[]
+
+One showing how to make a request using HTTPie:
+
+include::{snippets}/notifications/httpie-request.adoc[]
+
+One showing the HTTP request:
+
+include::{snippets}/notifications/http-request.adoc[]
+
+One showing the request body:
+
+include::{snippets}/notifications/request-body.adoc[]
+
+One showing the HTTP response:
+
+include::{snippets}/notifications/http-response.adoc[]
+
+And one showing the response body:
+
+include::{snippets}/notifications/response-body.adoc[]
+
+Response fields:
+
+include::{snippets}/notifications/response-fields.adoc[]
+

@@ -27,13 +27,10 @@ class NotificationController(private val notificationService: NotificationServic
     // Needed as temporary solution because gateway might throw 504 timeout if "nothing" happens on stream
     private val pingNotification = Notification("ping", emptyList(), "ping")
 
-    @GetMapping(produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    @GetMapping(produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE])
     fun getNotifications(@PathVariable("id") vehicleId: String): Flux<Notification> {
         return notificationService
             .getNotificationForVehicle(vehicleId)
             .startWith(pingNotification)
-//        val notification = Notification("someID", listOf("vehicle1", "vehicle2"), "Surprise mothafucka")
-//        return Flux.interval(Duration.ofSeconds(1))
-//                .map { notification }
     }
 }
