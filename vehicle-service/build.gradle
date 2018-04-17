@@ -1,17 +1,30 @@
 plugins {
     id 'com.sourcemuse.mongo' version '1.0.6'
+    id "org.asciidoctor.convert" version "1.5.3"
 }
 
 dependencies {
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.3'
+    testCompile 'org.springframework.restdocs:spring-restdocs-webtestclient:2.0.1.RELEASE'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
 }
 
 test {
     runWithMongoDb = true
+    outputs.dir snippetsDir
 }
 
 mongo {
     port = 'RANDOM'
     logging = 'console'
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
 }
