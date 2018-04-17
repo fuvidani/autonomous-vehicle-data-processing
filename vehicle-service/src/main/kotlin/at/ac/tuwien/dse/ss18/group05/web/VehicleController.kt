@@ -1,10 +1,15 @@
 package at.ac.tuwien.dse.ss18.group05.web
 
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import at.ac.tuwien.dse.ss18.group05.service.IVehicleService
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 /**
  * <h4>About this class</h4>
@@ -17,16 +22,15 @@ import reactor.core.publisher.Flux
  */
 @RestController
 @RequestMapping("/vehicle")
-class VehicleController {
+class VehicleController(private val vehicleService: IVehicleService) {
 
-    private val dummyVehicles: List<Vehicle> = listOf(
-        Vehicle("asd", "sedan", 4),
-        Vehicle("bla", "cabrio", 2),
-        Vehicle("mane", "monster", 25)
-    )
+    @GetMapping("/{manufacturerId}/vehicles")
+    fun getAllVehiclesOfManufacturer(@PathVariable("manufacturerId") manufacturerId: String): Flux<Vehicle> {
+        return vehicleService.findAllVehiclesByManufacturerId(manufacturerId)
+    }
 
-    @GetMapping("/vehicles")
-    fun getAllVehicles(): Flux<Vehicle> {
-        return Flux.fromIterable(dummyVehicles)
+    @PostMapping("/{manufacturerId}")
+    fun addNewVehicle(@RequestBody vehicle: Vehicle): Mono<Vehicle> {
+        return vehicleService.registerNewVehicle(vehicle)
     }
 }
