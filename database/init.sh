@@ -1,12 +1,13 @@
 #!/bin/bash
 
-auth="-u admin -p adminPassword"
-
-# MONGODB USER CREATION
+# MONGODB USER AND DB CREATION
 (
 echo "setup mongodb auth"
-create_user="if (!db.getUser('admin')) { db.createUser({ user: 'admin', pwd: 'adminPassword', roles: [ {role:'readWrite', db:'notificationDatabase'}, {role:'readWrite', db:'statisticsDatabase'}, {role:'readWrite', db:'trackerDatabase'}, {role:'readWrite', db:'vehicleDatabase'} ]}) }"
-until mongo vehicleDatabase --eval "$create_user" || mongo vehicleDatabase ${auth} --eval "$create_user"; do sleep 5; done
+vehicleDb_user="if (!db.getUser('vehicleService')) { db.createUser({ user: 'vehicleService', pwd: 'vehicleDatabasePassword', roles: [ {role:'readWrite', db:'vehicleDatabase'} ]}) }"
+trackerDb_user="if (!db.getUser('trackerService')) { db.createUser({ user: 'trackerService', pwd: 'trackerDatabasePassword', roles: [ {role:'readWrite', db:'trackerDatabase'} ]}) }"
+statisticsDb_user="if (!db.getUser('statisticsService')) { db.createUser({ user: 'statisticsService', pwd: 'statisticsDatabasePassword', roles: [ {role:'readWrite', db:'statisticsDatabase'} ]}) }"
+notificationDb_user="if (!db.getUser('notificationService')) { db.createUser({ user: 'notificationService', pwd: 'notificationDatabasePassword', roles: [ {role:'readWrite', db:'notificationDatabase'} ]}) }"
+until mongo trackerDatabase --eval "$trackerDb_user" && mongo vehicleDatabase --eval "$vehicleDb_user" && mongo statisticsDatabase --eval "$statisticsDb_user" && mongo notificationDatabase --eval "$notificationDb_user"; do sleep 5; done
 killall mongod
 sleep 1
 killall -9 mongod
@@ -16,7 +17,7 @@ killall -9 mongod
 (
 if test -n "vehicleDB_insert_script.js"; then
     echo "execute insert script"
-	until mongo vehicleDatabase ${auth} insert_script.js; do sleep 5; done
+	until mongo vehicleDatabase -u 'vehicleService' -p 'vehicleDatabasePassword' vehicleDB_insert_script.js; do sleep 5; done
 fi
 ) &
 
@@ -27,3 +28,9 @@ gosu mongodb mongod --config /mongod.conf "$@"
 echo "restarting with auth on"
 sleep 5
 exec gosu mongodb mongod --auth --config /mongod.conf "$@"
+
+# SHELL LOGIN
+#  mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u 'vehicleService' -p 'vehicleDatabasePassword'
+#  mongo YOUR_LOCAL_IP:27017/trackerDatabase -u 'trackerService' -p 'trackerDatabasePassword'
+#  mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u 'statisticsService' -p 'statisticsDatabasePassword'
+#  mongo YOUR_LOCAL_IP:27017/notificationDatabase -u 'notificationService' -p 'notificationDatabasePassword'
