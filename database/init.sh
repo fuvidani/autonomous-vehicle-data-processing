@@ -28,9 +28,3 @@ gosu mongodb mongod --config /mongod.conf "$@"
 echo "restarting with auth on"
 sleep 5
 exec gosu mongodb mongod --auth --config /mongod.conf "$@"
-
-# SHELL LOGIN
-#  mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u 'vehicleService' -p 'vehicleDatabasePassword'
-#  mongo YOUR_LOCAL_IP:27017/trackerDatabase -u 'trackerService' -p 'trackerDatabasePassword'
-#  mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u 'statisticsService' -p 'statisticsDatabasePassword'
-#  mongo YOUR_LOCAL_IP:27017/notificationDatabase -u 'notificationService' -p 'notificationDatabasePassword'
