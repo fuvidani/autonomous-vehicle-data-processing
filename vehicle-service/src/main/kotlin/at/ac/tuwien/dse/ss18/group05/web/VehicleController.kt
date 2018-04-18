@@ -2,12 +2,11 @@ package at.ac.tuwien.dse.ss18.group05.web
 
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleService
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import at.ac.tuwien.dse.ss18.group05.service.ServiceException
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
@@ -32,5 +31,12 @@ class VehicleController(private val vehicleService: IVehicleService) {
     @PostMapping("/{manufacturerId}")
     fun addNewVehicle(@RequestBody vehicle: Vehicle): Mono<Vehicle> {
         return vehicleService.registerNewVehicle(vehicle)
+    }
+
+    @ExceptionHandler(ServiceException::class)
+    fun serviceExceptionHandler(ex: ServiceException): ResponseEntity<Any> {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ex.message)
     }
 }

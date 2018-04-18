@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.web.reactive.config.EnableWebFlux
 
 /**
  * <h4>About this class</h4>
@@ -17,6 +18,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableCircuitBreaker
+@EnableWebFlux
 class VehicleServiceApplication {
 
     companion object {
