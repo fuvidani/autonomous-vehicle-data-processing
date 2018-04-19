@@ -4,7 +4,10 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.http.CacheControl
 import org.springframework.web.reactive.config.EnableWebFlux
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
  * <h4>About this class</h4>
@@ -19,12 +22,22 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableAutoConfiguration
 @EnableCircuitBreaker
 @EnableWebFlux
-class VehicleServiceApplication {
+class VehicleServiceApplication : WebFluxConfigurer {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(VehicleServiceApplication::class.java, *args)
         }
+    }
+
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/resources/**")
+            .addResourceLocations("classpath:/static/docs/")
+            .setCacheControl(CacheControl.noStore())
     }
 }
