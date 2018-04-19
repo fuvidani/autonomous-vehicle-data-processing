@@ -3,7 +3,6 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.VehicleServiceApplication
 import at.ac.tuwien.dse.ss18.group05.dto.Manufacturer
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,7 +20,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document
 import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration
 import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.test.web.reactive.server.EntityExchangeResult
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
@@ -73,19 +71,19 @@ class VehicleControllerTest {
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
-            .consumeWith {
-                Assert.assertEquals("Invalid manufacturer", String(it.responseBody!!))
-                document<EntityExchangeResult<ByteArray>>(
+            .jsonPath("$.error").isEqualTo("Invalid manufacturer")
+            .consumeWith(
+                document(
                     "manufacturer-vehicles-invalid",
                     pathParameters(
                         parameterWithName("manufacturerId")
                             .description("The ID of the manufacturer")
                     ),
                     responseFields(
-                        fieldWithPath("message").description("The error message in case of an invalid request")
+                        fieldWithPath("error").description("The error message in case of an invalid request")
                     )
                 )
-            }
+            )
     }
 
     @Test
@@ -212,12 +210,10 @@ class VehicleControllerTest {
             .exchange()
             .expectStatus().isBadRequest
             .expectBody()
-            .consumeWith {
-                Assert.assertEquals(
-                    "Vehicle with VIN ${testVehicleCitroen.identificationNumber} already exists!",
-                    String(it.responseBody!!)
-                )
-                document<EntityExchangeResult<ByteArray>>(
+            .jsonPath("$.error")
+            .isEqualTo("Vehicle with VIN ${testVehicleCitroen.identificationNumber} already exists!")
+            .consumeWith(
+                document(
                     "add-new-vehicle-invalid",
                     pathParameters(
                         parameterWithName("manufacturerId")
@@ -232,10 +228,10 @@ class VehicleControllerTest {
                             .description("The vehicle's type of model")
                     ),
                     responseFields(
-                        fieldWithPath("message").description("The error message in case of an invalid request")
+                        fieldWithPath("error").description("The error message in case of an invalid request")
                     )
                 )
-            }
+            )
     }
 
     private fun insertManufacturers() {

@@ -1,0 +1,73 @@
+= Vehicle Service Documentation
+DSE Group 05 - Version 1.0.0.RELEASE;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+This documentation describes the the available endpoints of the Vehicle Service API and how to interact
+with them.
+
+== Get all vehicles of a manufacturer
+
+[NOTE]
+Endpoint: `GET /vehicle/{manufacturerId}/vehicles`
+
+Tha API requires an existing manufacturer ID in the request path for which all the currently stored vehicles
+will be returned. Note that this endpoint supports streaming, this means you may call it with one of the following
+accept headers:
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting all vehicles of BMW using the latter header:
+include::{snippets}/manufacturer-vehicles-valid/http-request.adoc[]
+include::{snippets}/manufacturer-vehicles-valid/path-parameters.adoc[]
+
+HTTP response:
+include::{snippets}/manufacturer-vehicles-valid/http-response.adoc[]
+
+The above example response returns a stream of three vehicles. Each json can be de-serialized into a valid
+`Vehicle` object:
+include::{snippets}/manufacturer-vehicles-valid/response-fields.adoc[]
+
+In case the `manufacturerId` is invalid (i.e. there is no manufacturer with that particular ID), an error message will
+be returned. Request:
+include::{snippets}/manufacturer-vehicles-invalid/http-request.adoc[]
+
+Response:
+include::{snippets}/manufacturer-vehicles-invalid/http-response.adoc[]
+
+Field description:
+include::{snippets}/manufacturer-vehicles-invalid/response-fields.adoc[]
+
+== Registering a new vehicle
+
+[NOTE]
+Endpoint: `POST /vehicle/{manufacturerId}`
+
+An existing manufacturer is able to register new vehicles through this endpoint. The request body must contain the
+valid vehicle json that should be stored in the database.
+
+[NOTE]
+Since a vehicle's VIN (Vehicle Identification Number) is world-wide unique, only vehicles that are not aready in the
+database can be added.
+
+The following snippet shows an example of registering a new BMW vehicle:
+include::{snippets}/add-new-vehicle-valid/http-request.adoc[]
+include::{snippets}/add-new-vehicle-valid/request-fields.adoc[]
+
+If the insertion was successful, the response contains the registered and therefore same vehicle:
+include::{snippets}/add-new-vehicle-valid/http-response.adoc[]
+include::{snippets}/add-new-vehicle-valid/response-fields.adoc[]
+
+In case the provided vehicle is already in the database, the API returns an appropriate error message.
+Inserting an already existing vehicle:
+include::{snippets}/add-new-vehicle-invalid/http-request.adoc[]
+Response:
+include::{snippets}/add-new-vehicle-invalid/http-response.adoc[]
+
+
+
+
+
+

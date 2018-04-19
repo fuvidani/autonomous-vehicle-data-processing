@@ -3,7 +3,9 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleService
 import at.ac.tuwien.dse.ss18.group05.service.ServiceException
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 /* ktlint-disable no-wildcard-imports */
 import org.springframework.web.bind.annotation.*
@@ -35,8 +37,9 @@ class VehicleController(private val vehicleService: IVehicleService) {
 
     @ExceptionHandler(ServiceException::class)
     fun serviceExceptionHandler(ex: ServiceException): ResponseEntity<Any> {
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ex.message)
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON_UTF8
+        val json = "{\"error\":\"${ex.message}\"}"
+        return ResponseEntity(json, headers, HttpStatus.BAD_REQUEST)
     }
 }
