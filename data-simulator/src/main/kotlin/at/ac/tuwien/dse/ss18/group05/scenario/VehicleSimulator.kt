@@ -12,8 +12,53 @@ class VehicleSimulator(
 
     fun simulate() {
         findStartingPointForVehicles()
-        currentVehicleLocation.forEach { vehicle, routeRecord ->
-            println("vehicle: $vehicle is on startingpoint $routeRecord")
+        driveCarsToNextPoint()
+    }
+
+    private fun driveCarsToNextPoint() {
+        for (vehicle in vehicles) {
+            val currentPosition = currentVehicleLocation.get(vehicle)
+
+            val nextCar = findNextCar(currentPosition?.distanceToStart)
+            val previousCar = findPreviousCar(currentPosition?.distanceToStart)
+
+            val index = route.indexOf(currentPosition)
+            val nextIndex = calculateNextLocationIndex(index)
+            val nextPosition = route.get(nextIndex)
+
+            currentVehicleLocation.apply { put(vehicle, nextPosition) }
+        }
+
+        Thread.sleep(1000)
+        driveCarsToNextPoint()
+    }
+
+    private fun findNextCar(currentDistance: Double?) {
+        val nextDistance = currentVehicleLocation
+                .map { (k, v) -> v.distanceToStart }
+                .filter { distance -> distance > currentDistance!! }
+                .min()
+
+        val nextCar = currentVehicleLocation.filter { (a, b) -> b.distanceToStart == nextDistance }
+        println(nextCar)
+    }
+
+    private fun findPreviousCar(currentDistance: Double?) {
+        val previousDistance = currentVehicleLocation
+                .map { (k, v) -> v.distanceToStart }
+                .filter { distance -> distance < currentDistance!! }
+                .min()
+
+        val previousCar = currentVehicleLocation.filter { (a, b) -> b.distanceToStart == previousDistance }
+        println(previousCar)
+    }
+
+    private fun calculateNextLocationIndex(currentIndex: Int): Int {
+        //if on last position stay there
+        return if (currentIndex == route.size) {
+            currentIndex
+        } else {
+            currentIndex + 1
         }
     }
 

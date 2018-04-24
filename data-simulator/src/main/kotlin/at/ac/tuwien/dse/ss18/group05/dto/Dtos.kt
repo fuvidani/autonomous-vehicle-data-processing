@@ -15,7 +15,8 @@ data class Vehicle(
     var manufacturerId: String = "",
     var model: String = "",
     var crashing: Boolean = false,
-    var startingAtKm: Int = 0
+    var startingAtKm: Int = 0,
+    var passengers: Int = 1
 )
 
 data class RouteRecord(
