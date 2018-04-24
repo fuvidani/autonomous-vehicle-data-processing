@@ -9,14 +9,19 @@ package at.ac.tuwien.dse.ss18.group05.dto
  * @version 1.0.0
  * @since 1.0.0
  */
-@Deprecated(
-    "This is just dummy notification for API test, use VehicleNotification instead.",
-    level = DeprecationLevel.WARNING
+
+data class Vehicle(
+    var identificationNumber: String = "",
+    var manufacturerId: String = "",
+    var model: String = "",
+    var isCrashing: Boolean = false,
+    var startingAtKm: Int = 0
 )
-data class Notification(
-    val id: String,
-    val concernedVehicles: List<String>,
-    val message: String
+
+data class RouteRecord(
+    val lat: Double,
+    val lon: Double,
+    val distanceToStart: Double
 )
 
 /***************************** OUTGOING *****************************/
