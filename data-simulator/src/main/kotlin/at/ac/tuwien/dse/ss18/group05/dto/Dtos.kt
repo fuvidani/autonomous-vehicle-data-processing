@@ -14,7 +14,7 @@ data class Vehicle(
     var identificationNumber: String = "",
     var manufacturerId: String = "",
     var model: String = "",
-    var isCrashing: Boolean = false,
+    var crashing: Boolean = false,
     var startingAtKm: Int = 0
 )
 
