@@ -16,7 +16,8 @@ data class Vehicle(
     var model: String = "",
     var crashing: Boolean = false,
     var startingAtKm: Int = 0,
-    var passengers: Int = 1
+    var passengers: Int = 1,
+    var speed: Double = 50.0
 )
 
 data class RouteRecord(
