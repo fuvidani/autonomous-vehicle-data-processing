@@ -11,7 +11,7 @@ import org.springframework.core.env.PropertiesPropertySource
 import org.springframework.core.io.ClassPathResource
 import java.util.*
 
-class CarsReader(private val filePath: String) {
+class VehiclesReader(private val filePath: String) {
 
     fun getVehicles(): List<Vehicle> {
         val yml = loadYml()

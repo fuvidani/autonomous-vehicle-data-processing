@@ -1,24 +1,22 @@
 package at.ac.tuwien.dse.ss18.group05
 
-import at.ac.tuwien.dse.ss18.group05.notifications.NotificationSender
-import at.ac.tuwien.dse.ss18.group05.scenario.CarsReader
-import at.ac.tuwien.dse.ss18.group05.scenario.RouteReader
 import at.ac.tuwien.dse.ss18.group05.scenario.VehicleSimulator
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 @Component
-class InteractionManager : CommandLineRunner {
-
-    @Autowired
-    private lateinit var notificationSender: NotificationSender
+class InteractionManager(private val vehicleSimulator: VehicleSimulator) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
-
-        val carsReader = CarsReader("vehicles.yml")
-        val routeReader = RouteReader("route_vienna_graz.csv")
-        val simulator = VehicleSimulator(carsReader.getVehicles(), routeReader.readRecords(), notificationSender)
-        simulator.simulate()
+        val reader = BufferedReader(InputStreamReader(System.`in`))
+        var line = ""
+        while (!line.equals("q")) {
+            line = reader.readLine()
+            if (line.contains("crash")) {
+                vehicleSimulator.simulateCrash()
+            }
+        }
     }
 }
