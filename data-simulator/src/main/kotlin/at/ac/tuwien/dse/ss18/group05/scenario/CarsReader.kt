@@ -24,6 +24,6 @@ class CarsReader(private val filePath: String) {
     private fun loadYml(): Properties {
         val properties = YamlPropertiesFactoryBean()
         properties.setResources(ClassPathResource(filePath))
-        return properties.`object`
+        return properties.`object`!!
     }
 }
