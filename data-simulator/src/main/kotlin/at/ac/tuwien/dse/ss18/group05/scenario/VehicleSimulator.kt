@@ -55,7 +55,7 @@ class VehicleSimulator(
         return if (!crashSimulated && timeBetweenStartAndNow > timeDelayInSecondsForEvent) {
             if (vehicle.crashing) {
                 crashSimulated = true
-                EventInformation.NEAR_CRASH
+                EventInformation.CRASH
             } else {
                 EventInformation.NONE
             }
@@ -108,10 +108,11 @@ class VehicleSimulator(
         startTime = ZonedDateTime.now()
     }
 
-    fun setSpeedForVehicle(vehicleId: String, targetSpeed: Double) {
+    fun setSpeedForVehicle(vehicleId: String, targetSpeed: Double?) {
+
         val vehicle = currentVehicleLocations.map { (k, _) -> k }
                 .find { vehicle -> vehicle.identificationNumber.equals(vehicleId) }
-        if (vehicle != null) {
+        if (vehicle != null && targetSpeed != null) {
             vehicle.speed = targetSpeed
         }
     }
