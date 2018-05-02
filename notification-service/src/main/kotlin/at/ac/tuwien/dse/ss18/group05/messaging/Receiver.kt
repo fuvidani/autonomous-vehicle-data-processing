@@ -1,12 +1,13 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
-import at.ac.tuwien.dse.ss18.group05.dto.Notification
-import at.ac.tuwien.dse.ss18.group05.repository.NotificationRepository
-import com.google.gson.Gson
+import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
+import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification
+import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
+import at.ac.tuwien.dse.ss18.group05.service.IEmergencyServiceNotificationService
+import at.ac.tuwien.dse.ss18.group05.service.IManufacturerNotificationService
+import at.ac.tuwien.dse.ss18.group05.service.IVehicleNotificationService
+import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Flux
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
 
 /**
  * <h4>About this class</h4>
@@ -17,32 +18,29 @@ import reactor.util.concurrent.Queues
  * @version 1.0.0
  * @since 1.0.0
  */
-interface Receiver<T> {
 
-    fun receiveMessage(message: String)
+@Component
+class VehicleNotificationReceiver(private val service: IVehicleNotificationService) {
 
-    fun stream(): Flux<T>
+    @RabbitListener(queues = ["#{vehicleQueue.name}"])
+    fun receiveNotification(notification: IncomingVehicleNotification) {
+        service.handleIncomingVehicleNotification(notification)
+    }
 }
 
 @Component
-class NotificationDataReceiver(private val notificationRepository: NotificationRepository, private val gson: Gson) :
-    Receiver<Notification> {
+class EmsNotificationReceiver(private val service: IEmergencyServiceNotificationService) {
 
-    private val processor = TopicProcessor.builder<Notification>()
-        .autoCancel(false)
-        .share(true)
-        .name("something")
-        .bufferSize(Queues.SMALL_BUFFER_SIZE)
-        .build()
-
-    override fun receiveMessage(message: String) {
-        println(message)
-        val notification = gson.fromJson(message, Notification::class.java)
-        notificationRepository.save(notification).subscribe()
-        processor.onNext(notification)
+    @RabbitListener(queues = ["#{emsQueue.name}"])
+    fun receiveNotification(notification: EmergencyServiceNotification) {
+        service.handleEmsNotification(notification)
     }
+}
 
-    override fun stream(): Flux<Notification> {
-        return processor
+@Component
+class ManufacturerNotifictionReceiver(private val service: IManufacturerNotificationService) {
+    @RabbitListener(queues = ["#{manufacturerQueue.name}"])
+    fun receiveNotification(notification: ManufacturerNotification) {
+        service.handleManufacturerNotification(notification)
     }
 }
