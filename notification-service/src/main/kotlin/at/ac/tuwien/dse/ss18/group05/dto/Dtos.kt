@@ -74,7 +74,7 @@ data class IncomingVehicleNotification(
 @Document(collection = "manufacturer_notifications")
 data class ManufacturerNotification(
     @Id
-    val id: String,
+    val id: String?,
     val timeStamp: Long,
     val vehicleIdentificationNumber: String,
     val manufacturerId: String,
@@ -87,7 +87,7 @@ data class ManufacturerNotification(
 @Document(collection = "emergency_notifications")
 data class EmergencyServiceNotification(
     @Id
-    val id: String,
+    val id: String?,
     val accidentId: String,
     val timeStamp: Long,
     val location: GpsLocation,
@@ -98,7 +98,8 @@ data class EmergencyServiceNotification(
 @Document(collection = "vehicle_notifications")
 data class VehicleNotification(
     @Id
-    val id: String,
+    val id: String?,
+    val vehicleIdentificationNumber: String,
     val accidentId: String,
     val timestamp: Long,
     val location: GpsLocation,
@@ -107,7 +108,8 @@ data class VehicleNotification(
     val targetSpeed: Double?
 ) : Serializable {
     constructor(id: String, incomingVehicleNotification: IncomingVehicleNotification) : this(
-            id = id,
+            id = null,
+            vehicleIdentificationNumber = id,
             accidentId = incomingVehicleNotification.accidentId,
             timestamp = incomingVehicleNotification.timestamp,
             location = incomingVehicleNotification.location,

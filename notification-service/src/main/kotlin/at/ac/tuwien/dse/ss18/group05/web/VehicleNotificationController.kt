@@ -24,7 +24,7 @@ import reactor.core.publisher.Flux
 class VehicleNotificationController(private val vehicleNotificationService: IVehicleNotificationService) {
 
     // Needed as temporary solution because gateway might throw 504 timeout if "nothing" happens on stream
-    private val pingNotification = VehicleNotification(id = "", accidentId = "", timestamp = 0L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
+    private val pingNotification = VehicleNotification(id = "", vehicleIdentificationNumber = "", accidentId = "", timestamp = 0L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
 
     @GetMapping(produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE])
     fun getNotifications(@PathVariable("id") vehicleId: String): Flux<VehicleNotification> {

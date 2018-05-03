@@ -5,8 +5,6 @@ import at.ac.tuwien.dse.ss18.group05.repository.EmergencyServiceNotificationRepo
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
-import reactor.core.publisher.toFlux
-import reactor.util.concurrent.Queues
 
 interface IEmergencyServiceNotificationService {
 
@@ -24,7 +22,6 @@ class EmergencyServiceNotificationService(private val repository: EmergencyServi
             .autoCancel(false)
             .share(true)
             .name("ems_notification_topic")
-            .bufferSize(Queues.SMALL_BUFFER_SIZE)
             .build()
 
     override fun findAll(): Flux<EmergencyServiceNotification> {
@@ -32,7 +29,7 @@ class EmergencyServiceNotificationService(private val repository: EmergencyServi
     }
 
     override fun streamEmsNotifications(): Flux<EmergencyServiceNotification> {
-        return processor.toFlux()
+        return processor
     }
 
     override fun handleEmsNotification(emergencyServiceNotification: EmergencyServiceNotification) {

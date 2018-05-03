@@ -6,7 +6,6 @@ import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
 
 /**
  * <h4>About this class</h4>
@@ -23,6 +22,8 @@ interface IVehicleNotificationService {
     fun handleIncomingVehicleNotification(incomingVehicleNotification: IncomingVehicleNotification)
 
     fun getNotificationForVehicle(id: String): Flux<VehicleNotification>
+
+    fun findAllNotificationsForVehicle(id: String): Flux<VehicleNotification>
 }
 
 @Service
@@ -32,11 +33,14 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
             .autoCancel(false)
             .share(true)
             .name("vehicle_notification_topic")
-            .bufferSize(Queues.SMALL_BUFFER_SIZE)
             .build()
 
+    override fun findAllNotificationsForVehicle(id: String): Flux<VehicleNotification> {
+        return repository.findByvehicleIdentificationNumber(id)
+    }
+
     override fun getNotificationForVehicle(id: String): Flux<VehicleNotification> {
-        return processor.filter { it.id == id }
+        return processor.filter { it.vehicleIdentificationNumber == id }
     }
 
     override fun handleIncomingVehicleNotification(incomingVehicleNotification: IncomingVehicleNotification) {

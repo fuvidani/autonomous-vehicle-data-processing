@@ -5,7 +5,6 @@ import at.ac.tuwien.dse.ss18.group05.repository.ManufacturerNotificationReposito
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
-import reactor.core.publisher.toFlux
 import reactor.util.concurrent.Queues
 
 interface IManufacturerNotificationService {
@@ -37,7 +36,7 @@ class ManufacturerNotificationService(private val repository: ManufacturerNotifi
     }
 
     override fun streamManufacturerNotifications(): Flux<ManufacturerNotification> {
-        return processor.toFlux()
+        return processor
     }
 
     private fun saveNotification(notification: ManufacturerNotification) {
