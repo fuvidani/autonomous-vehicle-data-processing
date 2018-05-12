@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.context.annotation.Bean
+import org.springframework.http.CacheControl
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 import reactor.core.publisher.TopicProcessor
 import reactor.util.concurrent.Queues
 import retrofit2.Retrofit
@@ -25,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableCircuitBreaker
-class TrackerServiceApplication {
+class TrackerServiceApplication : WebFluxConfigurer {
 
     companion object {
         @JvmStatic
@@ -54,5 +57,15 @@ class TrackerServiceApplication {
             .name("something")
             .bufferSize(Queues.SMALL_BUFFER_SIZE)
             .build()
+    }
+
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/tracking/resources/**")
+            .addResourceLocations("classpath:/static/docs/")
+            .setCacheControl(CacheControl.noStore())
     }
 }
