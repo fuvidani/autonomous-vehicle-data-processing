@@ -32,6 +32,6 @@ class VehicleServiceCommand(private val vehicleService: VehicleService) :
 
     override fun getFallback(): List<Vehicle> {
         log.info("Vehicle-Service not reachable, returning fallback")
-        return listOf(Vehicle("JH4DB8590SS001561", "Acura", "1995 Acura Integra"))
+        return emptyList()
     }
 }

@@ -15,6 +15,18 @@ import at.ac.tuwien.dse.ss18.group05.dto.*
 class TestDataProvider {
 
     companion object {
+        fun testVehicleAcura(): Vehicle {
+            return Vehicle("JH4DB8590SS001561", "Acura", "1995 Acura Integra")
+        }
+
+        fun testVehicleAudi(): Vehicle {
+            return Vehicle("3GCPCSE03BG366866", "Audi", "Audi TT")
+        }
+
+        fun testVehicleTesla(): Vehicle {
+            return Vehicle("4T4BE46K19R123050", "Tesla", "Tesla Model X")
+        }
+
         fun testVehicleDataRecordAcura(): VehicleDataRecord {
             return VehicleDataRecord(
                 null, System.currentTimeMillis(),
@@ -46,7 +58,7 @@ class TestDataProvider {
         fun testVehicleDataRecordTesla(): VehicleDataRecord {
             return VehicleDataRecord(
                 null, System.currentTimeMillis(),
-                MetaData("4T4BE46K19R123050", "Tesla"),
+                MetaData("4T4BE46K19R123050", "Tesla Model X"),
                 SensorInformation(
                     GpsLocation(0.0, 0.0),
                     ProximityInformation(0.0, 0.0),
