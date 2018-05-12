@@ -61,7 +61,6 @@ class VehicleServiceClientTest {
                 return true
             }
 
-
             override fun clone(): Call<List<Vehicle>> {
                 return this
             }

@@ -29,7 +29,7 @@ class TestDataProvider {
 
         fun testVehicleDataRecordAcura(): VehicleDataRecord {
             return VehicleDataRecord(
-                null, System.currentTimeMillis(),
+                null, 1526135809808,
                 MetaData("JH4DB8590SS001561", "1995 Acura Integra"),
                 SensorInformation(
                     GpsLocation(0.0, 0.0),
@@ -43,7 +43,7 @@ class TestDataProvider {
 
         fun testVehicleDataRecordAudi(): VehicleDataRecord {
             return VehicleDataRecord(
-                null, System.currentTimeMillis(),
+                null, 1526135828502,
                 MetaData("3GCPCSE03BG366866", "Audi TT"),
                 SensorInformation(
                     GpsLocation(0.0, 0.0),
@@ -57,7 +57,7 @@ class TestDataProvider {
 
         fun testVehicleDataRecordTesla(): VehicleDataRecord {
             return VehicleDataRecord(
-                null, System.currentTimeMillis(),
+                null, 1526135842408,
                 MetaData("4T4BE46K19R123050", "Tesla Model X"),
                 SensorInformation(
                     GpsLocation(0.0, 0.0),
@@ -66,6 +66,36 @@ class TestDataProvider {
                     50.0
                 ),
                 EventInformation.NEAR_CRASH
+            )
+        }
+
+        fun testManufacturerDataRecordAudi(): ManufacturerDataRecord {
+            val dataRecord = testVehicleDataRecordAudi()
+            return ManufacturerDataRecord(
+                dataRecord.id, dataRecord.timestamp,
+                dataRecord.metaData.identificationNumber,
+                dataRecord.metaData.model,
+                dataRecord.sensorInformation.location
+            )
+        }
+
+        fun testManufacturerDataRecordAcura(): ManufacturerDataRecord {
+            val dataRecord = testVehicleDataRecordAcura()
+            return ManufacturerDataRecord(
+                dataRecord.id, dataRecord.timestamp,
+                dataRecord.metaData.identificationNumber,
+                dataRecord.metaData.model,
+                dataRecord.sensorInformation.location
+            )
+        }
+
+        fun testManufacturerDataRecordTesla(): ManufacturerDataRecord {
+            val dataRecord = testVehicleDataRecordTesla()
+            return ManufacturerDataRecord(
+                dataRecord.id, dataRecord.timestamp,
+                dataRecord.metaData.identificationNumber,
+                dataRecord.metaData.model,
+                dataRecord.sensorInformation.location
             )
         }
     }
