@@ -61,3 +61,13 @@ data class ManufacturerDataRecord(
     val model: String,
     val location: GpsLocation
 )
+
+fun VehicleDataRecord.toManufacturerDataRecord(): ManufacturerDataRecord {
+    return ManufacturerDataRecord(
+        this.id,
+        this.timestamp,
+        this.metaData.identificationNumber,
+        this.metaData.model,
+        this.sensorInformation.location
+    )
+}

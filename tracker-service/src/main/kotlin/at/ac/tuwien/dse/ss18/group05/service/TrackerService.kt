@@ -1,7 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.service
 
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerDataRecord
-import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
+import at.ac.tuwien.dse.ss18.group05.dto.toManufacturerDataRecord
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleDataRecordRepository
 import at.ac.tuwien.dse.ss18.group05.service.client.VehicleServiceClient
@@ -29,14 +29,14 @@ class TrackerService(
     override fun getTrackingStreamForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return receiver
             .recordStream()
-            .map { mapVehicleDataRecordTo(it) }
+            .map { it.toManufacturerDataRecord() }
             .filter { vehicleToManufacturerMap[it.vehicleIdentificationNumber] == manufacturerId }
     }
 
     override fun getTrackingHistoryForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return repository
             .findAll()
-            .map { mapVehicleDataRecordTo(it) }
+            .map { it.toManufacturerDataRecord() }
             .filter { vehicleToManufacturerMap[it.vehicleIdentificationNumber] == manufacturerId }
     }
 
@@ -44,15 +44,5 @@ class TrackerService(
         val result = mutableMapOf<String, String>()
         vehicleServiceClient.getAllVehicles().forEach { result[it.identificationNumber] = it.manufacturerId }
         return result.toMap()
-    }
-
-    private fun mapVehicleDataRecordTo(vehicleDataRecord: VehicleDataRecord): ManufacturerDataRecord {
-        return ManufacturerDataRecord(
-            vehicleDataRecord.id,
-            vehicleDataRecord.timestamp,
-            vehicleDataRecord.metaData.identificationNumber,
-            vehicleDataRecord.metaData.model,
-            vehicleDataRecord.sensorInformation.location
-        )
     }
 }
