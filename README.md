@@ -23,6 +23,13 @@ the mongo shell:
 - `mongo YOUR_LOCAL_IP:27017/notificationDatabase -u 'notificationService' -p 'notificationDatabasePassword'`
 
 ### Start RabbitMQ (Docker)
-`docker run -p 5672:5672 --hostname localhost rabbitmq:3` (change `localhost` accordingly)
+`docker run -p 5672:5672 -p 15672:15672 --hostname localhost rabbitmq:3-management` (change `localhost` accordingly)
+
+
+### Some useful JSONs
+Sample `VehicleDataRecord`:
+```json
+{"id":null,"timestamp":1526126033768,"metaData":{"identificationNumber":"JH4DB8590SS001561","model":"1995 Acura Integra"},"sensorInformation":{"location":{"lat":0.0,"lon":0.0},"proximityInformation":{"distanceToVehicleFrontInCm":0.0,"distanceToVehicleBehindInCm":0.0},"passengers":4,"speed":50.0},"eventInformation":"NONE"}
+```
 
 

@@ -1,9 +1,17 @@
 package at.ac.tuwien.dse.ss18.group05
 
+import at.ac.tuwien.dse.ss18.group05.dto.*
+import at.ac.tuwien.dse.ss18.group05.service.client.VehicleService
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.context.annotation.Bean
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * <h4>About this class</h4>
@@ -23,6 +31,31 @@ class TrackerServiceApplication {
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(TrackerServiceApplication::class.java, *args)
+            val gson = GsonBuilder().serializeNulls().create()
+            val record = VehicleDataRecord(
+                null, System.currentTimeMillis(),
+                MetaData("JH4DB8590SS001561", "1995 Acura Integra"),
+                SensorInformation(
+                    GpsLocation(0.0, 0.0),
+                    ProximityInformation(0.0, 0.0),
+                    4,
+                    50.0
+                ),
+                EventInformation.NONE
+            )
+            println(gson.toJson(record))
         }
+    }
+
+    @Bean
+    fun vehicleService(
+        @Value("\${vehicle.service.host}") host: String,
+        @Value("\${vehicle.service.port}") port: String
+    ): VehicleService {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://$host:$port/vehicle/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        return retrofit.create(VehicleService::class.java)
     }
 }
