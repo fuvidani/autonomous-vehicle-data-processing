@@ -32,12 +32,11 @@ class ReceiverTest {
     private lateinit var receiver: Receiver
     @MockBean
     private lateinit var repository: VehicleDataRecordRepository
-    private lateinit var processor: TopicProcessor<VehicleDataRecord>
     private val gson = Gson()
 
     @Before
     fun setUp() {
-        processor = TopicProcessor.builder<VehicleDataRecord>()
+        val processor = TopicProcessor.builder<VehicleDataRecord>()
             .autoCancel(false)
             .share(true)
             .name("something")
@@ -53,12 +52,9 @@ class ReceiverTest {
         StepVerifier
             .create(receiver.recordStream())
             .expectSubscription()
-            .then {
-                receiver.receiveMessage(gson.toJson(record))
-                Mono.delay(Duration.ofSeconds(1)).subscribe { processor.onComplete() }
-            }
+            .then { receiver.receiveMessage(gson.toJson(record)) }
             .expectNext(record)
-            .expectComplete()
+            .thenCancel()
             .verify(Duration.ofSeconds(5))
     }
 
@@ -78,9 +74,7 @@ class ReceiverTest {
             .then {
                 Flux.fromIterable(records)
                     .delayElements(Duration.ofSeconds(2))
-                    .doOnNext { receiver.receiveMessage(gson.toJson(it)) }
-                    .doOnComplete { processor.onComplete() }
-                    .subscribe()
+                    .subscribe { receiver.receiveMessage(gson.toJson(it)) }
             }
             .expectNoEvent(Duration.ofMillis(1800))
             .expectNext(audi)
@@ -88,7 +82,8 @@ class ReceiverTest {
             .expectNext(acura)
             .expectNoEvent(Duration.ofMillis(1800))
             .expectNext(tesla)
-            .expectComplete()
+            .expectNoEvent(Duration.ofSeconds(1))
+            .thenCancel()
             .verify()
     }
 }
