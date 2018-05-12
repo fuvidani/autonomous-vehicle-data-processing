@@ -1,7 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.service
 
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerDataRecord
-import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleDataRecordRepository
@@ -30,30 +29,14 @@ class TrackerService(
     override fun getTrackingStreamForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return receiver
             .recordStream()
-            .map {
-                ManufacturerDataRecord(
-                    it.id,
-                    it.timestamp,
-                    it.metaData.identificationNumber,
-                    it.metaData.model,
-                    it.sensorInformation.location
-                )
-            }
+            .map { mapVehicleDataRecordTo(it) }
             .filter { vehicleToManufacturerMap[it.vehicleIdentificationNumber] == manufacturerId }
     }
 
     override fun getTrackingHistoryForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return repository
             .findAll()
-            .map {
-                ManufacturerDataRecord(
-                    it.id,
-                    it.timestamp,
-                    it.metaData.identificationNumber,
-                    it.metaData.model,
-                    it.sensorInformation.location
-                )
-            }
+            .map { mapVehicleDataRecordTo(it) }
             .filter { vehicleToManufacturerMap[it.vehicleIdentificationNumber] == manufacturerId }
     }
 
@@ -61,5 +44,15 @@ class TrackerService(
         val result = mutableMapOf<String, String>()
         vehicleServiceClient.getAllVehicles().forEach { result[it.identificationNumber] = it.manufacturerId }
         return result.toMap()
+    }
+
+    private fun mapVehicleDataRecordTo(vehicleDataRecord: VehicleDataRecord): ManufacturerDataRecord {
+        return ManufacturerDataRecord(
+            vehicleDataRecord.id,
+            vehicleDataRecord.timestamp,
+            vehicleDataRecord.metaData.identificationNumber,
+            vehicleDataRecord.metaData.model,
+            vehicleDataRecord.sensorInformation.location
+        )
     }
 }

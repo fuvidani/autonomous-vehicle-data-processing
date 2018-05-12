@@ -3,7 +3,6 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerDataRecord
 import at.ac.tuwien.dse.ss18.group05.service.ITrackerService
-import at.ac.tuwien.dse.ss18.group05.service.client.VehicleServiceClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

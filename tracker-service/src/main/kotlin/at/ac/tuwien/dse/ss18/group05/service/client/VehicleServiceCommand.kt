@@ -3,9 +3,7 @@ package at.ac.tuwien.dse.ss18.group05.service.client
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
 import com.netflix.hystrix.HystrixCommand
 import com.netflix.hystrix.HystrixCommandGroupKey
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
 import java.util.logging.Logger
 
 /**
