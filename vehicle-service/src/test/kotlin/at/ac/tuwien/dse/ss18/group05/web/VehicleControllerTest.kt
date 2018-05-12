@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.MediaType
 import org.springframework.restdocs.JUnitRestDocumentation
+import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
@@ -104,10 +105,13 @@ class VehicleControllerTest {
                     ),
                     responseFields(
                         fieldWithPath("identificationNumber")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's world-wide unique Vehicle Identification Number"),
                         fieldWithPath("manufacturerId")
+                            .type(JsonFieldType.STRING)
                             .description("ID of the manufacturer"),
                         fieldWithPath("model")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's type of model")
                     )
                 )
@@ -181,18 +185,24 @@ class VehicleControllerTest {
                     ),
                     requestFields(
                         fieldWithPath("identificationNumber")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's world-wide unique Vehicle Identification Number"),
                         fieldWithPath("manufacturerId")
+                            .type(JsonFieldType.STRING)
                             .description("ID of the manufacturer"),
                         fieldWithPath("model")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's type of model")
                     ),
                     responseFields(
                         fieldWithPath("identificationNumber")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's world-wide unique Vehicle Identification Number"),
                         fieldWithPath("manufacturerId")
+                            .type(JsonFieldType.STRING)
                             .description("ID of the manufacturer"),
                         fieldWithPath("model")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's type of model")
                     )
                 )
@@ -221,10 +231,13 @@ class VehicleControllerTest {
                     ),
                     requestFields(
                         fieldWithPath("identificationNumber")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's world-wide unique Vehicle Identification Number"),
                         fieldWithPath("manufacturerId")
+                            .type(JsonFieldType.STRING)
                             .description("ID of the manufacturer"),
                         fieldWithPath("model")
+                            .type(JsonFieldType.STRING)
                             .description("The vehicle's type of model")
                     ),
                     responseFields(
@@ -232,6 +245,47 @@ class VehicleControllerTest {
                     )
                 )
             )
+    }
+
+    @Test
+    fun getAllVehiclesShouldReturnAllVehicles() {
+        insertVehicles()
+        client.get().uri("/vehicles")
+            .accept(MediaType.APPLICATION_STREAM_JSON)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody()
+            .consumeWith(
+                document(
+                    "all-vehicles",
+                    responseFields(
+                        fieldWithPath("identificationNumber")
+                            .type(JsonFieldType.STRING)
+                            .description("The vehicle's world-wide unique Vehicle Identification Number"),
+                        fieldWithPath("manufacturerId")
+                            .type(JsonFieldType.STRING)
+                            .description("ID of the manufacturer"),
+                        fieldWithPath("model")
+                            .type(JsonFieldType.STRING)
+                            .description("The vehicle's type of model")
+                    )
+                )
+            )
+        val stream = client.get().uri("/vehicles")
+            .accept(MediaType.APPLICATION_STREAM_JSON)
+            .exchange()
+            .expectStatus().isOk
+            .returnResult(Vehicle::class.java)
+
+        StepVerifier.create(stream.responseBody)
+            .expectNext(testVehicleBmw1)
+            .expectNext(testVehicleBmw2)
+            .expectNext(testVehicleBmw3)
+            .expectNext(testVehicleAudi1)
+            .expectNext(testVehicleAudi2)
+            .expectNext(testVehicleCitroen)
+            .expectComplete()
+            .verify()
     }
 
     private fun insertManufacturers() {
