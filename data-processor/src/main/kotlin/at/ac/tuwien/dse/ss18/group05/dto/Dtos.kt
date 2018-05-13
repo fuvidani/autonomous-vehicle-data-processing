@@ -3,7 +3,7 @@ package at.ac.tuwien.dse.ss18.group05.dto
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.*
+import java.util.Arrays
 
 /**
  * <h4>About this class</h4>
@@ -115,7 +115,7 @@ data class ManufacturerNotification(
     val model: String,
     val location: GpsLocation,
     val eventInfo: EventInformation,
-    val accidentId: String
+    val accidentId: String?
 )
 
 data class EmergencyServiceNotification(
@@ -127,12 +127,11 @@ data class EmergencyServiceNotification(
     val passengers: Int
 )
 
-
 @Document(collection = "locations")
 data class VehicleLocation(
     @Id
     val vehicleIdentificationNumber: String,
-    val geoJsonPoint: GeoJsonPoint
+    val location: GeoJsonPoint
 )
 
 @Document(collection = "live_accidents")
@@ -140,12 +139,36 @@ data class LiveAccident(
     @Id
     val id: String?,
     val vehicleMetaData: MetaData,
-    val geoJsonPoint: GeoJsonPoint,
+    val location: GeoJsonPoint,
     val passengers: Int,
     val timestampOfAccident: Long,
     val timestampOfServiceArrival: Long?,
     val timestampOfSiteClearing: Long?
 )
+
+fun LiveAccident.withServiceArrival(timestampOfServiceArrival: Long): LiveAccident {
+    return LiveAccident(
+        this.id,
+        this.vehicleMetaData,
+        this.location,
+        this.passengers,
+        this.timestampOfAccident,
+        timestampOfServiceArrival,
+        this.timestampOfSiteClearing
+    )
+}
+
+fun LiveAccident.withSiteClearing(timestampOfSiteClearing: Long): LiveAccident {
+    return LiveAccident(
+        this.id,
+        this.vehicleMetaData,
+        this.location,
+        this.passengers,
+        this.timestampOfAccident,
+        this.timestampOfServiceArrival,
+        timestampOfSiteClearing
+    )
+}
 
 data class AccidentReport(
     val accidentId: String,
@@ -155,3 +178,73 @@ data class AccidentReport(
     val emergencyResponseInMillis: Long,
     val durationOfSiteClearingInMillis: Long
 )
+
+fun VehicleDataRecord.toManufacturerNotification(
+    manufacturerId: String,
+    accidentId: String?
+): ManufacturerNotification {
+    return ManufacturerNotification(
+        null,
+        this.timestamp,
+        this.metaData.identificationNumber,
+        manufacturerId,
+        this.metaData.model,
+        this.sensorInformation.location,
+        this.eventInformation,
+        accidentId
+    )
+}
+
+fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
+    return LiveAccident(
+        null,
+        this.metaData,
+        GeoJsonPoint(this.sensorInformation.location.lon, this.sensorInformation.location.lat),
+        this.sensorInformation.passengers,
+        this.timestamp,
+        0,
+        0
+    )
+}
+
+fun VehicleDataRecord.toEmergencyServiceNotification(accidentId: String): EmergencyServiceNotification {
+    return EmergencyServiceNotification(
+        null,
+        accidentId,
+        this.timestamp,
+        this.sensorInformation.location,
+        this.metaData.model,
+        this.sensorInformation.passengers
+    )
+}
+
+fun VehicleDataRecord.toVehicleNotification(
+    accidentId: String,
+    emergencyServiceStatus: EmergencyServiceStatus,
+    nearVehiclesList: List<String>,
+    farVehiclesList: List<String>,
+    specialWarning: Boolean?,
+    targetSpeed: Double?
+): VehicleNotification {
+    return VehicleNotification(
+        farVehiclesList.toTypedArray(),
+        nearVehiclesList.toTypedArray(),
+        accidentId,
+        this.timestamp,
+        this.sensorInformation.location,
+        emergencyServiceStatus,
+        specialWarning,
+        targetSpeed
+    )
+}
+
+fun LiveAccident.toAccidentReport(): AccidentReport {
+    return AccidentReport(
+        this.id!!,
+        this.vehicleMetaData,
+        GpsLocation(this.location.y, this.location.x),
+        this.passengers,
+        this.timestampOfServiceArrival!!.minus(this.timestampOfAccident),
+        this.timestampOfSiteClearing!!.minus(this.timestampOfServiceArrival)
+    )
+}

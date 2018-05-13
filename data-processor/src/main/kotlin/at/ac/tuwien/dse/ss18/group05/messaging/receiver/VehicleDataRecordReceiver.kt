@@ -1,4 +1,4 @@
-package at.ac.tuwien.dse.ss18.group05.messaging
+package at.ac.tuwien.dse.ss18.group05.messaging.receiver
 
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
 import at.ac.tuwien.dse.ss18.group05.processing.DataProcessor

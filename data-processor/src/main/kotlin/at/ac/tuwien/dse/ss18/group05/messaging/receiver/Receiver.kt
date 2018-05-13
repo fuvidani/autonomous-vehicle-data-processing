@@ -1,8 +1,7 @@
-package at.ac.tuwien.dse.ss18.group05.messaging
+package at.ac.tuwien.dse.ss18.group05.messaging.receiver
 
 import com.google.gson.Gson
 import java.util.logging.Logger
-
 
 /**
  * <h4>About this class</h4>
