@@ -174,7 +174,7 @@ fun LiveAccident.withSiteClearing(timestampOfSiteClearing: Long): LiveAccident {
 }
 
 data class AccidentReport(
-    // TODO: add id field
+    val id: String?,
     val accidentId: String,
     val vehicleMetaData: MetaData,
     val location: GpsLocation,
@@ -244,6 +244,7 @@ fun VehicleDataRecord.toVehicleNotification(
 
 fun LiveAccident.toAccidentReport(): AccidentReport {
     return AccidentReport(
+        null,
         this.id!!,
         this.vehicleMetaData,
         GpsLocation(this.location.y, this.location.x),
