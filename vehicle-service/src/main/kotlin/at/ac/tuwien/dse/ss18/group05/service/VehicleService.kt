@@ -25,6 +25,8 @@ interface IVehicleService {
 
     @Throws(ServiceException::class)
     fun registerNewVehicle(vehicle: Vehicle): Mono<Vehicle>
+
+    fun findAll(): Flux<Vehicle>
 }
 
 @Service
@@ -49,5 +51,9 @@ class VehicleService(
                 )
             }
             .then(vehicleRepository.save(vehicle))
+    }
+
+    override fun findAll(): Flux<Vehicle> {
+        return vehicleRepository.findAll()
     }
 }
