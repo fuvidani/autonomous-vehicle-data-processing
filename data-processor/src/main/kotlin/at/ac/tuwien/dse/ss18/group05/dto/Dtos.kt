@@ -57,14 +57,14 @@ enum class EventInformation {
 }
 
 data class VehicleNotification(
-    private val concernedFarAwayVehicles: Array<String>,
-    private val concernedNearByVehicles: Array<String>,
-    private val accidentId: String,
-    private val timestamp: Long,
-    private val location: GpsLocation,
-    private val emergencyServiceStatus: EmergencyServiceStatus,
-    private val specialWarning: Boolean?,
-    private val targetSpeed: Double?
+    val concernedFarAwayVehicles: Array<String>,
+    val concernedNearByVehicles: Array<String>,
+    val accidentId: String,
+    val timestamp: Long,
+    val location: GpsLocation,
+    val emergencyServiceStatus: EmergencyServiceStatus,
+    val specialWarning: Boolean?,
+    val targetSpeed: Double?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -206,8 +206,8 @@ fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
         GeoJsonPoint(this.sensorInformation.location.lon, this.sensorInformation.location.lat),
         this.sensorInformation.passengers,
         this.timestamp,
-        0,
-        0
+        null,
+        null
     )
 }
 
