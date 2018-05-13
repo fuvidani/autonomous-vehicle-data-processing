@@ -2,6 +2,8 @@ package at.ac.tuwien.dse.ss18.group05.dto
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.util.Arrays
 
@@ -131,6 +133,7 @@ data class EmergencyServiceNotification(
 data class VehicleLocation(
     @Id
     val vehicleIdentificationNumber: String,
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     val location: GeoJsonPoint
 )
 
@@ -171,6 +174,7 @@ fun LiveAccident.withSiteClearing(timestampOfSiteClearing: Long): LiveAccident {
 }
 
 data class AccidentReport(
+    // TODO: add id field
     val accidentId: String,
     val vehicleMetaData: MetaData,
     val location: GpsLocation,

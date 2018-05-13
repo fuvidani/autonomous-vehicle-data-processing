@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: test
+
+vehicle:
+  service:
+    host: localhost
+    port: 4000

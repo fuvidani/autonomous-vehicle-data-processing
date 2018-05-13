@@ -4,11 +4,8 @@ package at.ac.tuwien.dse.ss18.group05.processing
 import at.ac.tuwien.dse.ss18.group05.dto.*
 import at.ac.tuwien.dse.ss18.group05.messaging.sender.Sender
 import at.ac.tuwien.dse.ss18.group05.repository.LiveAccidentRepository
-import at.ac.tuwien.dse.ss18.group05.repository.VehicleLocationRepository
+import at.ac.tuwien.dse.ss18.group05.service.IVehicleLocationService
 import at.ac.tuwien.dse.ss18.group05.service.client.VehicleServiceClient
-import org.springframework.data.geo.Distance
-import org.springframework.data.geo.Metrics
-import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.stereotype.Component
 
@@ -23,11 +20,11 @@ import org.springframework.stereotype.Component
  */
 @Component
 class VehicleDataRecordProcessor(
-    locationRepository: VehicleLocationRepository,
+    vehicleLocationService: IVehicleLocationService,
     accidentRepository: LiveAccidentRepository,
     sender: Sender,
     private val vehicleServiceClient: VehicleServiceClient
-) : DataProcessor<VehicleDataRecord>(locationRepository, accidentRepository, sender) {
+) : DataProcessor<VehicleDataRecord>(vehicleLocationService, accidentRepository, sender) {
 
     private val vehicleToManufacturerMap: Map<String, String> by lazy { initializeVehicleToManufacturerMap() }
 
@@ -41,7 +38,7 @@ class VehicleDataRecordProcessor(
             data.metaData.identificationNumber,
             GeoJsonPoint(data.sensorInformation.location.lon, data.sensorInformation.location.lat)
         )
-        vehicleLocationRepository.save(location).subscribe()
+        vehicleLocationService.save(location).subscribe()
     }
 
     private fun checkAndHandleCrashEvent(data: VehicleDataRecord) {
@@ -55,29 +52,10 @@ class VehicleDataRecordProcessor(
     private fun handleCrashEvent(data: VehicleDataRecord) {
         val accident = accidentRepository.save(data.toDefaultLiveAccident()).block()
         if (accident?.id != null) {
-            val accidentId = accident.id
-            notifyManufacturer(data, accidentId)
-            notifyEmergencyService(data, accidentId)
-            val nearVehicles = vehicleLocationRepository.findByLocationNear(
-                Point(data.sensorInformation.location.lon, data.sensorInformation.location.lat),
-                Distance(0.01, Metrics.KILOMETERS), Distance(1.0, Metrics.KILOMETERS)
-            )
-            val farVehicles = vehicleLocationRepository.findByLocationNear(
-                Point(data.sensorInformation.location.lon, data.sensorInformation.location.lat),
-                Distance(1.0, Metrics.KILOMETERS), Distance(10.0, Metrics.KILOMETERS)
-            )
-            val nearVehiclesList = mutableListOf<String>()
-            val farVehiclesList = mutableListOf<String>()
-            nearVehicles
-                .zipWith(farVehicles)
-                .doOnNext { tuple ->
-                    nearVehiclesList.add(tuple.t1.vehicleIdentificationNumber)
-                    farVehiclesList.add(tuple.t2.vehicleIdentificationNumber)
-                }
-                .doOnComplete {
-                    notifyVehicles(data, accidentId, nearVehiclesList, farVehiclesList)
-                }
-                .subscribe()
+            notifyManufacturer(data, accident.id)
+            notifyEmergencyService(data, accident.id)
+            val vehicles = vehicleLocationService.findVehiclesInRadius(data.sensorInformation.location).block()!!
+            notifyVehicles(data, accident.id, vehicles.first, vehicles.second)
         }
     }
 

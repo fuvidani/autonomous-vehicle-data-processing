@@ -17,5 +17,5 @@ import reactor.core.publisher.Flux
  */
 interface VehicleLocationRepository : ReactiveCrudRepository<VehicleLocation, String> {
 
-    fun findByLocationNear(point: Point, minDistance: Distance, maxDistance: Distance): Flux<VehicleLocation>
+    fun findByLocationNear(point: Point, distance: Distance): Flux<VehicleLocation>
 }

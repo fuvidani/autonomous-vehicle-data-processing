@@ -4,10 +4,7 @@ package at.ac.tuwien.dse.ss18.group05.processing
 import at.ac.tuwien.dse.ss18.group05.dto.*
 import at.ac.tuwien.dse.ss18.group05.messaging.sender.Sender
 import at.ac.tuwien.dse.ss18.group05.repository.LiveAccidentRepository
-import at.ac.tuwien.dse.ss18.group05.repository.VehicleLocationRepository
-import org.springframework.data.geo.Distance
-import org.springframework.data.geo.Metrics
-import org.springframework.data.geo.Point
+import at.ac.tuwien.dse.ss18.group05.service.IVehicleLocationService
 import org.springframework.stereotype.Component
 
 /**
@@ -21,10 +18,10 @@ import org.springframework.stereotype.Component
  */
 @Component
 class EmergencyServiceMessageProcessor(
-    locationRepository: VehicleLocationRepository,
+    vehicleLocationService: IVehicleLocationService,
     accidentRepository: LiveAccidentRepository,
     sender: Sender
-) : DataProcessor<EmergencyServiceMessage>(locationRepository, accidentRepository, sender) {
+) : DataProcessor<EmergencyServiceMessage>(vehicleLocationService, accidentRepository, sender) {
 
     override fun process(data: EmergencyServiceMessage) {
         if (data.status == EmergencyServiceStatus.ARRIVED) {
@@ -37,35 +34,9 @@ class EmergencyServiceMessageProcessor(
     private fun handleArrival(data: EmergencyServiceMessage) {
         val currentAccident = accidentRepository.findById(data.accidentId).block()
         if (currentAccident?.id != null) {
-            val accident = accidentRepository.save(currentAccident.withServiceArrival(data.timestamp)).block()
-            if (accident?.id != null) {
-                val nearVehicles = vehicleLocationRepository.findByLocationNear(
-                    Point(accident.location.x, accident.location.y),
-                    Distance(0.01, Metrics.KILOMETERS), Distance(1.0, Metrics.KILOMETERS)
-                )
-                val farVehicles = vehicleLocationRepository.findByLocationNear(
-                    Point(accident.location.x, accident.location.y),
-                    Distance(1.0, Metrics.KILOMETERS), Distance(10.0, Metrics.KILOMETERS)
-                )
-                val nearVehiclesList = mutableListOf<String>()
-                val farVehiclesList = mutableListOf<String>()
-                nearVehicles
-                    .zipWith(farVehicles)
-                    .doOnNext { tuple ->
-                        nearVehiclesList.add(tuple.t1.vehicleIdentificationNumber)
-                        farVehiclesList.add(tuple.t2.vehicleIdentificationNumber)
-                    }
-                    .doOnComplete {
-                        notifyVehicles(
-                            accident,
-                            data.timestamp,
-                            EmergencyServiceStatus.ARRIVED,
-                            nearVehiclesList,
-                            farVehiclesList
-                        )
-                    }
-                    .subscribe()
-            }
+            val accident = accidentRepository.save(currentAccident.withServiceArrival(data.timestamp)).block()!!
+            val vehicles = vehicleLocationService.findVehiclesInRadius(accident.location).block()!!
+            notifyVehicles(accident, data.timestamp, EmergencyServiceStatus.ARRIVED, vehicles.first, vehicles.second)
         }
     }
 
@@ -74,35 +45,15 @@ class EmergencyServiceMessageProcessor(
         if (currentAccident?.id != null) {
             accidentRepository.delete(currentAccident).subscribe()
             val accident = currentAccident.withSiteClearing(data.timestamp)
-            if (accident.id != null) {
-                val nearVehicles = vehicleLocationRepository.findByLocationNear(
-                    Point(accident.location.x, accident.location.y),
-                    Distance(0.01, Metrics.KILOMETERS), Distance(1.0, Metrics.KILOMETERS)
-                )
-                val farVehicles = vehicleLocationRepository.findByLocationNear(
-                    Point(accident.location.x, accident.location.y),
-                    Distance(1.0, Metrics.KILOMETERS), Distance(10.0, Metrics.KILOMETERS)
-                )
-                val nearVehiclesList = mutableListOf<String>()
-                val farVehiclesList = mutableListOf<String>()
-                nearVehicles
-                    .zipWith(farVehicles)
-                    .doOnNext { tuple ->
-                        nearVehiclesList.add(tuple.t1.vehicleIdentificationNumber)
-                        farVehiclesList.add(tuple.t2.vehicleIdentificationNumber)
-                    }
-                    .doOnComplete {
-                        notifyVehicles(
-                            accident,
-                            data.timestamp,
-                            EmergencyServiceStatus.AREA_CLEARED,
-                            nearVehiclesList,
-                            farVehiclesList
-                        )
-                    }
-                    .subscribe()
-                notifyStatisticsService(accident)
-            }
+            val vehicles = vehicleLocationService.findVehiclesInRadius(accident.location).block()!!
+            notifyVehicles(
+                accident,
+                data.timestamp,
+                EmergencyServiceStatus.AREA_CLEARED,
+                vehicles.first,
+                vehicles.second
+            )
+            notifyStatisticsService(accident)
         }
     }
 
