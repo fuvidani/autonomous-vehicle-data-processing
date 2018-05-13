@@ -1,0 +1,27 @@
+package at.ac.tuwien.dse.ss18.group05.messaging
+
+import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
+import at.ac.tuwien.dse.ss18.group05.processing.DataProcessor
+import com.google.gson.Gson
+import org.springframework.amqp.rabbit.annotation.RabbitListener
+import org.springframework.stereotype.Component
+
+/**
+ * <h4>About this class</h4>
+ *
+ * <p>Description</p>
+ *
+ * @author Daniel Fuevesi
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+@Component
+class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleDataRecord>, gson: Gson) : Receiver(gson) {
+
+    @RabbitListener(queues = ["#{vehicleQueue.name}"])
+    override fun receiveMessage(message: String) {
+        log.info("New vehicle data record arrived")
+        val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
+        processor.process(vehicleDataRecord)
+    }
+}
