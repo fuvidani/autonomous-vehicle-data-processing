@@ -1,7 +1,9 @@
 print('initializing database with statistics');
 
-// Insert test statistics
+// Create capped collection for statistics
+db.createCollection("statistics", { capped : true, size : 5242880, max : 5000 } );
 
+// Insert test statistics
 db.statistics.save(
     {
         "_id": "Accident 1",
