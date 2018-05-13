@@ -18,21 +18,20 @@ import reactor.core.publisher.Mono
 class ServiceException(message: String) : Exception(message)
 
 interface IStatisticsService {
-    fun findAll(): Flux<Statistics>
+    fun findBy(): Flux<Statistics>
 
     fun create(statistics: Statistics): Mono<Statistics>
 }
 
 @Service
 class StatisticsService(
-        private val statisticsRepository: StatisticsRepository
+    private val statisticsRepository: StatisticsRepository
 ) : IStatisticsService {
     override fun create(statistics: Statistics): Mono<Statistics> {
         return statisticsRepository.save(statistics)
     }
 
-    override fun findAll(): Flux<Statistics> {
-        return statisticsRepository.findAll()
+    override fun findBy(): Flux<Statistics> {
+        return statisticsRepository.findBy()
     }
-
 }

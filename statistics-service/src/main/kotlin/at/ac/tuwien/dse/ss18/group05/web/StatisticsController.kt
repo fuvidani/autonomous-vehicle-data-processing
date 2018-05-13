@@ -7,9 +7,12 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.ExceptionHandler
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 
 /**
  * <h4>About this class</h4>
@@ -20,18 +23,14 @@ import reactor.core.publisher.Mono
  * @version 1.0.0
  * @since 1.0.0
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/statistics")
 class StatisticsController(private val statisticsService: IStatisticsService) {
 
     @GetMapping("/accidents")
     fun getAllStatistics(): Flux<Statistics> {
-        return statisticsService.findAll()
-    }
-
-    @PostMapping("/accidents")
-    fun createStatistics(@RequestBody statistics: Statistics): Mono<Statistics> {
-        return statisticsService.create(statistics)
+        return statisticsService.findBy()
     }
 
     @ExceptionHandler(ServiceException::class)

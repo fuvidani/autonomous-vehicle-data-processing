@@ -1,7 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.dto
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
 
 /**
  * <h4>About this class</h4>
@@ -12,19 +11,18 @@ import org.springframework.data.mongodb.core.mapping.Document
  * @version 1.0.0
  * @since 1.0.0
  */
-@Document(collection = "statistics")
 data class Statistics(
-        @Id
-        val id: String,
-        val serialNumber: String,
-        val model: String,
-        val location: GpsLocation,
-        val passengers: Int,
-        val emergencyResponseInMillis: Double,
-        val durationOfSiteClearing: Double
+    @Id
+    val id: String,
+    val serialNumber: String,
+    val model: String,
+    val location: GpsLocation,
+    val passengers: Int,
+    val emergencyResponseInMillis: Double,
+    val durationOfSiteClearing: Double
 )
 
 data class GpsLocation(
-        val lat: String,
-        val lon: String
+    val lat: String,
+    val lon: String
 )

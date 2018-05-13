@@ -1,7 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
-import org.springframework.stereotype.Component
-
 /**
  * <h4>About this class</h4>
  *
@@ -14,12 +12,4 @@ import org.springframework.stereotype.Component
 interface Receiver {
 
     fun receiveMessage(message: String)
-}
-
-@Component
-class VehicleDataReceiver : Receiver {
-
-    override fun receiveMessage(message: String) {
-        println("Received <$message>")
-    }
 }
