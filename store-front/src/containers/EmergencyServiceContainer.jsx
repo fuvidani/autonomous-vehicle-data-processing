@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import EmergencyServiceComponent from "../components/EmergencyServiceComponent";
+import EmergencyServiceComponent from "../components/emergency/EmergencyServiceComponent";
 
 const mapStateToProps = (state) => {
     return {};

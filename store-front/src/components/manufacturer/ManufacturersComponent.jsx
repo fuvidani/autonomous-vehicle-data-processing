@@ -1,5 +1,5 @@
 import React from "react";
-import GeneralComponent from "./GeneralComponent";
+import GeneralComponent from "../GeneralComponent";
 import ReactTooltip from 'react-tooltip';
 import {RaisedButton} from "material-ui";
 import {Link} from "react-router-dom";

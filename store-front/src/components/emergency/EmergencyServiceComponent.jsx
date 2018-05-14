@@ -1,5 +1,5 @@
 import React from "react";
-import GeneralComponent from "./GeneralComponent";
+import GeneralComponent from "../GeneralComponent";
 
 export default class EmergencyServiceComponent extends React.Component {
     constructor(props) {

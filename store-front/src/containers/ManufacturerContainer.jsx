@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import ManufacturerComponent from "../components/ManufacturerComponent";
+import ManufacturerComponent from "../components/manufacturer/ManufacturerComponent";
 
 const mapStateToProps = (state) => {
     return {};

@@ -3,6 +3,14 @@ export default function reducer(state = {
 }, action) {
 
     switch (action.type) {
+        case 'CLEAR_ACCIDENT_REPORTS': {
+            state.accidentReports = [];
+
+            return {
+                ...state
+            };
+        }
+
         case 'ACCIDENT_REPORT_FETCHED':
             return {
                 ...state,

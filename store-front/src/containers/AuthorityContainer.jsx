@@ -2,8 +2,8 @@ import {connect} from "react-redux";
 import {
     fetchAccidentReports,
     cancelAccidentReports
-} from "../actions/actions";
-import AuthorityComponent from "../components/AuthorityComponent";
+} from "../actions/AuthorityActions";
+import AuthorityComponent from "../components/authority/AuthorityComponent";
 
 const mapStateToProps = (state) => {
     return {
