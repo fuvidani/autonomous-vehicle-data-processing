@@ -17,12 +17,6 @@ import reactor.core.publisher.Mono
  */
 class ServiceException(message: String) : Exception(message)
 
-interface IStatisticsService {
-    fun findBy(): Flux<AccidentReport>
-
-    fun create(accidentReport: AccidentReport): Mono<AccidentReport>
-}
-
 @Service
 class StatisticsService(
     private val statisticsRepository: StatisticsRepository
@@ -31,7 +25,7 @@ class StatisticsService(
         return statisticsRepository.save(accidentReport)
     }
 
-    override fun findBy(): Flux<AccidentReport> {
+    override fun findAll(): Flux<AccidentReport> {
         return statisticsRepository.findBy()
     }
 }

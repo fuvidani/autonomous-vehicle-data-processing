@@ -29,6 +29,7 @@ class StatisticsReceiver(
         log.info("New statistics arrived")
         val report = gson.fromJson<AccidentReport>(message, AccidentReport::class.java)
         log.info(report.toString())
+
         statisticsService.create(report).subscribe()
     }
 }

@@ -30,7 +30,7 @@ class StatisticsController(private val statisticsService: IStatisticsService) {
 
     @GetMapping("/accidents")
     fun getAllAccidentReports(): Flux<AccidentReport> {
-        return statisticsService.findBy()
+        return statisticsService.findAll()
     }
 
     @ExceptionHandler(ServiceException::class)

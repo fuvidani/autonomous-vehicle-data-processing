@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document
  * @since 1.0.0
  */
 data class GpsLocation(
-    val lat: String,
-    val lon: String
+    val lat: Double,
+    val lon: Double
 )
 
 data class MetaData(
@@ -25,7 +25,7 @@ data class MetaData(
 @Document(collection = "statistics")
 data class AccidentReport(
     @Id
-    val id: String,
+    val id: String?,
     val accidentId: String,
     val vehicleMetaData: MetaData,
     val location: GpsLocation,
