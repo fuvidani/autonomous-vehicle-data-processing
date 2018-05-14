@@ -79,7 +79,7 @@ class TestDataProvider {
             )
         }
 
-        fun testVehicleDataRecordTesla(): VehicleDataRecord {
+        fun testVehicleDataRecordNearCrashTesla(): VehicleDataRecord {
             return VehicleDataRecord(
                 null, 1526135842408,
                 MetaData("4T4BE46K19R123050", "Tesla Model X"),

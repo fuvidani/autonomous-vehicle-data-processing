@@ -59,7 +59,7 @@ class DtoTests {
 
     @Test
     fun vehicleDataRecordToDefaultLiveAccidentTest() {
-        val record = TestDataProvider.testVehicleDataRecordTesla()
+        val record = TestDataProvider.testVehicleDataRecordNearCrashTesla()
         val accident = record.toDefaultLiveAccident()
         Assert.assertEquals(null, accident.id)
         Assert.assertEquals(record.metaData, accident.vehicleMetaData)

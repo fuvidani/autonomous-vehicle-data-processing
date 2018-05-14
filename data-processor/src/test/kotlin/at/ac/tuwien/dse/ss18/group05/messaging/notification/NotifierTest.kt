@@ -37,7 +37,7 @@ class NotifierTest {
     @Test
     fun testNotifyManufacturerShouldInvokeSenderWithCorrectNotification_NearCrash() {
         // NEAR_CRASH
-        val dataRecord = TestDataProvider.testVehicleDataRecordTesla()
+        val dataRecord = TestDataProvider.testVehicleDataRecordNearCrashTesla()
         val expectedNotification = ManufacturerNotification(
             null,
             dataRecord.timestamp, dataRecord.metaData.identificationNumber, "Tesla", dataRecord.metaData.model,

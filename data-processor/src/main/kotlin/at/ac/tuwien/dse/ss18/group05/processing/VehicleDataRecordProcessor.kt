@@ -55,7 +55,7 @@ class VehicleDataRecordProcessor(
             val vehicles = vehicleLocationService.findVehiclesInRadius(data.sensorInformation.location).block()!!
             notifyManufacturer(data, accident.id)
             notifier.notifyEmergencyService(data, accident.id)
-            notifier.notifyVehiclesOfNewAccident(data, accident.id, ConcernedVehicles(vehicles.first, vehicles.second))
+            notifier.notifyVehiclesOfNewAccident(data, accident.id, ConcernedVehicles(vehicles.second, vehicles.first))
         }
     }
 
