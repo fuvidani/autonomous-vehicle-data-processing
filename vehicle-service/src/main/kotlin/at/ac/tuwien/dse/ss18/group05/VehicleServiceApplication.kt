@@ -36,7 +36,7 @@ class VehicleServiceApplication : WebFluxConfigurer {
      * @see ResourceHandlerRegistry
      */
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("/resources/**")
+        registry.addResourceHandler("/vehicle/resources/**")
             .addResourceLocations("classpath:/static/docs/")
             .setCacheControl(CacheControl.noStore())
     }

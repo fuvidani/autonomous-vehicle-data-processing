@@ -66,6 +66,15 @@ class VehicleServiceTest {
                     Vehicle("alreadyStoredVehicleId", "availableManufacturerId", "Superb model")
                 )
             )
+        Mockito.`when`(vehicleRepository.findAll()).thenReturn(
+            Flux.fromIterable(
+                listOf(
+                    Vehicle("identification1", "availableManufacturerId1", "Nice model"),
+                    Vehicle("identification2", "availableManufacturerId2", "Great model"),
+                    Vehicle("identification3", "availableManufacturerId3", "Bad model")
+                )
+            )
+        )
         vehicleService = VehicleService(vehicleRepository, manufacturerRepository)
     }
 
@@ -105,6 +114,18 @@ class VehicleServiceTest {
 
         StepVerifier.create(vehicleService.registerNewVehicle(vehicle))
             .expectErrorMessage("Vehicle with VIN ${vehicle.identificationNumber} already exists!")
+            .verify()
+    }
+
+    @Test
+    fun findAllShouldReturnAllAvailableVehicles() {
+        StepVerifier
+            .create(vehicleService.findAll())
+            .expectSubscription()
+            .expectNext(Vehicle("identification1", "availableManufacturerId1", "Nice model"))
+            .expectNext(Vehicle("identification2", "availableManufacturerId2", "Great model"))
+            .expectNext(Vehicle("identification3", "availableManufacturerId3", "Bad model"))
+            .expectComplete()
             .verify()
     }
 

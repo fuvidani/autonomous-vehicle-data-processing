@@ -9,3 +9,8 @@ spring:
       port: 5672
       username: guest
       password: guest
+
+vehicle:
+  service:
+    host: localhost
+    port: 4000
