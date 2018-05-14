@@ -2,7 +2,7 @@ package at.ac.tuwien.dse.ss18.group05.processing
 
 /* ktlint-disable no-wildcard-imports */
 import at.ac.tuwien.dse.ss18.group05.dto.*
-import at.ac.tuwien.dse.ss18.group05.messaging.sender.Sender
+import at.ac.tuwien.dse.ss18.group05.messaging.notification.INotifier
 import at.ac.tuwien.dse.ss18.group05.repository.LiveAccidentRepository
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleLocationService
 import at.ac.tuwien.dse.ss18.group05.service.client.VehicleServiceClient
@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component
 class VehicleDataRecordProcessor(
     vehicleLocationService: IVehicleLocationService,
     accidentRepository: LiveAccidentRepository,
-    sender: Sender,
+    notifier: INotifier,
     private val vehicleServiceClient: VehicleServiceClient
-) : DataProcessor<VehicleDataRecord>(vehicleLocationService, accidentRepository, sender) {
+) : DataProcessor<VehicleDataRecord>(vehicleLocationService, accidentRepository, notifier) {
 
     private val vehicleToManufacturerMap: Map<String, String> by lazy { initializeVehicleToManufacturerMap() }
 
@@ -43,7 +43,7 @@ class VehicleDataRecordProcessor(
 
     private fun checkAndHandleCrashEvent(data: VehicleDataRecord) {
         if (data.eventInformation == EventInformation.NEAR_CRASH) {
-            handleNearCrashEvent(data)
+            notifyManufacturer(data, null)
         } else if (data.eventInformation == EventInformation.CRASH) {
             handleCrashEvent(data)
         }
@@ -52,43 +52,16 @@ class VehicleDataRecordProcessor(
     private fun handleCrashEvent(data: VehicleDataRecord) {
         val accident = accidentRepository.save(data.toDefaultLiveAccident()).block()
         if (accident?.id != null) {
-            notifyManufacturer(data, accident.id)
-            notifyEmergencyService(data, accident.id)
             val vehicles = vehicleLocationService.findVehiclesInRadius(data.sensorInformation.location).block()!!
-            notifyVehicles(data, accident.id, vehicles.first, vehicles.second)
+            notifyManufacturer(data, accident.id)
+            notifier.notifyEmergencyService(data, accident.id)
+            notifier.notifyVehiclesOfNewAccident(data, accident.id, ConcernedVehicles(vehicles.first, vehicles.second))
         }
-    }
-
-    private fun handleNearCrashEvent(data: VehicleDataRecord) {
-        notifyManufacturer(data, null)
     }
 
     private fun notifyManufacturer(data: VehicleDataRecord, accidentId: String?) {
         val manufacturerId = retrieveManufacturerIdOfVehicle(data)
-        val notification = data.toManufacturerNotification(manufacturerId, accidentId)
-        sender.sendMessage(notification, "notifications.manufacturer")
-    }
-
-    private fun notifyEmergencyService(data: VehicleDataRecord, accidentId: String) {
-        val notification = data.toEmergencyServiceNotification(accidentId)
-        sender.sendMessage(notification, "notifications.ems")
-    }
-
-    private fun notifyVehicles(
-        data: VehicleDataRecord,
-        accidentId: String,
-        nearVehiclesList: List<String>,
-        farVehiclesList: List<String>
-    ) {
-        val notification = data.toVehicleNotification(
-            accidentId,
-            EmergencyServiceStatus.UNKNOWN,
-            nearVehiclesList,
-            farVehiclesList,
-            true,
-            10.0
-        )
-        sender.sendMessage(notification, "notifications.vehicle")
+        notifier.notifyManufacturer(data, accidentId, manufacturerId)
     }
 
     private fun retrieveManufacturerIdOfVehicle(data: VehicleDataRecord): String {

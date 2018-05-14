@@ -183,6 +183,11 @@ data class AccidentReport(
     val durationOfSiteClearingInMillis: Long
 )
 
+data class ConcernedVehicles(
+    val concernedFarAwayVehicles: List<String>,
+    val concernedNearByVehicles: List<String>
+)
+
 fun VehicleDataRecord.toManufacturerNotification(
     manufacturerId: String,
     accidentId: String?

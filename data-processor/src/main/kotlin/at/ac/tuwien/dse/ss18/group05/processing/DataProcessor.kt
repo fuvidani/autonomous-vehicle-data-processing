@@ -1,6 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.processing
 
-import at.ac.tuwien.dse.ss18.group05.messaging.sender.Sender
+import at.ac.tuwien.dse.ss18.group05.messaging.notification.INotifier
 import at.ac.tuwien.dse.ss18.group05.repository.LiveAccidentRepository
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleLocationService
 import java.util.logging.Logger
@@ -17,7 +17,7 @@ import java.util.logging.Logger
 abstract class DataProcessor<in T>(
     protected val vehicleLocationService: IVehicleLocationService,
     protected val accidentRepository: LiveAccidentRepository,
-    protected val sender: Sender
+    protected val notifier: INotifier
 ) {
 
     protected val log: Logger = Logger.getLogger(this.javaClass.name)
