@@ -5,7 +5,6 @@ import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleNotification
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleNotificationService
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 
@@ -29,7 +28,7 @@ class VehicleNotificationController(private val vehicleNotificationService: IVeh
     @GetMapping("/vehicle/{id}")
     fun getNotifications(@PathVariable("id") vehicleId: String): Flux<VehicleNotification> {
         return vehicleNotificationService
-                .getNotificationForVehicle(vehicleId)
+                .getStreamForVehicle(vehicleId)
                 .startWith(pingNotification)
     }
 }

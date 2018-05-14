@@ -19,7 +19,7 @@ import reactor.core.publisher.Flux
 
 @Repository
 interface VehicleNotificationRepository : ReactiveCrudRepository<VehicleNotification, String> {
-    fun findByvehicleIdentificationNumber(id: String): Flux<VehicleNotification>
+    fun findByVehicleIdentificationNumber(id: String): Flux<VehicleNotification>
 }
 
 @Repository

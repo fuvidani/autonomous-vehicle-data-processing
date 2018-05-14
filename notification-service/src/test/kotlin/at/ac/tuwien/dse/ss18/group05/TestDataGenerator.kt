@@ -50,19 +50,19 @@ class TestDataGenerator {
     }
 
     fun getVehicleAFirstNotification(): VehicleNotification {
-        return VehicleNotification(id = "first_id", vehicleIdentificationNumber = firstVehicleId, accidentId = "", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
+        return VehicleNotification(id = null, vehicleIdentificationNumber = firstVehicleId, accidentId = "acc_id", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
     }
 
     fun getVehicleASecondNotification(): VehicleNotification {
-        return VehicleNotification(id = "second_id", vehicleIdentificationNumber = firstVehicleId, accidentId = "first_accident", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.ARRIVED, specialWarning = true, targetSpeed = 30.0)
+        return VehicleNotification(id = null, vehicleIdentificationNumber = firstVehicleId, accidentId = "first_accident", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.ARRIVED, specialWarning = true, targetSpeed = 30.0)
     }
 
     fun getVehicleBFirstNotification(): VehicleNotification {
-        return VehicleNotification(id = "third_id", vehicleIdentificationNumber = secondVehicleId, accidentId = "", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
+        return VehicleNotification(id = null, vehicleIdentificationNumber = secondVehicleId, accidentId = "acc_id", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
     }
 
     fun getVehicleBSecondNotification(): VehicleNotification {
-        return VehicleNotification(id = "fourth_id", vehicleIdentificationNumber = secondVehicleId, accidentId = "second_accident", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.ARRIVED, specialWarning = true, targetSpeed = 30.0)
+        return VehicleNotification(id = null, vehicleIdentificationNumber = secondVehicleId, accidentId = "second_accident", timestamp = getTimeStamp(), location = accidentLocation, emergencyServiceStatus = EmergencyServiceStatus.ARRIVED, specialWarning = true, targetSpeed = 30.0)
     }
 
     fun getAllVehicleNotifications(): Array<VehicleNotification> {
@@ -75,6 +75,6 @@ class TestDataGenerator {
     }
 
     private fun getTimeStamp(): Long {
-        return 1525369739L
+        return 1L
     }
 }

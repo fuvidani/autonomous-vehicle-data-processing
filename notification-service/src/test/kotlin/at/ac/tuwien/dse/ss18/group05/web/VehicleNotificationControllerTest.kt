@@ -6,13 +6,16 @@ import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleNotification
+import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleNotificationService
 import at.ac.tuwien.dse.ss18.group05.service.VehicleNotificationService
+import com.google.gson.Gson
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -42,9 +45,13 @@ class VehicleNotificationControllerTest {
     private lateinit var rabbitAdmin: RabbitAdmin
 
 
+
     @Rule
     @JvmField
     final val restDocumentation = JUnitRestDocumentation()
+
+    @Autowired
+    private lateinit var receiver: Receiver<VehicleNotification>
 
     @Autowired
     private lateinit var repository: VehicleNotificationRepository
@@ -55,6 +62,8 @@ class VehicleNotificationControllerTest {
     @Autowired
     private lateinit var template: MongoTemplate
 
+    private val gson = Gson()
+
     private val generator = TestDataGenerator()
     private lateinit var client: WebTestClient
     private lateinit var service: IVehicleNotificationService
@@ -63,7 +72,7 @@ class VehicleNotificationControllerTest {
     @Before
     fun setUp() {
 
-        service = VehicleNotificationService(repository)
+        service = VehicleNotificationService(receiver, repository)
         client = WebTestClient.bindToController(vehicleNotificationController)
                 .configureClient()
                 .baseUrl("http://notification-service.com/notifications")
@@ -91,24 +100,19 @@ class VehicleNotificationControllerTest {
                 .returnResult(VehicleNotification::class.java)
 
         val incomingVehicleNotification = IncomingVehicleNotification(
-                concernedNearByVehicles = arrayOf(vehicleId), concernedFarAwayVehicles = arrayOf(vehicleId), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
+                concernedNearByVehicles = arrayOf(vehicleId), concernedFarAwayVehicles = emptyArray(), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
         )
 
         StepVerifier.create(stream.responseBody)
                 .expectSubscription()
                 .then {
                     Flux.fromIterable(listOf(incomingVehicleNotification))
-                            .delaySubscription(Duration.ofSeconds(2))
-                            .delayElements(Duration.ofSeconds(3))
-                            .doOnNext {  service.handleIncomingVehicleNotification(it)}
-                            .doOnComplete { service.closeStream() }
-                            .subscribe()
-                            //.subscribe { service.handleIncomingVehicleNotification(it) }
+                            .delayElements(Duration.ofSeconds(2))
+                            .subscribe { receiver.receiveMessage(gson.toJson(it)) }
                 }
                 .expectNext(pingNotification)
                 .expectNextCount(1)
-                .expectNoEvent(Duration.ofSeconds(2))
-                .expectComplete()
+                .thenCancel()
                 .verify()
 
     }
