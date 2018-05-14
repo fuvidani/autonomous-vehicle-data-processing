@@ -37,8 +37,8 @@ data class IncomingVehicleNotification(
     val timestamp: Long,
     val location: GpsLocation,
     val emergencyServiceStatus: EmergencyServiceStatus,
-    val specialWarning: Boolean?,
-    val targetSpeed: Double?
+    var specialWarning: Boolean?,
+    var targetSpeed: Double?
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

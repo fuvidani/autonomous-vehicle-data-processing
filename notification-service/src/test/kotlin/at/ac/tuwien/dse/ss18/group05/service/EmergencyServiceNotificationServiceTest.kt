@@ -18,15 +18,6 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
 import reactor.test.StepVerifier
 
-/**
- * <h4>About this class</h4>
- *
- * <p>Description</p>
- *
- * @author Daniel Fuevesi
- * @version 1.0.0
- * @since 1.0.0
- */
 @RunWith(SpringRunner::class)
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class EmergencyServiceNotificationServiceTest {

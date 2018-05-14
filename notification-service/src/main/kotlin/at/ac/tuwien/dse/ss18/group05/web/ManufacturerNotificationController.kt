@@ -25,7 +25,7 @@ class ManufacturerNotificationController(private val service: IManufacturerNotif
 
     private val pingNotification = ManufacturerNotification(id = "", timeStamp = 0L, accidentId = "", vehicleIdentificationNumber = "", manufacturerId = "", model = "", location = GpsLocation(0.0, 0.0), eventInfo = EventInformation.NONE)
 
-    @GetMapping(produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE])
+    @GetMapping
     fun getNotifications(@PathVariable("id") vehicleId: String): Flux<ManufacturerNotification> {
         return service
                 .streamManufacturerNotifications()

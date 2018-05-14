@@ -6,6 +6,7 @@ import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
 import at.ac.tuwien.dse.ss18.group05.service.IEmergencyServiceNotificationService
 import at.ac.tuwien.dse.ss18.group05.service.IManufacturerNotificationService
 import at.ac.tuwien.dse.ss18.group05.service.IVehicleNotificationService
+import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 
@@ -20,27 +21,30 @@ import org.springframework.stereotype.Component
  */
 
 @Component
-class VehicleNotificationReceiver(private val service: IVehicleNotificationService) {
+class VehicleNotificationReceiver(private val service: IVehicleNotificationService, private val gson: Gson) {
 
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
-    fun receiveNotification(notification: IncomingVehicleNotification) {
+    fun receiveNotification(message: String) {
+        val notification = gson.fromJson(message, IncomingVehicleNotification::class.java)
         service.handleIncomingVehicleNotification(notification)
     }
 }
 
 @Component
-class EmsNotificationReceiver(private val service: IEmergencyServiceNotificationService) {
+class EmsNotificationReceiver(private val service: IEmergencyServiceNotificationService, private val gson: Gson) {
 
     @RabbitListener(queues = ["#{emsQueue.name}"])
-    fun receiveNotification(notification: EmergencyServiceNotification) {
+    fun receiveNotification(message: String) {
+        val notification = gson.fromJson(message, EmergencyServiceNotification::class.java)
         service.handleEmsNotification(notification)
     }
 }
 
 @Component
-class ManufacturerNotifictionReceiver(private val service: IManufacturerNotificationService) {
+class ManufacturerNotifictionReceiver(private val service: IManufacturerNotificationService, private val gson: Gson) {
     @RabbitListener(queues = ["#{manufacturerQueue.name}"])
-    fun receiveNotification(notification: ManufacturerNotification) {
+    fun receiveNotification(message: String) {
+        val notification = gson.fromJson(message, ManufacturerNotification::class.java)
         service.handleManufacturerNotification(notification)
     }
 }

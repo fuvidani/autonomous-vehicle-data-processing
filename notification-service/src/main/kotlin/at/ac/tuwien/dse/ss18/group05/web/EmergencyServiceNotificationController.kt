@@ -26,12 +26,12 @@ class EmergencyServiceNotificationController(private val service: IEmergencyServ
 
     private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0)
 
-    @GetMapping(produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE])
+    @GetMapping
     fun getNotifications(): Flux<EmergencyServiceNotification> {
         return service.streamEmsNotifications().startWith(pingNotification)
     }
 
-    @GetMapping("findAll", produces = [MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_STREAM_JSON_VALUE])
+    @GetMapping("findAll")
     fun findAllNotifications(): Flux<EmergencyServiceNotification> {
         return service.findAll()
     }

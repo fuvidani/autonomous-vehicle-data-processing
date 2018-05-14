@@ -24,6 +24,8 @@ interface IVehicleNotificationService {
     fun getNotificationForVehicle(id: String): Flux<VehicleNotification>
 
     fun findAllNotificationsForVehicle(id: String): Flux<VehicleNotification>
+
+    fun closeStream()
 }
 
 @Service
@@ -35,6 +37,10 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
             .name("vehicle_notification_topic")
             .build()
 
+    override fun closeStream() {
+        processor.onComplete()
+    }
+
     override fun findAllNotificationsForVehicle(id: String): Flux<VehicleNotification> {
         return repository.findByvehicleIdentificationNumber(id)
     }
@@ -44,18 +50,30 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
     }
 
     override fun handleIncomingVehicleNotification(incomingVehicleNotification: IncomingVehicleNotification) {
-        saveAllNotifications(incomingVehicleNotification)
-        streamAllNotifications(incomingVehicleNotification)
+        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
+        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
+
+        handleFieldsForFarAwayVehicles(incomingVehicleNotification)
+        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
+        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
+
     }
 
     private fun streamAllNotifications(incomingVehicleNotification: IncomingVehicleNotification) {
-        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
         streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
+        handleFieldsForFarAwayVehicles(incomingVehicleNotification)
+        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
     }
 
     private fun saveAllNotifications(incomingVehicleNotification: IncomingVehicleNotification) {
-        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
         saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
+        handleFieldsForFarAwayVehicles(incomingVehicleNotification)
+        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
+    }
+
+    private fun handleFieldsForFarAwayVehicles(incomingVehicleNotification: IncomingVehicleNotification){
+        incomingVehicleNotification.targetSpeed = null
+        incomingVehicleNotification.specialWarning = null
     }
 
     private fun saveNotifications(incomingVehicleNotification: IncomingVehicleNotification, ids: Array<String>) {
@@ -72,7 +90,7 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
     private fun streamNotifications(incomingVehicleNotification: IncomingVehicleNotification, ids: Array<String>) {
         ids.forEach {
             val vehicleNotification = mapIncomingNotificationToVehicle(it, incomingVehicleNotification)
-            streamNotification(vehicleNotification)
+               streamNotification(vehicleNotification)
         }
     }
 
