@@ -14,6 +14,7 @@ import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Metrics
 import org.springframework.data.geo.Point
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType
 import org.springframework.data.mongodb.core.index.GeospatialIndex
 import org.springframework.test.context.junit4.SpringRunner
@@ -107,6 +108,33 @@ class VehicleLocationRepositoryTest {
             .expectNext(TestDataProvider.getTestVehicleLocation0())
             .expectNext(TestDataProvider.getTestVehicleLocation1())
             .expectNext(TestDataProvider.getTestVehicleLocation2())
+            .expectComplete()
+            .verify()
+    }
+
+    @Test
+    fun testLocationUpdateShouldUpdateLocationCorrectly() {
+        insertTestVehicleLocations()
+        val location = TestDataProvider.getTestVehicleLocation0()
+        val expectedUpdatedLocation = VehicleLocation(
+            location.vehicleIdentificationNumber,
+            GeoJsonPoint(16.3732133, 48.2089816)
+        )
+        StepVerifier.create(repository.findById(location.vehicleIdentificationNumber))
+            .expectSubscription()
+            .expectNext(location)
+            .expectComplete()
+            .verify()
+
+        StepVerifier.create(repository.save(expectedUpdatedLocation))
+            .expectSubscription()
+            .expectNext(expectedUpdatedLocation)
+            .expectComplete()
+            .verify()
+
+        StepVerifier.create(repository.findById(expectedUpdatedLocation.vehicleIdentificationNumber))
+            .expectSubscription()
+            .expectNext(expectedUpdatedLocation)
             .expectComplete()
             .verify()
     }

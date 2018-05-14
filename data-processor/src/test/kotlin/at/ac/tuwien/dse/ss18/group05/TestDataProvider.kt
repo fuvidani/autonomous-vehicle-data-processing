@@ -93,6 +93,20 @@ class TestDataProvider {
             )
         }
 
+        fun testVehicleDataRecordCrashTesla(): VehicleDataRecord {
+            return VehicleDataRecord(
+                null, 1526135842408,
+                MetaData("4T4BE46K19R123050", "Tesla Model X"),
+                SensorInformation(
+                    GpsLocation(0.0, 0.0),
+                    ProximityInformation(0.0, 0.0),
+                    4,
+                    50.0
+                ),
+                EventInformation.CRASH
+            )
+        }
+
         fun testEmergencyServiceMessageArrived(): EmergencyServiceMessage {
             return EmergencyServiceMessage(1526135842408, "onGoingAccident", EmergencyServiceStatus.ARRIVED)
         }
