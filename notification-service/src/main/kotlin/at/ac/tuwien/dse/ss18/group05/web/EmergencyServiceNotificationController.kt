@@ -3,7 +3,6 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.service.IEmergencyServiceNotificationService
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -31,8 +30,8 @@ class EmergencyServiceNotificationController(private val service: IEmergencyServ
         return service.streamEmsNotifications().startWith(pingNotification)
     }
 
-    @GetMapping("findAll")
+    @GetMapping("findAllHistoryNotifications")
     fun findAllNotifications(): Flux<EmergencyServiceNotification> {
-        return service.findAll()
+        return service.findAllHistoryNotifications()
     }
 }

@@ -1,9 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.service
 
 import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
-import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
-import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
-import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleNotification
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
@@ -30,7 +27,6 @@ class VehicleNotificationServiceTest {
 
     @MockBean
     private lateinit var repository: VehicleNotificationRepository
-
 
     @Before
     fun setUp() {
@@ -75,5 +71,4 @@ class VehicleNotificationServiceTest {
                 .expectComplete()
                 .verify()
     }
-
 }

@@ -5,7 +5,6 @@ import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
 import at.ac.tuwien.dse.ss18.group05.service.IManufacturerNotificationService
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 
@@ -32,8 +31,8 @@ class ManufacturerNotificationController(private val service: IManufacturerNotif
                 .startWith(pingNotification)
     }
 
-    @GetMapping("findAll")
+    @GetMapping("findAllHistoryNotifications")
     fun findAllManufacturerNotifications(@PathVariable("id") manufacturerId: String): Flux<ManufacturerNotification> {
-        return service.findAllForManufacturer(manufacturerId)
+        return service.findAllHistoryNotifications(manufacturerId)
     }
 }

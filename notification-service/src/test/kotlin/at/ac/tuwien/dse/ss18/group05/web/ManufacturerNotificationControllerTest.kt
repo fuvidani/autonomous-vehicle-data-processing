@@ -2,14 +2,13 @@ package at.ac.tuwien.dse.ss18.group05.web
 
 import at.ac.tuwien.dse.ss18.group05.NotificationServiceTestApplication
 import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
-import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
+import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
-import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification
-import at.ac.tuwien.dse.ss18.group05.dto.VehicleNotification
+import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
-import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
-import at.ac.tuwien.dse.ss18.group05.service.IVehicleNotificationService
-import at.ac.tuwien.dse.ss18.group05.service.VehicleNotificationService
+import at.ac.tuwien.dse.ss18.group05.repository.ManufacturerNotificationRepository
+import at.ac.tuwien.dse.ss18.group05.service.IManufacturerNotificationService
+import at.ac.tuwien.dse.ss18.group05.service.ManufacturerNotificationService
 import com.google.gson.Gson
 import org.junit.Before
 import org.junit.Rule
@@ -30,9 +29,9 @@ import java.time.Duration
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
-class VehicleNotificationControllerTest {
+class ManufacturerNotificationControllerTest {
 
-    private val pingNotification = VehicleNotification(id = "", vehicleIdentificationNumber = "", accidentId = "", timestamp = 0L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
+    private val pingNotification = ManufacturerNotification(id = "", timeStamp = 0L, accidentId = "", vehicleIdentificationNumber = "", manufacturerId = "", model = "", location = GpsLocation(0.0, 0.0), eventInfo = EventInformation.NONE)
 
     @Suppress("unused")
     @MockBean
@@ -43,13 +42,13 @@ class VehicleNotificationControllerTest {
     final val restDocumentation = JUnitRestDocumentation()
 
     @Autowired
-    private lateinit var receiver: Receiver<VehicleNotification>
+    private lateinit var repository: ManufacturerNotificationRepository
 
     @Autowired
-    private lateinit var repository: VehicleNotificationRepository
+    private lateinit var receiver: Receiver<ManufacturerNotification>
 
     @Autowired
-    private lateinit var vehicleNotificationController: VehicleNotificationController
+    private lateinit var controller: ManufacturerNotificationController
 
     @Autowired
     private lateinit var template: MongoTemplate
@@ -57,47 +56,43 @@ class VehicleNotificationControllerTest {
     private val gson = Gson()
     private val generator = TestDataGenerator()
     private lateinit var client: WebTestClient
-    private lateinit var service: IVehicleNotificationService
+    private lateinit var service: IManufacturerNotificationService
 
     @Before
     fun setUp() {
-
-        service = VehicleNotificationService(receiver, repository)
-        client = WebTestClient.bindToController(vehicleNotificationController)
+        service = ManufacturerNotificationService(receiver, repository)
+        client = WebTestClient.bindToController(controller)
                 .configureClient()
-                .baseUrl("http://notification-service.com/notifications")
+                .baseUrl("http://notification-service.com/notifications/manufacturer")
                 .build()
 
-        template.dropCollection(VehicleNotification::class.java)
-        val notifications = generator.getAllVehicleNotifications()
+        template.dropCollection(ManufacturerNotification::class.java)
+        val notifications = generator.getAllManufacturerNotifications()
         notifications.forEach {
             template.insert(it)
         }
     }
 
     @Test
-    fun getNotifications_gettingFluxStreamForVehicle_shouldReturnFluxAndNotifications() {
-        val vehicleId = generator.getAllVehicleNotifications()[0].vehicleIdentificationNumber
+    fun getNotifications_gettingFluxStreamForEMS_shouldReturnFluxAndNotifications() {
+        val notifications = generator.getAllManufacturerNotifications()
+        val manufacturerId = notifications[0].manufacturerId
 
-        val stream = client.get().uri("/vehicle/{vehicleId}", vehicleId)
+        val stream = client.get().uri("/{id}", manufacturerId)
                 .accept(MediaType.APPLICATION_STREAM_JSON)
                 .exchange()
                 .expectStatus().isOk
-                .returnResult(VehicleNotification::class.java)
-
-        val incomingVehicleNotification = IncomingVehicleNotification(
-                concernedNearByVehicles = arrayOf(vehicleId), concernedFarAwayVehicles = emptyArray(), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
-        )
+                .returnResult(ManufacturerNotification::class.java)
 
         StepVerifier.create(stream.responseBody)
                 .expectSubscription()
                 .then {
-                    Flux.fromIterable(listOf(incomingVehicleNotification))
+                    Flux.fromArray(notifications)
                             .delayElements(Duration.ofSeconds(2))
                             .subscribe { receiver.receiveMessage(gson.toJson(it)) }
                 }
                 .expectNext(pingNotification)
-                .expectNextCount(1)
+                .expectNextCount(2)
                 .thenCancel()
                 .verify()
     }

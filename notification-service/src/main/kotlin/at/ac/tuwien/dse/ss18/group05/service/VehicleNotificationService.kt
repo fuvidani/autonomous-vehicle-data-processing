@@ -26,11 +26,11 @@ interface IVehicleNotificationService {
 
 @Service
 class VehicleNotificationService(
-        private val vehicleNotificationReceiver: Receiver<VehicleNotification>,
-        private val repository: VehicleNotificationRepository) : IVehicleNotificationService {
+    private val vehicleNotificationReceiver: Receiver<VehicleNotification>,
+    private val repository: VehicleNotificationRepository
+) : IVehicleNotificationService {
 
     private val log = Logger.getLogger(this.javaClass.name)
-
 
     override fun findHistoryNotificationsForVehicle(id: String): Flux<VehicleNotification> {
         log.info("finding history notifications for vehicle with id $id")
