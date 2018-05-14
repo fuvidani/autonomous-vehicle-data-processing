@@ -17,10 +17,10 @@ And run:
 
 Additionally, you can test the connection to the different databases through
 the mongo shell:
-- `mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u 'vehicleService' -p 'vehicleDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/trackerDatabase -u 'trackerService' -p 'trackerDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u 'statisticsService' -p 'statisticsDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/notificationDatabase -u 'notificationService' -p 'notificationDatabasePassword'`
+- `mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u "vehicleService" -p "vehicleDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/trackerDatabase -u "trackerService" -p "trackerDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u "statisticsService" -p "statisticsDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/notificationDatabase -u "notificationService" -p "notificationDatabasePassword"`
 
 ### Start RabbitMQ (Docker)
 `docker run -p 5672:5672 -p 15672:15672 --hostname localhost rabbitmq:3-management` (change `localhost` accordingly)
