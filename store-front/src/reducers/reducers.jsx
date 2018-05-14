@@ -1,8 +1,8 @@
 import {combineReducers} from "redux";
 
-import ServerEventReducer from "./ServerEventReducer";
 import ManufacturerReducer from "./ManufacturerReducer";
+import AuthorityReducer from "./AuthorityReducer";
 
 export default combineReducers({
-    ServerEventReducer, ManufacturerReducer
+    AuthorityReducer, ManufacturerReducer
 });

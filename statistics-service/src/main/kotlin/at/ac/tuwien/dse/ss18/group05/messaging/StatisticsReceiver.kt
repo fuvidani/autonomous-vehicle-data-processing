@@ -1,6 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
-import at.ac.tuwien.dse.ss18.group05.dto.Statistics
+import at.ac.tuwien.dse.ss18.group05.dto.AccidentReport
 import at.ac.tuwien.dse.ss18.group05.service.StatisticsService
 import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitListener
@@ -27,8 +27,8 @@ class StatisticsReceiver(
     @RabbitListener(queues = ["#{statisticsQueue.name}"])
     override fun receiveMessage(message: String) {
         log.info("New statistics arrived")
-        val statistics = gson.fromJson<Statistics>(message, Statistics::class.java)
-        log.info(statistics.toString())
-        statisticsService.create(statistics).subscribe()
+        val report = gson.fromJson<AccidentReport>(message, AccidentReport::class.java)
+        log.info(report.toString())
+        statisticsService.create(report).subscribe()
     }
 }

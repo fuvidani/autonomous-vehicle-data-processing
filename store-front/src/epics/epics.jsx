@@ -15,30 +15,14 @@ const fromEventSource = (url, event) => {
     });
 };
 
-const fetchStatisticsEpic = action$ =>
-    action$.ofType('FETCH_STATISTICS')
+const fetchAccidentReportsEpic = action$ =>
+    action$.ofType('FETCH_ACCIDENT_REPORTS')
         .mergeMap(() =>
             fromEventSource('http://localhost:8000/statistics/accidents', 'message')
-                .map(response => ({type: 'STATISTICS_EVENT', payload: JSON.parse(response.data)}))
-                .takeUntil(action$.ofType('CANCEL_STATISTICS'))
-        );
-
-const fetchServerEventsEpic = action$ =>
-    action$.ofType('FETCH_SERVER_EVENTS')
-        .mergeMap(() =>
-            fromEventSource('http://localhost:8080/randomNumbers', 'random')
-                .map(response => ({type: 'RANDOM_NUMBER_EVENT', payload: response.data}))
-                .takeUntil(action$.ofType('CANCEL_SERVER_EVENTS'))
-        );
-
-const fetchNotificationEpic = action$ =>
-    action$.ofType('FETCH_NOTIFICATIONS')
-        .mergeMap(() =>
-            fromEventSource('http://localhost:7000/notifications/vehicle1', 'message')
-                .map(response => ({type: 'NOTIFICATION_EVENT', payload: JSON.parse(response.data).message}))
-                .takeUntil(action$.ofType('CANCEL_NOTIFICATIONS'))
+                .map(response => ({type: 'ACCIDENT_REPORT_FETCHED', payload: JSON.parse(response.data)}))
+                .takeUntil(action$.ofType('CANCEL_ACCIDENT_REPORTS'))
         );
 
 export default combineEpics(
-    fetchServerEventsEpic, fetchNotificationEpic, fetchStatisticsEpic
+    fetchAccidentReportsEpic
 );

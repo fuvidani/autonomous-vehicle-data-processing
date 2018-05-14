@@ -1,6 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.web
 
-import at.ac.tuwien.dse.ss18.group05.dto.Statistics
+import at.ac.tuwien.dse.ss18.group05.dto.AccidentReport
 import at.ac.tuwien.dse.ss18.group05.service.ServiceException
 import at.ac.tuwien.dse.ss18.group05.service.IStatisticsService
 import org.springframework.http.HttpHeaders
@@ -29,7 +29,7 @@ import reactor.core.publisher.Flux
 class StatisticsController(private val statisticsService: IStatisticsService) {
 
     @GetMapping("/accidents")
-    fun getAllStatistics(): Flux<Statistics> {
+    fun getAllAccidentReports(): Flux<AccidentReport> {
         return statisticsService.findBy()
     }
 

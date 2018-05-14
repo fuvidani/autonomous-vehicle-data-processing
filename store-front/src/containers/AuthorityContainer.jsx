@@ -1,20 +1,20 @@
 import {connect} from "react-redux";
 import {
-    cancelStatistics,
-    fetchStatistics
+    fetchAccidentReports,
+    cancelAccidentReports
 } from "../actions/actions";
 import AuthorityComponent from "../components/AuthorityComponent";
 
 const mapStateToProps = (state) => {
     return {
-        statistics: state.ServerEventReducer.statistics
+        accidentReports: state.AuthorityReducer.accidentReports
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchStatistics: () => dispatch(fetchStatistics()),
-        cancelStatistics: () => dispatch(cancelStatistics())
+        fetchAccidentReports: () => dispatch(fetchAccidentReports()),
+        cancelAccidentReports: () => dispatch(cancelAccidentReports())
     };
 };
 

@@ -1,6 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.service
 
-import at.ac.tuwien.dse.ss18.group05.dto.Statistics
+import at.ac.tuwien.dse.ss18.group05.dto.AccidentReport
 import at.ac.tuwien.dse.ss18.group05.repository.StatisticsRepository
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
@@ -18,20 +18,20 @@ import reactor.core.publisher.Mono
 class ServiceException(message: String) : Exception(message)
 
 interface IStatisticsService {
-    fun findBy(): Flux<Statistics>
+    fun findBy(): Flux<AccidentReport>
 
-    fun create(statistics: Statistics): Mono<Statistics>
+    fun create(accidentReport: AccidentReport): Mono<AccidentReport>
 }
 
 @Service
 class StatisticsService(
     private val statisticsRepository: StatisticsRepository
 ) : IStatisticsService {
-    override fun create(statistics: Statistics): Mono<Statistics> {
-        return statisticsRepository.save(statistics)
+    override fun create(accidentReport: AccidentReport): Mono<AccidentReport> {
+        return statisticsRepository.save(accidentReport)
     }
 
-    override fun findBy(): Flux<Statistics> {
+    override fun findBy(): Flux<AccidentReport> {
         return statisticsRepository.findBy()
     }
 }

@@ -1,6 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.repository
 
-import at.ac.tuwien.dse.ss18.group05.dto.Statistics
+import at.ac.tuwien.dse.ss18.group05.dto.AccidentReport
 import org.springframework.data.mongodb.repository.Tailable
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
@@ -16,7 +16,7 @@ import reactor.core.publisher.Flux
  * @since 1.0.0
  */
 @Repository
-interface StatisticsRepository : ReactiveCrudRepository<Statistics, String> {
+interface StatisticsRepository : ReactiveCrudRepository<AccidentReport, String> {
     @Tailable
-    fun findBy(): Flux<Statistics>
+    fun findBy(): Flux<AccidentReport>
 }
