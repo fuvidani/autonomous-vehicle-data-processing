@@ -22,9 +22,6 @@ import reactor.test.StepVerifier
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class EmergencyServiceNotificationServiceTest {
 
-    @MockBean
-    private lateinit var admin: RabbitAdmin
-
     @Autowired
     private lateinit var repository: EmergencyServiceNotificationRepository
 

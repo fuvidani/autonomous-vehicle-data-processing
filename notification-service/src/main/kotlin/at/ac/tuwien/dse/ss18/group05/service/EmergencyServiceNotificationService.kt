@@ -5,6 +5,7 @@ import at.ac.tuwien.dse.ss18.group05.repository.EmergencyServiceNotificationRepo
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.util.logging.Logger
 
 interface IEmergencyServiceNotificationService {
 
@@ -17,6 +18,8 @@ interface IEmergencyServiceNotificationService {
 
 @Service
 class EmergencyServiceNotificationService(private val repository: EmergencyServiceNotificationRepository) : IEmergencyServiceNotificationService {
+
+    private val log = Logger.getLogger(this.javaClass.name)
 
     private val processor = TopicProcessor.builder<EmergencyServiceNotification>()
             .autoCancel(false)
@@ -33,15 +36,8 @@ class EmergencyServiceNotificationService(private val repository: EmergencyServi
     }
 
     override fun handleEmsNotification(emergencyServiceNotification: EmergencyServiceNotification) {
-        saveNotification(emergencyServiceNotification)
-        streamNotification(emergencyServiceNotification)
+        log.info("handling ems notification")
+        repository.save(emergencyServiceNotification).subscribe{processor.onNext(it)}
     }
 
-    private fun saveNotification(emergencyServiceNotification: EmergencyServiceNotification) {
-        repository.save(emergencyServiceNotification).subscribe()
-    }
-
-    private fun streamNotification(emergencyServiceNotification: EmergencyServiceNotification) {
-        processor.onNext(emergencyServiceNotification)
-    }
 }

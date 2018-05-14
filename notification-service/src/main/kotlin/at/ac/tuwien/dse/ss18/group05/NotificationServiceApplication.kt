@@ -35,22 +35,3 @@ class NotificationServiceApplication {
         }
     }
 }
-
-
-@Component
-class Something {
-
-    @Autowired
-    private lateinit var service: IVehicleNotificationService
-
-
-    @Scheduled(fixedDelay = 2000)
-    fun stream() {
-        val incomingVehicleNotification = IncomingVehicleNotification(
-                concernedNearByVehicles = arrayOf("id"), concernedFarAwayVehicles = emptyArray(), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
-        )
-
-        service.handleIncomingVehicleNotification(incomingVehicleNotification)
-        println("scheduled")
-    }
-}

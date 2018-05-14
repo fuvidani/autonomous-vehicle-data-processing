@@ -6,6 +6,7 @@ import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.util.logging.Logger
 
 /**
  * <h4>About this class</h4>
@@ -31,6 +32,8 @@ interface IVehicleNotificationService {
 @Service
 class VehicleNotificationService(private val repository: VehicleNotificationRepository) : IVehicleNotificationService {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     private val processor = TopicProcessor.builder<VehicleNotification>()
             .autoCancel(false)
             .share(true)
@@ -50,25 +53,11 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
     }
 
     override fun handleIncomingVehicleNotification(incomingVehicleNotification: IncomingVehicleNotification) {
-        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
-        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
-
+        log.info("handling incoming notification ${incomingVehicleNotification}")
+        handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
         handleFieldsForFarAwayVehicles(incomingVehicleNotification)
-        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
-        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
+        handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
 
-    }
-
-    private fun streamAllNotifications(incomingVehicleNotification: IncomingVehicleNotification) {
-        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
-        handleFieldsForFarAwayVehicles(incomingVehicleNotification)
-        streamNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
-    }
-
-    private fun saveAllNotifications(incomingVehicleNotification: IncomingVehicleNotification) {
-        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
-        handleFieldsForFarAwayVehicles(incomingVehicleNotification)
-        saveNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
     }
 
     private fun handleFieldsForFarAwayVehicles(incomingVehicleNotification: IncomingVehicleNotification){
@@ -76,29 +65,18 @@ class VehicleNotificationService(private val repository: VehicleNotificationRepo
         incomingVehicleNotification.specialWarning = null
     }
 
-    private fun saveNotifications(incomingVehicleNotification: IncomingVehicleNotification, ids: Array<String>) {
+    private fun handleNotifications(incomingVehicleNotification: IncomingVehicleNotification, ids: Array<String>) {
         ids.forEach {
             val vehicleNotification = mapIncomingNotificationToVehicle(it, incomingVehicleNotification)
-            saveNotification(vehicleNotification)
+            handleNotification(vehicleNotification)
         }
     }
 
-    private fun saveNotification(vehicleNotification: VehicleNotification) {
-        repository.save(vehicleNotification).subscribe()
-    }
-
-    private fun streamNotifications(incomingVehicleNotification: IncomingVehicleNotification, ids: Array<String>) {
-        ids.forEach {
-            val vehicleNotification = mapIncomingNotificationToVehicle(it, incomingVehicleNotification)
-               streamNotification(vehicleNotification)
-        }
-    }
-
-    private fun streamNotification(vehicleNotification: VehicleNotification) {
-        processor.onNext(vehicleNotification)
+    private fun handleNotification(vehicleNotification: VehicleNotification) {
+        repository.save(vehicleNotification).subscribe{processor.onNext(it)}
     }
 
     private fun mapIncomingNotificationToVehicle(id: String, incomingVehicleNotification: IncomingVehicleNotification): VehicleNotification {
-        return VehicleNotification(id, incomingVehicleNotification)
+        return VehicleNotification(vehicleId = id, incomingVehicleNotification = incomingVehicleNotification)
     }
 }

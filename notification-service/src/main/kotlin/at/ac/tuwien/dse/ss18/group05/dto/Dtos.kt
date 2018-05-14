@@ -104,12 +104,12 @@ data class VehicleNotification(
     val timestamp: Long,
     val location: GpsLocation,
     val emergencyServiceStatus: EmergencyServiceStatus,
-    val specialWarning: Boolean?,
-    val targetSpeed: Double?
+    var specialWarning: Boolean?,
+    var targetSpeed: Double?
 ) : Serializable {
-    constructor(id: String, incomingVehicleNotification: IncomingVehicleNotification) : this(
+    constructor(vehicleId: String, incomingVehicleNotification: IncomingVehicleNotification) : this(
             id = null,
-            vehicleIdentificationNumber = id,
+            vehicleIdentificationNumber = vehicleId,
             accidentId = incomingVehicleNotification.accidentId,
             timestamp = incomingVehicleNotification.timestamp,
             location = incomingVehicleNotification.location,

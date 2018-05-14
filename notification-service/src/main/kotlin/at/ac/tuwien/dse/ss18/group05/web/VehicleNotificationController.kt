@@ -20,13 +20,13 @@ import reactor.core.publisher.Flux
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/notifications/vehicle/{id}")
+@RequestMapping("/notifications")
 class VehicleNotificationController(private val vehicleNotificationService: IVehicleNotificationService) {
 
     // Needed as temporary solution because gateway might throw 504 timeout if "nothing" happens on stream
     private val pingNotification = VehicleNotification(id = "", vehicleIdentificationNumber = "", accidentId = "", timestamp = 0L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
 
-    @GetMapping
+    @GetMapping("/vehicle/{id}")
     fun getNotifications(@PathVariable("id") vehicleId: String): Flux<VehicleNotification> {
         return vehicleNotificationService
                 .getNotificationForVehicle(vehicleId)

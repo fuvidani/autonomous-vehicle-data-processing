@@ -1,6 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.service
 
-import at.ac.tuwien.dse.ss18.group05.NotificationServiceTestApplication
 import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
@@ -10,45 +9,45 @@ import at.ac.tuwien.dse.ss18.group05.repository.VehicleNotificationRepository
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.amqp.rabbit.core.RabbitAdmin
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.test.context.junit4.SpringRunner
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
+import java.time.Duration
 
 @RunWith(SpringRunner::class)
-@SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class VehicleNotificationServiceTest {
 
-    @MockBean
-    private lateinit var admin: RabbitAdmin
 
-    @Autowired
+    @MockBean
     private lateinit var repository: VehicleNotificationRepository
 
     private lateinit var service: IVehicleNotificationService
 
-    @Autowired
-    private lateinit var template: MongoTemplate
 
     private val generator = TestDataGenerator()
 
     @Before
     fun setUp() {
+
         service = VehicleNotificationService(repository)
-        template.dropCollection(VehicleNotification::class.java)
-        val notifications = generator.getAllVehicleNotifications()
-        notifications.forEach {
-            template.insert(it)
-        }
     }
 
     @Test
     fun findAll_findingAllStoredNotifications_shouldReturnInInsertionOrder() {
         val vehicleA = "first_vehicle_id"
         val vehicleB = "second_vehicle_id"
+
+        val vehicleANotifications = generator.getAllVehicleNotifications().filter { n -> n.vehicleIdentificationNumber == vehicleA }
+        val vehicleBNotifications = generator.getAllVehicleNotifications().filter { n -> n.vehicleIdentificationNumber == vehicleB }
+
+        Mockito.`when`(repository.findByvehicleIdentificationNumber(vehicleA))
+                .thenReturn(Flux.fromIterable(vehicleANotifications))
+        Mockito.`when`(repository.findByvehicleIdentificationNumber(vehicleB))
+                .thenReturn(Flux.fromIterable(vehicleBNotifications))
 
         StepVerifier
                 .create(service.findAllNotificationsForVehicle(vehicleA))
@@ -64,7 +63,7 @@ class VehicleNotificationServiceTest {
     }
 
     @Test
-    fun streamNotifications_streamingWithEmptyNotifications_shouldReturnEmpty() {
+    fun streamNotifications_streamingNotificationsForVehicles_shouldReturnExpectedNotifications() {
         val nearByVehicle = "random_id"
         val farAwayVehicle = "far_away_id"
         val nearFlux = service.getNotificationForVehicle(nearByVehicle)
@@ -73,31 +72,25 @@ class VehicleNotificationServiceTest {
         val incomingVehicleNotification = IncomingVehicleNotification(
                 concernedNearByVehicles = arrayOf(nearByVehicle), concernedFarAwayVehicles = arrayOf(farAwayVehicle), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
         )
-        val nearByNotification = VehicleNotification(nearByVehicle, incomingVehicleNotification)
+        val nearByNotification = VehicleNotification(vehicleId = nearByVehicle, incomingVehicleNotification = incomingVehicleNotification)
+        Mockito.`when`(repository.save(nearByNotification)).thenReturn(Mono.just(nearByNotification))
 
+        val farNotification = VehicleNotification(vehicleId = farAwayVehicle, incomingVehicleNotification = incomingVehicleNotification)
+        farNotification.specialWarning = null
+        farNotification.targetSpeed = null
+        Mockito.`when`(repository.save(farNotification)).thenReturn(Mono.just(farNotification))
+
+        val combined = nearFlux.mergeWith(farFlux)
 
         StepVerifier
-                .create(nearFlux)
+                .create(combined)
                 .expectSubscription()
+                .expectNoEvent(Duration.ofMillis(900))
                 .then {
                     service.handleIncomingVehicleNotification(incomingVehicleNotification)
                     service.closeStream()
                 }
                 .expectNext(nearByNotification)
-                .verifyComplete()
-
-
-        incomingVehicleNotification.targetSpeed = null
-        incomingVehicleNotification.specialWarning = null
-        val farNotification = VehicleNotification(farAwayVehicle, incomingVehicleNotification)
-
-        StepVerifier
-                .create(farFlux)
-                .expectSubscription()
-                .then {
-                    service.handleIncomingVehicleNotification(incomingVehicleNotification)
-                    service.closeStream()
-                }
                 .expectNext(farNotification)
                 .verifyComplete()
 

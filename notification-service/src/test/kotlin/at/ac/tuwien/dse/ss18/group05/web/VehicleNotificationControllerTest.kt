@@ -24,9 +24,12 @@ import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import reactor.core.publisher.TopicProcessor
 import reactor.test.StepVerifier
 import java.time.Duration
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
@@ -34,13 +37,14 @@ class VehicleNotificationControllerTest {
 
     private val pingNotification = VehicleNotification(id = "", vehicleIdentificationNumber = "", accidentId = "", timestamp = 0L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = null, targetSpeed = null)
 
+    @Suppress("unused")
+    @MockBean
+    private lateinit var rabbitAdmin: RabbitAdmin
+
 
     @Rule
     @JvmField
     final val restDocumentation = JUnitRestDocumentation()
-
-    @MockBean
-    private lateinit var admin: RabbitAdmin
 
     @Autowired
     private lateinit var repository: VehicleNotificationRepository
@@ -58,11 +62,11 @@ class VehicleNotificationControllerTest {
 
     @Before
     fun setUp() {
+
         service = VehicleNotificationService(repository)
         client = WebTestClient.bindToController(vehicleNotificationController)
                 .configureClient()
                 .baseUrl("http://notification-service.com/notifications")
-                .filter(WebTestClientRestDocumentation.documentationConfiguration(restDocumentation))
                 .build()
 
         template.dropCollection(VehicleNotification::class.java)
@@ -79,13 +83,6 @@ class VehicleNotificationControllerTest {
 
         val vehicleId = notifications[0].vehicleIdentificationNumber
 
-//        client.get().uri("/vehicle/{id}", vehicleId)
-//                .accept(MediaType.APPLICATION_STREAM_JSON)
-//                .exchange()
-//                .expectStatus().isOk
-//                .expectBody()
-
-
 
         val stream = client.get().uri("/vehicle/{vehicleId}", vehicleId)
                 .accept(MediaType.APPLICATION_STREAM_JSON)
@@ -94,22 +91,24 @@ class VehicleNotificationControllerTest {
                 .returnResult(VehicleNotification::class.java)
 
         val incomingVehicleNotification = IncomingVehicleNotification(
-                concernedNearByVehicles = arrayOf(vehicleId), concernedFarAwayVehicles = emptyArray(), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
+                concernedNearByVehicles = arrayOf(vehicleId), concernedFarAwayVehicles = arrayOf(vehicleId), accidentId = "acc_id", timestamp = 1L, location = GpsLocation(0.0, 0.0), emergencyServiceStatus = EmergencyServiceStatus.UNKNOWN, specialWarning = true, targetSpeed = 30.0
         )
-        val vehicleNotification = VehicleNotification(vehicleId, incomingVehicleNotification)
-
-
 
         StepVerifier.create(stream.responseBody)
+                .expectSubscription()
                 .then {
-                    service.handleIncomingVehicleNotification(incomingVehicleNotification)
-                    service.closeStream()
-
+                    Flux.fromIterable(listOf(incomingVehicleNotification))
+                            .delaySubscription(Duration.ofSeconds(2))
+                            .delayElements(Duration.ofSeconds(3))
+                            .doOnNext {  service.handleIncomingVehicleNotification(it)}
+                            .doOnComplete { service.closeStream() }
+                            .subscribe()
+                            //.subscribe { service.handleIncomingVehicleNotification(it) }
                 }
                 .expectNext(pingNotification)
-                .expectNext(vehicleNotification)
+                .expectNextCount(1)
                 .expectNoEvent(Duration.ofSeconds(2))
-                .thenCancel()
+                .expectComplete()
                 .verify()
 
     }

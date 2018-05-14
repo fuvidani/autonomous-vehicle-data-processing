@@ -27,8 +27,8 @@ class ManufacturerNotificationService(private val repository: ManufacturerNotifi
             .build()
 
     override fun handleManufacturerNotification(manufacturerNotification: ManufacturerNotification) {
-        saveNotification(manufacturerNotification)
-        streamNotification(manufacturerNotification)
+        repository.save(manufacturerNotification).subscribe{processor.onNext(it)}
+
     }
 
     override fun findAllForManufacturer(id: String): Flux<ManufacturerNotification> {
@@ -37,13 +37,5 @@ class ManufacturerNotificationService(private val repository: ManufacturerNotifi
 
     override fun streamManufacturerNotifications(): Flux<ManufacturerNotification> {
         return processor
-    }
-
-    private fun saveNotification(notification: ManufacturerNotification) {
-        repository.save(notification).subscribe()
-    }
-
-    private fun streamNotification(notification: ManufacturerNotification) {
-        processor.onNext(notification)
     }
 }
