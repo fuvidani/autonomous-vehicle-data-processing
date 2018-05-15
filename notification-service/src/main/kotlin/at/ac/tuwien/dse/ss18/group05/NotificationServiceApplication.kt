@@ -1,9 +1,15 @@
 package at.ac.tuwien.dse.ss18.group05
+/* ktlint-disable no-wildcard-imports */
 
+import at.ac.tuwien.dse.ss18.group05.dto.*
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.context.annotation.Bean
+import org.springframework.scheduling.annotation.EnableScheduling
+import reactor.core.publisher.TopicProcessor
+import reactor.util.concurrent.Queues
 
 /**
  * <h4>About this class</h4>
@@ -17,6 +23,7 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableCircuitBreaker
+@EnableScheduling
 class NotificationServiceApplication {
 
     companion object {
@@ -24,5 +31,35 @@ class NotificationServiceApplication {
         fun main(args: Array<String>) {
             SpringApplication.run(NotificationServiceApplication::class.java, *args)
         }
+    }
+
+    @Bean
+    fun vehicleNotificationProcessor(): TopicProcessor<VehicleNotification> {
+        return TopicProcessor.builder<VehicleNotification>()
+                .autoCancel(false)
+                .share(true)
+                .name("vehicle_notification_processor")
+                .bufferSize(Queues.SMALL_BUFFER_SIZE)
+                .build()
+    }
+
+    @Bean
+    fun emsNotificationProcessor(): TopicProcessor<EmergencyServiceNotification> {
+        return TopicProcessor.builder<EmergencyServiceNotification>()
+                .autoCancel(false)
+                .share(true)
+                .name("ems_notification_processor")
+                .bufferSize(Queues.SMALL_BUFFER_SIZE)
+                .build()
+    }
+
+    @Bean
+    fun manufacturerNotificationProcessor(): TopicProcessor<ManufacturerNotification> {
+        return TopicProcessor.builder<ManufacturerNotification>()
+                .autoCancel(false)
+                .share(true)
+                .name("manufacturer_notification_processor")
+                .bufferSize(Queues.SMALL_BUFFER_SIZE)
+                .build()
     }
 }
