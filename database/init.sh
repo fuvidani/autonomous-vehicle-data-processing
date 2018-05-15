@@ -21,6 +21,13 @@ if test -n "vehicleDB_insert_script.js"; then
 fi
 ) &
 
+(
+if test -n "statisticsDB_insert_script.js"; then
+    echo "execute insert script"
+	until mongo statisticsDatabase -u 'statisticsService' -p 'statisticsDatabasePassword' statisticsDB_insert_script.js; do sleep 5; done
+fi
+) &
+
 echo "start mongodb without auth"
 chown -R mongodb /data/db
 gosu mongodb mongod --config /mongod.conf "$@"

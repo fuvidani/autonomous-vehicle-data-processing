@@ -1,38 +1,133 @@
-= Spring REST Docs Notification Service
+= Notification Service Documentation
 DSE Group 05 - Version 1.0.0.RELEASE;
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
 
-Sample application demonstrating how to use Spring REST Docs with Spring Framework's
-WebTestClient.
+This documentation describes the the available endpoints of the Notification Service API and how to interact
+with them.
 
-`SampleWebTestClientApplicationTests` makes a call to a very simple service. Six
-snippets are produced. One showing how to make a request using cURL:
+== Live-stream vehicle notifications
 
-include::{snippets}/notifications/curl-request.adoc[]
+[NOTE]
+Endpoint: `GET /notifications/vehicle/{id}`
 
-One showing how to make a request using HTTPie:
+The API requires an existing vehicle ID in the request path for which data records will be streamed down whenever available.
+Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.
+You may invoke this endpoint with one of these headers:
 
-include::{snippets}/notifications/httpie-request.adoc[]
 
-One showing the HTTP request:
+* `text/event-stream`
+* `application/stream+json`
 
-include::{snippets}/notifications/http-request.adoc[]
+Example request for getting the stream for vehicle A using the latter header:
+include::{snippets}/notifications-vehicle-stream/http-request.adoc[]
+include::{snippets}/notifications-vehicle-stream/path-parameters.adoc[]
 
-One showing the request body:
+HTTP response:
+include::{snippets}/notifications-vehicle-stream/http-response.adoc[]
 
-include::{snippets}/notifications/request-body.adoc[]
 
-One showing the HTTP response:
+The example returns a stream of vehicle notifications. The ping data is only sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid object:
 
-include::{snippets}/notifications/http-response.adoc[]
+include::{snippets}/notifications-vehicle-stream/response-fields.adoc[]
 
-And one showing the response body:
+Important: This endpoint will never close its end, meaning it's the client's responsibility to unsubscribe from the stream if  they aren't interested anymore.
 
-include::{snippets}/notifications/response-body.adoc[]
 
-Response fields:
+== Live-stream manufacturer notifications
 
-include::{snippets}/notifications/response-fields.adoc[]
+[NOTE]
+Endpoint: `GET /notifications/manufacturer/{id}`
 
+The API requires an existing manufacturer ID in the request path for which data records will be streamed down whenever available.
+Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.
+You may invoke this endpoint with one of these headers:
+
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream for manufacturer A using the latter header:
+include::{snippets}/manufacturer-a-stream-notifications/http-request.adoc[]
+include::{snippets}/manufacturer-a-stream-notifications/path-parameters.adoc[]
+
+HTTP response:
+include::{snippets}/manufacturer-a-stream-notifications/http-response.adoc[]
+
+
+The example returns a stream of manufacturer notifications. The ping data is only sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid object:
+
+include::{snippets}/manufacturer-a-stream-notifications/response-fields.adoc[]
+
+Important: This endpoint will never close its end, meaning it's the client's responsibility to unsubscribe from the stream if  they aren't interested anymore.
+
+== History manufacturer notifications
+
+[NOTE]
+Endpoint: `GET /notifications/manufacturer/{id}/findAllHistoryNotifications`
+
+The API requires an existing manufacturer ID in the request path for which data records will searched in the database.
+You may invoke this endpoint with one of these headers:
+
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream for manufacturer A using the latter header:
+include::{snippets}/manufacturer-a-history-notifications/http-request.adoc[]
+include::{snippets}/manufacturer-a-history-notifications/path-parameters.adoc[]
+
+HTTP response:
+include::{snippets}/manufacturer-a-history-notifications/http-response.adoc[]
+
+The example returns a stream of manufacturer notifications. The ping data is only sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid object:
+
+include::{snippets}/manufacturer-a-history-notifications/response-fields.adoc[]
+
+
+== Live-stream emergency service notifications
+
+[NOTE]
+Endpoint: `GET /notifications/ems`
+
+Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.
+You may invoke this endpoint with one of these headers:
+
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream for manufacturer A using the latter header:
+include::{snippets}/ems-stream-notifications/http-request.adoc[]
+
+HTTP response:
+include::{snippets}/ems-stream-notifications/http-response.adoc[]
+
+
+The example returns a stream of manufacturer notifications. The ping data is only sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid object:
+
+include::{snippets}/ems-stream-notifications/response-fields.adoc[]
+
+Important: This endpoint will never close its end, meaning it's the client's responsibility to unsubscribe from the stream if  they aren't interested anymore.
+
+== History emergency service notifications
+
+[NOTE]
+Endpoint: `GET /notifications/ems/findAllHistoryNotifications`
+
+You may invoke this endpoint with one of these headers:
+
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream for manufacturer A using the latter header:
+include::{snippets}/ems-history-notifications/http-request.adoc[]
+
+HTTP response:
+include::{snippets}/ems-history-notifications/http-response.adoc[]
+
+The example returns a stream of emergency service notifications. The ping data is only sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid object:
+
+include::{snippets}/ems-history-notifications/response-fields.adoc[]

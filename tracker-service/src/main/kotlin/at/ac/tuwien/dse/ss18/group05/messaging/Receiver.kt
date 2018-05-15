@@ -1,6 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
-import org.springframework.stereotype.Component
+import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
+import reactor.core.publisher.Flux
 
 /**
  * <h4>About this class</h4>
@@ -14,12 +15,6 @@ import org.springframework.stereotype.Component
 interface Receiver {
 
     fun receiveMessage(message: String)
-}
 
-@Component
-class VehicleDataReceiver : Receiver {
-
-    override fun receiveMessage(message: String) {
-        println("Received <$message>")
-    }
+    fun recordStream(): Flux<VehicleDataRecord>
 }

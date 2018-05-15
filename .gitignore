@@ -81,7 +81,7 @@ classes/*
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+*/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
