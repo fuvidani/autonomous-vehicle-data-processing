@@ -11,9 +11,9 @@ const epicMiddleware = createEpicMiddleware(epics);
 
 let middleware = null;
 if (serverConfig.logging) {
-  middleware = applyMiddleware(promise(), thunk, epicMiddleware, logger);
+    middleware = applyMiddleware(promise(), thunk, epicMiddleware, logger);
 } else {
-  middleware = applyMiddleware(promise(), thunk, epicMiddleware);
+    middleware = applyMiddleware(promise(), thunk, epicMiddleware);
 }
 
 export default createStore(reducers, middleware);

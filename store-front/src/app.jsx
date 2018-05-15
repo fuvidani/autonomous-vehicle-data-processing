@@ -7,11 +7,11 @@ import Routes from "./routes";
 import store from "./store/store";
 
 const App = () => (
-  <Provider store={store}>
-    <MuiThemeProvider>
-      <Routes/>
-    </MuiThemeProvider>
-  </Provider>
+    <Provider store={store}>
+        <MuiThemeProvider>
+            <Routes/>
+        </MuiThemeProvider>
+    </Provider>
 );
 
 export default App;
