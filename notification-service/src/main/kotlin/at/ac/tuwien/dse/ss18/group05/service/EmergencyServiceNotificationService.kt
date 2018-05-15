@@ -5,6 +5,7 @@ import at.ac.tuwien.dse.ss18.group05.repository.EmergencyServiceNotificationRepo
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
+import java.util.logging.Logger
 
 interface IEmergencyServiceNotificationService {
 
@@ -19,7 +20,10 @@ class EmergencyServiceNotificationService(
     private val repository: EmergencyServiceNotificationRepository
 ) : IEmergencyServiceNotificationService {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     override fun findAllHistoryNotifications(): Flux<EmergencyServiceNotification> {
+        log.info("returning all history notifications for EMS")
         return repository.findAll()
     }
 

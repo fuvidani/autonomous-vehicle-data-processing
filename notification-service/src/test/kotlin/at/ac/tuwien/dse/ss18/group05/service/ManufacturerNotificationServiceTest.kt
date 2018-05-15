@@ -37,6 +37,7 @@ class ManufacturerNotificationServiceTest {
         Mockito.`when`(repository.findByManufacturerId(manufacturerAId)).thenReturn(Flux.fromIterable(manufacturerANotifications))
         Mockito.`when`(repository.findByManufacturerId(manufacturerBId)).thenReturn(Flux.fromIterable(manufacturerBNotifications))
         Mockito.`when`(receiver.notificationStream()).thenReturn(Flux.fromArray(generator.getAllManufacturerNotifications()))
+
         service = ManufacturerNotificationService(receiver, repository)
     }
 
@@ -59,8 +60,48 @@ class ManufacturerNotificationServiceTest {
     fun streamNotifications_streamingWithEmptyNotifications_shouldReturnEmpty() {
         Mockito.`when`(receiver.notificationStream()).thenReturn(Flux.empty())
         StepVerifier
-                .create(service.streamManufacturerNotifications())
+                .create(service.streamManufacturerNotifications(manufacturerAId))
                 .expectSubscription()
                 .verifyComplete()
+    }
+
+    @Test
+    fun streamNotifications_streamingNotificationsForManufacturers_shouldReturnExpectedNotifications() {
+        val manufacturerAFlux = service.streamManufacturerNotifications(manufacturerAId)
+        val manufacturerBFlux = service.streamManufacturerNotifications(manufacturerBId)
+        val combined = manufacturerAFlux.mergeWith(manufacturerBFlux)
+        StepVerifier
+                .create(combined)
+                .expectSubscription()
+                .expectNext(generator.getManufacturerAFirstNotification())
+                .expectNext(generator.getManufacturerASecondNotification())
+                .expectNext(generator.getManufacturerBFirstNotification())
+                .expectNext(generator.getManufacturerBSecondNotification())
+                .expectComplete()
+                .verify()
+    }
+
+    @Test
+    fun streamNotifications_streamingNotificationsForManufacturerA_shouldReturnExpectedNotifications() {
+        val manufacturerAFlux = service.streamManufacturerNotifications(manufacturerAId)
+        StepVerifier
+                .create(manufacturerAFlux)
+                .expectSubscription()
+                .expectNext(generator.getManufacturerAFirstNotification())
+                .expectNext(generator.getManufacturerASecondNotification())
+                .expectComplete()
+                .verify()
+    }
+
+    @Test
+    fun streamNotifications_streamingNotificationsForManufacturerB_shouldReturnExpectedNotifications() {
+        val manufacturerBFlux = service.streamManufacturerNotifications(manufacturerBId)
+        StepVerifier
+                .create(manufacturerBFlux)
+                .expectSubscription()
+                .expectNext(generator.getManufacturerBFirstNotification())
+                .expectNext(generator.getManufacturerBSecondNotification())
+                .expectComplete()
+                .verify()
     }
 }

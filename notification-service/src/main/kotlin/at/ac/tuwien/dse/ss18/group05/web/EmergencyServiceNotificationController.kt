@@ -30,7 +30,7 @@ class EmergencyServiceNotificationController(private val service: IEmergencyServ
         return service.streamEmsNotifications().startWith(pingNotification)
     }
 
-    @GetMapping("findAllHistoryNotifications")
+    @GetMapping("/findAllHistoryNotifications")
     fun findAllNotifications(): Flux<EmergencyServiceNotification> {
         return service.findAllHistoryNotifications()
     }

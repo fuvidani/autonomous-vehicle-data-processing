@@ -71,4 +71,28 @@ class VehicleNotificationServiceTest {
                 .expectComplete()
                 .verify()
     }
+
+    @Test
+    fun streamNotifications_streamingNotificationsForVehicleA_shouldReturnExpectedNotifications() {
+        val nearFlux = service.getStreamForVehicle(vehicleA)
+        StepVerifier
+                .create(nearFlux)
+                .expectSubscription()
+                .expectNext(generator.getVehicleAFirstNotification())
+                .expectNext(generator.getVehicleASecondNotification())
+                .expectComplete()
+                .verify()
+    }
+
+    @Test
+    fun streamNotifications_streamingNotificationsForVehicleB_shouldReturnExpectedNotifications() {
+        val farFlux = service.getStreamForVehicle(vehicleB)
+        StepVerifier
+                .create(farFlux)
+                .expectSubscription()
+                .expectNext(generator.getVehicleBFirstNotification())
+                .expectNext(generator.getVehicleBSecondNotification())
+                .expectComplete()
+                .verify()
+    }
 }

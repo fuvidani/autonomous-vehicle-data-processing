@@ -25,13 +25,13 @@ class ManufacturerNotificationController(private val service: IManufacturerNotif
     private val pingNotification = ManufacturerNotification(id = "", timeStamp = 0L, accidentId = "", vehicleIdentificationNumber = "", manufacturerId = "", model = "", location = GpsLocation(0.0, 0.0), eventInfo = EventInformation.NONE)
 
     @GetMapping
-    fun getNotifications(@PathVariable("id") vehicleId: String): Flux<ManufacturerNotification> {
+    fun getNotifications(@PathVariable("id") manufacturerId: String): Flux<ManufacturerNotification> {
         return service
-                .streamManufacturerNotifications()
+                .streamManufacturerNotifications(manufacturerId)
                 .startWith(pingNotification)
     }
 
-    @GetMapping("findAllHistoryNotifications")
+    @GetMapping("/findAllHistoryNotifications")
     fun findAllManufacturerNotifications(@PathVariable("id") manufacturerId: String): Flux<ManufacturerNotification> {
         return service.findAllHistoryNotifications(manufacturerId)
     }

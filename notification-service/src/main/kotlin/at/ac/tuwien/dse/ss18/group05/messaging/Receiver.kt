@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.util.logging.Logger
 
 /**
  * <h4>About this class</h4>
@@ -37,9 +38,12 @@ class VehicleNotificationReceiver(
     private val gson: Gson
 ) : Receiver<VehicleNotification> {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val incomingVehicleNotification = gson.fromJson(message, IncomingVehicleNotification::class.java)
+        log.info("received vehicle notification $incomingVehicleNotification")
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
         handleFieldsForFarAwayVehicles(incomingVehicleNotification)
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
@@ -69,9 +73,12 @@ class EmsNotificationReceiver(
     private val gson: Gson
 ) : Receiver<EmergencyServiceNotification> {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
         val emergencyServiceNotification = gson.fromJson(message, EmergencyServiceNotification::class.java)
+        log.info("received ems notification $emergencyServiceNotification")
         repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
     }
 
@@ -87,9 +94,12 @@ class ManufacturerNotifictionReceiver(
     private val gson: Gson
 ) : Receiver<ManufacturerNotification> {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     @RabbitListener(queues = ["#{manufacturerQueue.name}"])
     override fun receiveMessage(message: String) {
         val notification = gson.fromJson(message, ManufacturerNotification::class.java)
+        log.info("received manufacturer notification")
         repository.save(notification).subscribe { processor.onNext(it) }
     }
 

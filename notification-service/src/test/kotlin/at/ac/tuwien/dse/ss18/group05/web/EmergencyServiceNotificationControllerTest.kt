@@ -94,4 +94,20 @@ class EmergencyServiceNotificationControllerTest {
                 .thenCancel()
                 .verify()
     }
+
+    @Test
+    fun historyNotifications_requestingHistoryNotifications_shouldReturnDatabaseNotifications() {
+        val stream = client.get().uri("/findAllHistoryNotifications")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isOk
+                .returnResult(EmergencyServiceNotification::class.java)
+
+        StepVerifier.create(stream.responseBody)
+                .expectSubscription()
+                .expectNext(generator.getFirstEMSNotification())
+                .expectNext(generator.getSecondEMSNotification())
+                .thenCancel()
+                .verify()
+    }
 }

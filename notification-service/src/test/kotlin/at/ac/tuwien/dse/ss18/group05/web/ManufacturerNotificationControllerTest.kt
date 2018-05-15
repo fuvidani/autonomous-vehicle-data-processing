@@ -96,4 +96,23 @@ class ManufacturerNotificationControllerTest {
                 .thenCancel()
                 .verify()
     }
+
+    @Test
+    fun historyNotifications_requestingHistoryNotifications_shouldReturnDatabaseNotifications() {
+        val notifications = generator.getAllManufacturerNotifications()
+        val manufacturerId = notifications[0].manufacturerId
+
+        val stream = client.get().uri("/{id}/findAllHistoryNotifications", manufacturerId)
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isOk
+                .returnResult(ManufacturerNotification::class.java)
+
+        StepVerifier.create(stream.responseBody)
+                .expectSubscription()
+                .expectNext(generator.getManufacturerAFirstNotification())
+                .expectNext(generator.getManufacturerASecondNotification())
+                .thenCancel()
+                .verify()
+    }
 }
