@@ -76,3 +76,9 @@ enum class EmergencyServiceStatus {
     AREA_CLEARED,
     UNKNOWN
 }
+
+data class EmergencyServiceMessage(
+    val timestamp: Long,
+    val accidentId: String,
+    val status: EmergencyServiceStatus
+)
