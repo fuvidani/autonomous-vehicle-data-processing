@@ -3,20 +3,23 @@ package at.ac.tuwien.dse.ss18.group05.scenario
 import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.RouteRecord
 import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
-import at.ac.tuwien.dse.ss18.group05.notifications.NotificationSender
+import at.ac.tuwien.dse.ss18.group05.notifications.VehicleDataSender
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.ZonedDateTime
+import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
 @Component
 class VehicleSimulator(
     private val vehicles: List<Vehicle>,
     private val route: List<RouteRecord>,
-    private val notificationSender: NotificationSender
+    private val vehicleDataSender: VehicleDataSender
 ) {
+
+    private val log = Logger.getLogger(this.javaClass.name)
 
     private val currentVehicleLocations = mutableMapOf<Vehicle, RouteRecord>()
     private lateinit var startTime: ZonedDateTime
@@ -46,13 +49,13 @@ class VehicleSimulator(
             val speed = handleSpeed(eventInfo, vehicle)
             val dataRecordCreator = VehicleDataRecordCreator(vehicle, currentVehicleLocations, eventInfo, speed)
             val dataRecord = dataRecordCreator.createNotificationForVehicle()
-            notificationSender.sendNotification(dataRecord)
+            vehicleDataSender.sendNotification(dataRecord)
         }
     }
 
     private fun handleEventInformation(vehicle: Vehicle): EventInformation {
         val timeBetweenStartAndNow = Math.abs(Duration.between(ZonedDateTime.now(), startTime).seconds)
-        return if (!crashSimulated && timeBetweenStartAndNow > timeDelayInSecondsForEvent) {
+        return if (!crashSimulated) {
             if (vehicle.crashing) {
                 crashSimulated = true
                 EventInformation.CRASH
@@ -109,9 +112,9 @@ class VehicleSimulator(
     }
 
     fun setSpeedForVehicle(vehicleId: String, targetSpeed: Double?) {
-
+        log.info("notification received vor vehicle with id: $vehicleId and target speed: $targetSpeed")
         val vehicle = currentVehicleLocations.map { (k, _) -> k }
-                .find { vehicle -> vehicle.identificationNumber.equals(vehicleId) }
+                .find { vehicle -> vehicle.identificationNumber == vehicleId }
         if (vehicle != null && targetSpeed != null) {
             vehicle.speed = targetSpeed
         }

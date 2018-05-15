@@ -29,7 +29,7 @@ class VehicleDataRecordReceiver(
 
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
-        log.info("New vehicle data record arrived")
+        log.info("New vehicle data record arrived $message")
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
         repository.save(vehicleDataRecord).subscribe { processor.onNext(it) }
     }

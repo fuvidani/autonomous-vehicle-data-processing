@@ -9,6 +9,3 @@ spring:
       port: 5672
       username: guest
       password: guest
-  data:
-    mongodb:
-      host: 192.168.0.4

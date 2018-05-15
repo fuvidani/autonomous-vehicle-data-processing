@@ -23,7 +23,7 @@ class RabbitConfig {
 
     @Bean
     fun vehicleQueue(): Queue {
-        return Queue("vehicleQueue", false)
+        return Queue("vehicleQueueNotification", false)
     }
 
     @Bean
