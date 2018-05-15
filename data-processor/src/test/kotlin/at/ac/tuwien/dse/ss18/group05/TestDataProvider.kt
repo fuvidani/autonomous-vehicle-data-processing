@@ -79,6 +79,34 @@ class TestDataProvider {
             )
         }
 
+        fun testVehicleDataRecordTesla(): VehicleDataRecord {
+            return VehicleDataRecord(
+                null, 1526135842408,
+                MetaData("4T4BE46K19R123050", "Tesla Model X"),
+                SensorInformation(
+                    GpsLocation(0.0, 0.0),
+                    ProximityInformation(0.0, 0.0),
+                    4,
+                    50.0
+                ),
+                EventInformation.NONE
+            )
+        }
+
+        fun testVehicleDataRecordNearCrashTesla(location: GpsLocation): VehicleDataRecord {
+            return VehicleDataRecord(
+                null, 1526135842408,
+                MetaData("4T4BE46K19R123050", "Tesla Model X"),
+                SensorInformation(
+                    location,
+                    ProximityInformation(0.0, 0.0),
+                    4,
+                    50.0
+                ),
+                EventInformation.NEAR_CRASH
+            )
+        }
+
         fun testVehicleDataRecordNearCrashTesla(): VehicleDataRecord {
             return VehicleDataRecord(
                 null, 1526135842408,
