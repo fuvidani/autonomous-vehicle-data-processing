@@ -144,7 +144,7 @@ class EmergencyServiceNotificationControllerDocumentationTest {
                 .expectBody()
                 .consumeWith(
                         document(
-                                "ems-history-notifications",
+                                "ems-stream-notifications",
                                 responseFields(
                                         fieldWithPath("id")
                                                 .type(JsonFieldType.STRING)
