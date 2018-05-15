@@ -35,6 +35,11 @@ class VehicleController(private val vehicleService: IVehicleService) {
         return vehicleService.registerNewVehicle(vehicle)
     }
 
+    @GetMapping("/vehicles")
+    fun getAllVehicles(): Flux<Vehicle> {
+        return vehicleService.findAll()
+    }
+
     @ExceptionHandler(ServiceException::class)
     fun serviceExceptionHandler(ex: ServiceException): ResponseEntity<Any> {
         val headers = HttpHeaders()

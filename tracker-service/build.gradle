@@ -6,6 +6,8 @@ plugins {
 dependencies {
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.1.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.3'
     testCompile 'org.springframework.restdocs:spring-restdocs-webtestclient:2.0.1.RELEASE'
 }
@@ -15,7 +17,7 @@ ext {
 }
 
 test {
-    runWithMongoDb = false
+    runWithMongoDb = true
     outputs.dir snippetsDir
 }
 
@@ -27,4 +29,11 @@ mongo {
 asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }

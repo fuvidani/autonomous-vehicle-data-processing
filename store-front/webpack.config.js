@@ -9,7 +9,7 @@ const PORT = process.env.PORT || "8888";
 
 module.exports = {
   // disabling cache in watch mode due to SCSS reload issue - REMOVE it for production
-  //cache: false,
+  cache: false,
   mode: "production",
   entry: [
     './src/index.jsx'
