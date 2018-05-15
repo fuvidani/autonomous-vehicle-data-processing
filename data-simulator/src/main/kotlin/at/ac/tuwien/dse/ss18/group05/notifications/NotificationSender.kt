@@ -1,5 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.notifications
 
+import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceMessage
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
 import com.google.gson.Gson
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -14,5 +15,10 @@ class NotificationSender(
     fun sendNotification(notification: VehicleDataRecord) {
         val json = gson.toJson(Object())
         rabbitTemplate.convertAndSend("vehicle-data-exchange", "notifications.event", json)
+    }
+
+    fun sendEmergencyStatusUpdate(message: EmergencyServiceMessage) {
+        val json = gson.toJson(Object())
+        rabbitTemplate.convertAndSend("vehicle-data-exchange", "ems.notification", json)
     }
 }
