@@ -4,7 +4,8 @@ import {cancelVehicleTrackingStream, fetchVehicleTrackingStream} from "../action
 
 const mapStateToProps = (state) => {
     return {
-        vehicleTrackingInformation: state.ManufacturerReducer.vehicleTrackingInformation
+        vehicleTrackingInformation: state.ManufacturerReducer.vehicleTrackingInformation,
+        vehicles: state.ManufacturerReducer.vehicles
     };
 };
 
