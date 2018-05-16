@@ -19,7 +19,9 @@ export default function reducer(state = {
             name: "opel"
         }
     ],
-    vehicleTrackingInformation: {},
+    vehicleTrackingInformation: {
+        
+    },
     vehicles: {
         identificationNumber1: {
             identificationNumber: "identificationNumber1",
@@ -32,8 +34,34 @@ export default function reducer(state = {
             manufacturerId: "manufacturerId",
             model: "2012 Audi A8",
             moving: false
+        }
+    },
+    notifications: [
+        {
+            id: "notification1",
+            timeStamp: 1520474808321,
+            vehicleIdentificationNumber: "identificationNumber1",
+            model: "1972 Ford Mustang",
+            location: {
+                lat: 48.172450,
+                lon: 16.376432
+            },
+            eventInfo: "NEAR_CRASH",
+            accidentId: "accident1",
         },
-    }
+        {
+            id: "notification2",
+            timeStamp: 1526474800000,
+            vehicleIdentificationNumber: "identificationNumber2",
+            model: "2012 Audi A8",
+            location: {
+                lat: 46.172450,
+                lon: 14.376432
+            },
+            eventInfo: "CRASH",
+            accidentId: "accident1",
+        }
+    ]
 }, action) {
 
     switch (action.type) {
@@ -62,9 +90,17 @@ export default function reducer(state = {
             };
         }
 
+        case ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED: {
+            return {
+                ...state,
+                notifications: state.notifications.concat(action.payload)
+            };
+        }
+
         case ActionTypes.CLEAR_MANUFACTURER_INFORMATION: {
             state.vehicleTrackingInformation = {};
-            state.vehicles = [];
+            state.vehicles = {};
+            state.notifications = [];
 
             return {
                 ...state

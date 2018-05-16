@@ -1,18 +1,21 @@
 import {connect} from "react-redux";
 import ManufacturerComponent from "../components/manufacturer/ManufacturerComponent";
-import {cancelVehicleTrackingStream, fetchVehicleTrackingStream} from "../actions/ManufacturerActions";
+import {
+    cancelManufacturerStreams, fetchManufacturerStreams
+} from "../actions/ManufacturerActions";
 
 const mapStateToProps = (state) => {
     return {
         vehicleTrackingInformation: state.ManufacturerReducer.vehicleTrackingInformation,
-        vehicles: state.ManufacturerReducer.vehicles
+        vehicles: state.ManufacturerReducer.vehicles,
+        notifications: state.ManufacturerReducer.notifications
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchVehicleTrackingStream: () => dispatch(fetchVehicleTrackingStream()),
-        cancelVehicleTrackingStream: () => dispatch(cancelVehicleTrackingStream())
+        fetchManufacturerStreams: (manufacturerId) => dispatch(fetchManufacturerStreams(manufacturerId)),
+        cancelManufacturerStreams: () => dispatch(cancelManufacturerStreams())
     };
 };
 

@@ -3,10 +3,14 @@ import GeneralComponent from "../GeneralComponent";
 import MapComponent from "./MapComponent";
 import PlaceholderCard from "../PlaceholderCard";
 import VehicleList from "./VehicleList";
+import NotificationList from "./NotificationList";
 
 const styles = {
     cardStyles: {
         margin: "10px 0"
+    },
+    listStyles: {
+        paddingBottom: 0
     }
 };
 
@@ -20,11 +24,11 @@ export default class ManufacturerComponent extends React.Component {
     }
 
     componentWillMount() {
-        this.props.fetchVehicleTrackingStream();
+        this.props.fetchManufacturerStreams(manufacturerId);
     }
 
     componentWillUnmount() {
-        this.props.cancelVehicleTrackingStream();
+        this.props.cancelManufacturerStreams();
     }
 
     render() {
@@ -32,14 +36,13 @@ export default class ManufacturerComponent extends React.Component {
             <GeneralComponent/>
             <div className="row row-padding">
                 <div className="col-md-3">
-                    <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles}/>
+                    <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
                 </div>
                 <div className="col-md-6">
                     <MapComponent/>
                 </div>
                 <div className="col-md-3">
-                    <PlaceholderCard text="No crash event notification to show."
-                                     cardStyles={styles.cardStyles}/>
+                    <NotificationList notifications={this.props.notifications} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
                 </div>
             </div>
         </div>;

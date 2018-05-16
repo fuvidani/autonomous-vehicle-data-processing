@@ -18,7 +18,7 @@ export default function reducer(state = {
 
     switch (action.type) {
         case ActionTypes.CLEAR_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS: {
-            state.accidentReports = [];
+            state.crashEventNotifications = [];
 
             return {
                 ...state

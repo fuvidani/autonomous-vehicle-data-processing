@@ -1,8 +1,6 @@
 import * as ActionTypes from "./ActionTypes";
 
-const fetchVehicleTrackingStream = () => ({type: ActionTypes.FETCH_VEHICLE_TRACKING_STREAM});
-const cancelVehicleTrackingStream = () => ({type: ActionTypes.CANCEL_VEHICLE_TRACKING_STREAM});
-const fetchVehicleInformation = () => ({type: ActionTypes.FETCH_VEHICLE_INFORMATION});
-const cancelVehicleInformation = () => ({type: ActionTypes.CANCEL_VEHICLE_INFORMATION});
+const fetchManufacturerStreams = (manufacturerId) => ({type: ActionTypes.FETCH_MANUFACTURER_STREAMS, payload: manufacturerId});
+const cancelManufacturerStreams = () => ({type: ActionTypes.CANCEL_MANUFACTURER_STREAMS});
 
-export {fetchVehicleTrackingStream, cancelVehicleTrackingStream, fetchVehicleInformation, cancelVehicleInformation}
+export {fetchManufacturerStreams, cancelManufacturerStreams}
