@@ -38,6 +38,8 @@ class ReceiverTest {
         val report = TestDataProvider.testAccidentReport1()
         Mockito.`when`(service.create(report)).thenReturn(Mono.just(report))
 
-        // TODO test Receiver.receiveMessage()
+        receiver.receiveMessage(gson.toJson(report))
+        Mockito.verify(service).create(report)
+        Mockito.verifyZeroInteractions(service)
     }
 }
