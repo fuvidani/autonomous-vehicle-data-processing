@@ -1,9 +1,15 @@
-import {Card, CardText, CardTitle, List, ListItem} from "material-ui";
+import {Card, CardMedia, CardText, CardTitle, List, ListItem} from "material-ui";
 import React from "react";
+import StaticMapComponent from "../StaticMapComponent";
 
 const AccidentReportCard = (props) => (
     <Card style={props.cardStyles}>
-        <CardTitle title="Accident Report" subtitle={props.report.id}/>
+        <CardMedia
+            mediaStyle={{maxWidth: '100%'}} overlay={<CardTitle title="Accident Report" subtitle={props.report.id}/>}
+        >
+            <StaticMapComponent
+                markers={[{location: props.report.location.lat + "," + props.report.location.lon}]}/>
+        </CardMedia>
         <CardText>
             <List>
                 <ListItem
@@ -21,20 +27,6 @@ const AccidentReportCard = (props) => (
                 />
                 <ListItem
                     primaryText={"Model: " + props.report.vehicleMetaData.model}
-                    insetChildren={true}
-                    disabled={true}
-                />
-                <ListItem
-                    primaryText="Location:"
-                    disabled={true}
-                />
-                <ListItem
-                    primaryText={"Lat: " + props.report.location.lat}
-                    insetChildren={true}
-                    disabled={true}
-                />
-                <ListItem
-                    primaryText={"Lon: " + props.report.location.lon}
                     insetChildren={true}
                     disabled={true}
                 />

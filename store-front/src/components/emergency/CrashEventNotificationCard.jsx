@@ -1,4 +1,4 @@
-import {Card, CardActions, CardHeader, CardMedia, CardText, CardTitle, FlatButton, List, ListItem} from "material-ui";
+import {Card, CardActions, CardMedia, CardText, CardTitle, FlatButton, List, ListItem} from "material-ui";
 import React from "react";
 import StaticMapComponent from "../StaticMapComponent";
 

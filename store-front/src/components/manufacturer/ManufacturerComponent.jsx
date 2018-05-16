@@ -7,6 +7,14 @@ export default class ManufacturerComponent extends React.Component {
         super(props);
     }
 
+    componentWillMount() {
+        this.props.fetchVehicleTrackingStream();
+    }
+
+    componentWillUnmount() {
+        this.props.cancelVehicleTrackingStream();
+    }
+
     render() {
         return <div>
             <GeneralComponent/>
