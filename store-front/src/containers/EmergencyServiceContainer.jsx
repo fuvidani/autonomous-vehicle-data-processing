@@ -16,8 +16,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         fetchCrashEventNotifications: () => dispatch(fetchCrashEventNotifications()),
         cancelCrashEventNotifications: () => dispatch(cancelCrashEventNotifications()),
-        arriveToCrashEvent: (accidentId) => dispatch(arriveToCrashEvent(accidentId)),
-        clearCrashEvent: (accidentId) => dispatch(clearCrashEvent(accidentId))
+        arriveToCrashEvent: (accidentId, timestamp) => dispatch(arriveToCrashEvent(accidentId, timestamp)),
+        clearCrashEvent: (accidentId, timestamp) => dispatch(clearCrashEvent(accidentId, timestamp))
     };
 };
 

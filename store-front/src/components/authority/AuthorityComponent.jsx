@@ -28,9 +28,11 @@ export default class AuthorityComponent extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-7 col-centered">
-                        {this.props.accidentReports.length === 0 ? <PlaceholderCard text="No accident report to show." cardStyles={styles.cardStyles}/> : this.props.accidentReports.reverse().map((report, i) => <AccidentReportCard key={i}
-                                                                                                                                                                                                                                    cardStyles={styles.cardStyles}
-                                                                                                                                                                                                                                    report={report}/>
+                        {this.props.accidentReports.length === 0 ? <PlaceholderCard text="No accident report to show."
+                                                                                    cardStyles={styles.cardStyles}/> : this.props.accidentReports.reverse().map((report, i) =>
+                            <AccidentReportCard key={i}
+                                                cardStyles={styles.cardStyles}
+                                                report={report}/>
                         )}
                     </div>
                 </div>

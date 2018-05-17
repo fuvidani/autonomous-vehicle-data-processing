@@ -10,7 +10,7 @@ const VehicleList = (props) => (
                 {
                     Object.getOwnPropertyNames(props.vehicles).length === 0 ?
                         <ListItem primaryText="No vehicle to show." disabled={true}
-                                                 className="text-center"/> : Object.keys(props.vehicles).map(function (key) {
+                                  className="text-center"/> : Object.keys(props.vehicles).map(function (key) {
                             return <div key={key}>
                                 <Divider/>
                                 <ListItem

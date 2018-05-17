@@ -1,7 +1,6 @@
 import React from "react";
 import GeneralComponent from "../GeneralComponent";
 import MapComponent from "./MapComponent";
-import PlaceholderCard from "../PlaceholderCard";
 import VehicleList from "./VehicleList";
 import NotificationList from "./NotificationList";
 
@@ -36,13 +35,15 @@ export default class ManufacturerComponent extends React.Component {
             <GeneralComponent/>
             <div className="row p-0 m-0">
                 <div className="col-md-3">
-                    <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
+                    <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles}
+                                 listStyles={styles.listStyles}/>
                 </div>
                 <div className="col-md-6">
-                    <MapComponent vehicleTrackingInformation={this.props.vehicleTrackingInformation} />
+                    <MapComponent vehicleTrackingInformation={this.props.vehicleTrackingInformation}/>
                 </div>
                 <div className="col-md-3">
-                    <NotificationList notifications={this.props.notifications} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
+                    <NotificationList notifications={this.props.notifications} cardStyles={styles.cardStyles}
+                                      listStyles={styles.listStyles}/>
                 </div>
             </div>
         </div>;

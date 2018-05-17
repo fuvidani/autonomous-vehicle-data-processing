@@ -17,10 +17,19 @@ const MapComponent = compose(
 )((props) =>
     <GoogleMap
         defaultZoom={11}
-        defaultCenter={Object.getOwnPropertyNames(props.vehicleTrackingInformation).length === 0 ? {lat: 48.210033, lng: 16.363449} : {lat: props.vehicleTrackingInformation[Object.keys(props.vehicleTrackingInformation)[0]].location.lat, lng: props.vehicleTrackingInformation[Object.keys(props.vehicleTrackingInformation)[0]].location.lon}}
+        defaultCenter={Object.getOwnPropertyNames(props.vehicleTrackingInformation).length === 0 ? {
+            lat: 48.210033,
+            lng: 16.363449
+        } : {
+            lat: props.vehicleTrackingInformation[Object.keys(props.vehicleTrackingInformation)[0]].location.lat,
+            lng: props.vehicleTrackingInformation[Object.keys(props.vehicleTrackingInformation)[0]].location.lon
+        }}
     >
         {Object.keys(props.vehicleTrackingInformation).map(function (key) {
-            return <Marker key={key} position={{lat: props.vehicleTrackingInformation[key].location.lat, lng: props.vehicleTrackingInformation[key].location.lon}} icon={{url: icon}}/>;
+            return <Marker key={key} position={{
+                lat: props.vehicleTrackingInformation[key].location.lat,
+                lng: props.vehicleTrackingInformation[key].location.lon
+            }} icon={{url: icon}}/>;
         })}
     </GoogleMap>
 );

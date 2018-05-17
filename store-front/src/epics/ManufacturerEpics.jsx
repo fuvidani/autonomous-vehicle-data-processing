@@ -1,5 +1,6 @@
 import * as ActionTypes from "../actions/ActionTypes";
 import {Observable} from "rxjs/Rx";
+import {fromEventSource} from "../util/RequestHandler";
 
 const fetchManufacturerInformationEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_STREAMS)
@@ -9,6 +10,38 @@ const fetchManufacturerInformationEpic = action$ =>
                 Observable.of({type: ActionTypes.FETCH_VEHICLE_INFORMATION, payload: action.payload}),
                 Observable.of({type: ActionTypes.FETCH_MANUFACTURER_NOTIFICATIONS, payload: action.payload})
             )
+        );
+
+const fetchVehicleTrackingStreamEpic = action$ =>
+    action$.ofType(ActionTypes.FETCH_VEHICLE_TRACKING_STREAM)
+        .mergeMap((action) =>
+            fromEventSource('/tracking/manufacturer/' + action.payload, 'message')
+                .filter(response => JSON.parse(response.data).id === null || JSON.parse(response.data).id === "")
+                .map(response => ({
+                    type: ActionTypes.VEHICLE_TRACKING_INFORMATION_FETCHED,
+                    payload: JSON.parse(response.data)
+                }))
+                .takeUntil(action$.ofType(ActionTypes.CANCEL_VEHICLE_TRACKING_STREAM))
+        );
+
+const fetchVehicleInformationEpic = action$ =>
+    action$.ofType(ActionTypes.FETCH_VEHICLE_INFORMATION)
+        .mergeMap((action) =>
+            fromEventSource('/vehicle/' + action.payload + '/vehicles', 'message')
+                .map(response => ({type: ActionTypes.VEHICLE_INFORMATION_FETCHED, payload: JSON.parse(response.data)}))
+                .takeUntil(action$.ofType(ActionTypes.CANCEL_VEHICLE_INFORMATION))
+        );
+
+const fetchManufacturerNotificationsEpic = action$ =>
+    action$.ofType(ActionTypes.FETCH_MANUFACTURER_NOTIFICATIONS)
+        .mergeMap((action) =>
+            fromEventSource('/notifications/manufacturer/' + action.payload, 'message')
+                .filter(response => JSON.parse(response.data).id === null || JSON.parse(response.data).id === "")
+                .map(response => ({
+                    type: ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED,
+                    payload: JSON.parse(response.data)
+                }))
+                .takeUntil(action$.ofType(ActionTypes.CANCEL_MANUFACTURER_NOTIFICATIONS))
         );
 
 const cancelAndClearManufacturerInformationEpic = action$ =>
@@ -22,4 +55,10 @@ const cancelAndClearManufacturerInformationEpic = action$ =>
             )
         );
 
-export {cancelAndClearManufacturerInformationEpic, fetchManufacturerInformationEpic}
+export {
+    cancelAndClearManufacturerInformationEpic,
+    fetchManufacturerInformationEpic,
+    fetchVehicleTrackingStreamEpic,
+    fetchVehicleInformationEpic,
+    fetchManufacturerNotificationsEpic
+}
