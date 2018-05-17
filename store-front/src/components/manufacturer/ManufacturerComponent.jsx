@@ -34,7 +34,7 @@ export default class ManufacturerComponent extends React.Component {
     render() {
         return <div>
             <GeneralComponent/>
-            <div className="row row-padding">
+            <div className="row p-0 m-0">
                 <div className="col-md-3">
                     <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
                 </div>

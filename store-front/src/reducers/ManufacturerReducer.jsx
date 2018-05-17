@@ -20,7 +20,16 @@ export default function reducer(state = {
         }
     ],
     vehicleTrackingInformation: {
-        
+        identificationNumber1: {
+            id: "trackingInformation1",
+            timestamp: 1520474808321,
+            vehicleIdentificationNumber: "identificationNumber1",
+            model: "1972 Ford Mustang",
+            location: {
+                lat: 48.172450,
+                lon: 16.376432
+            },
+        }
     },
     vehicles: {
         identificationNumber1: {

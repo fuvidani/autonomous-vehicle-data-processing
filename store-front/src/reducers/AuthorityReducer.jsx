@@ -1,3 +1,5 @@
+import * as ActionTypes from "../actions/ActionTypes";
+
 export default function reducer(state = {
     accidentReports: [
         {
@@ -19,7 +21,7 @@ export default function reducer(state = {
 }, action) {
 
     switch (action.type) {
-        case 'CLEAR_ACCIDENT_REPORTS': {
+        case ActionTypes.CLEAR_ACCIDENT_REPORTS: {
             state.accidentReports = [];
 
             return {
@@ -27,7 +29,7 @@ export default function reducer(state = {
             };
         }
 
-        case 'ACCIDENT_REPORT_FETCHED':
+        case ActionTypes.ACCIDENT_REPORT_FETCHED:
             return {
                 ...state,
                 accidentReports: state.accidentReports.concat(action.payload)
