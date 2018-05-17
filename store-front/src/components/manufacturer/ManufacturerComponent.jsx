@@ -39,7 +39,7 @@ export default class ManufacturerComponent extends React.Component {
                     <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
                 </div>
                 <div className="col-md-6">
-                    <MapComponent/>
+                    <MapComponent vehicleTrackingInformation={this.props.vehicleTrackingInformation} />
                 </div>
                 <div className="col-md-3">
                     <NotificationList notifications={this.props.notifications} cardStyles={styles.cardStyles} listStyles={styles.listStyles} />
