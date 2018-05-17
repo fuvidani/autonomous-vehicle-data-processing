@@ -13,15 +13,15 @@ const AccidentReportCard = (props) => (
         <CardText>
             <List>
                 <ListItem
-                    primaryText={"AccidentId: " + props.report.accidentId}
+                    primaryText={"Accident: " + props.report.accidentId}
                     disabled={true}
                 />
                 <ListItem
-                    primaryText="VehicleMetaData:"
+                    primaryText="Vehicle:"
                     disabled={true}
                 />
                 <ListItem
-                    primaryText={"IdentificationNumber: " + props.report.vehicleMetaData.identificationNumber}
+                    primaryText={"ID: " + props.report.vehicleMetaData.identificationNumber}
                     insetChildren={true}
                     disabled={true}
                 />
@@ -35,11 +35,11 @@ const AccidentReportCard = (props) => (
                     disabled={true}
                 />
                 <ListItem
-                    primaryText={"EmergencyResponse: " + (props.report.emergencyResponseInMillis / 60000).toFixed(2) + " min"}
+                    primaryText={"Emergency response in " + (props.report.emergencyResponseInMillis / 60000).toFixed(2) + " min"}
                     disabled={true}
                 />
                 <ListItem
-                    primaryText={"DurationOfSiteClearing: " + (props.report.durationOfSiteClearingInMillis / 60000).toFixed(2) + " min"}
+                    primaryText={"Duration of site clearing in " + (props.report.durationOfSiteClearingInMillis / 60000).toFixed(2) + " min"}
                     disabled={true}
                 />
             </List>

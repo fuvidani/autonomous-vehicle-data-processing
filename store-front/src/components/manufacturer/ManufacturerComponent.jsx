@@ -6,7 +6,8 @@ import NotificationList from "./NotificationList";
 
 const styles = {
     cardStyles: {
-        margin: "10px 0"
+        margin: "10px 0",
+        minHeight: '500px'
     },
     listStyles: {
         paddingBottom: 0
