@@ -33,7 +33,7 @@ export default class ManufacturerComponent extends React.Component {
     }
 
     componentWillMount() {
-        // this.props.fetchManufacturerStreams(manufacturerId);
+        this.props.fetchManufacturerStreams(manufacturerId);
     }
 
     componentWillUnmount() {
