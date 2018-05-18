@@ -53,6 +53,14 @@ export default class ManufacturerComponent extends React.Component {
         });
     }
 
+    handleDialogOpen = (notification) => {
+        this.props.clickNotification(notification);
+    };
+
+    handleDialogClose = () => {
+        this.props.leaveNotification();
+    };
+
     render() {
         return <div>
             <GeneralComponent/>
@@ -70,10 +78,10 @@ export default class ManufacturerComponent extends React.Component {
                     <NotificationList notifications={this.props.notifications}
                                       cardStyles={styles.cardStyles}
                                       listStyles={styles.listStyles}
-                                      popoverState={this.state}
-                                      handleClick={this.handleClick}
-                                      handleRequestClose={this.handleRequestClose}
+                                      handleDialogOpen={this.handleDialogOpen}
+                                      handleDialogClose={this.handleDialogClose}
                                       tableStyles={styles.tableStyles}
+                                      clickedNotification={this.props.clickedNotification}
                                       notShownNotificationIds={this.state.notShownNotificationIds}
                                       handleNotificationSelectionChange={this.handleNotificationSelectionChange.bind(this)}/>
                 </div>

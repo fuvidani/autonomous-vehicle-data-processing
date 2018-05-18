@@ -82,7 +82,19 @@ export default function reducer(state = {
             eventInfo: "CRASH",
             accidentId: "accident1"
         }
-    ]
+    ],
+    clickedNotification: {
+        id: "",
+        timeStamp: 0,
+        vehicleIdentificationNumber: "",
+        model: "",
+        location: {
+            lat: 0.0,
+            lon: 0.0
+        },
+        eventInfo: "",
+        accidentId: ""
+    }
 }, action) {
 
     switch (action.type) {
@@ -128,6 +140,30 @@ export default function reducer(state = {
             };
         }
 
+        case ActionTypes.CLICK_NOTIFICATION: {
+            return {
+                ...state,
+                clickedNotification: action.payload
+            };
+        }
+
+        case ActionTypes.LEAVE_NOTIFICATION: {
+            return {
+                ...state,
+                clickedNotification: {
+                    id: "",
+                    timeStamp: 0,
+                    vehicleIdentificationNumber: "",
+                    model: "",
+                    location: {
+                        lat: 0.0,
+                        lon: 0.0
+                    },
+                    eventInfo: "",
+                    accidentId: ""
+                }
+            };
+        }
         default:
             return state;
     }

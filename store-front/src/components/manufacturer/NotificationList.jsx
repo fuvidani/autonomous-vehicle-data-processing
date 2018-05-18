@@ -11,6 +11,7 @@ import {
     TableRow, TableRowColumn
 } from "material-ui";
 import {ActionVisibility} from "material-ui/svg-icons/index.es";
+import NotificationDetailsDialog from "./NotificationDetailsDialog";
 
 const NotificationList = (props) => (
     <Card style={props.cardStyles}>
@@ -46,9 +47,10 @@ const NotificationList = (props) => (
                                     <TableRow key={i} selected={!props.notShownNotificationIds.includes(i)}>
                                         <TableRowColumn colSpan={2}>{notification.eventInfo}</TableRowColumn>
                                         <TableRowColumn colSpan={1}>
-                                            <span>
+                                            <span style={{cursor: "pointer"}} onClick={() => props.handleDialogOpen(notification)} >
                                                 <ActionVisibility/>
                                             </span>
+                                            <NotificationDetailsDialog clickedNotification={props.clickedNotification} handleDialogClose={props.handleDialogClose} />
                                         </TableRowColumn>
                                     </TableRow>
                                 ))}
