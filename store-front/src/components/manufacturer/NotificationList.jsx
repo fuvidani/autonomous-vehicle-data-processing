@@ -20,7 +20,6 @@ const NotificationList = (props) => (
                 props.notifications.length === 0 ?
                     <List style={props.listStyles}><ListItem primaryText="No notifications to show." disabled={true}
                                                              className="text-center"/></List> :
-                    <div>
                         <Table
                             height={props.tableStyles.height}
                             fixedHeader={true}
@@ -39,8 +38,8 @@ const NotificationList = (props) => (
                                 </TableRow>
                             </TableHeader>
                             <TableBody
+                                deselectOnClickaway={false}
                                 displayRowCheckbox={true}
-                                deselectOnClickaway={true}
                                 showRowHover={true}
                             >
                                 {props.notifications.map((notification, i) => (
@@ -55,8 +54,6 @@ const NotificationList = (props) => (
                                 ))}
                             </TableBody>
                         </Table>
-                    </div>
-
             }
         </CardText>
     </Card>
