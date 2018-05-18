@@ -46,7 +46,7 @@ const NotificationList = (props) => (
                                 {props.notifications.map((notification, i) => (
                                     <TableRow key={i} selected={!props.notShownNotificationIds.includes(i)}>
                                         <TableRowColumn colSpan={2}>{notification.eventInfo}</TableRowColumn>
-                                        <TableRowColumn colSpan={1}>
+                                        <TableRowColumn className="text-right" colSpan={1}>
                                             <span style={{cursor: "pointer"}} onClick={() => props.handleDialogOpen(notification)} >
                                                 <ActionVisibility/>
                                             </span>
