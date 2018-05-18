@@ -17,14 +17,14 @@ const postEmergencyServiceArrivedEpic = action$ =>
     action$.ofType(ActionTypes.ARRIVE_TO_CRASH_EVENT)
         .mergeMap((action) =>
             postRequest('/datasimulation/updatestatus', {...action.payload, status: 'ARRIVED'})
-                .map(() => ({type: ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED}))
+                .map(() => ({type: ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED, payload: action.payload}))
         );
 
 const postEmergencyServiceClearedEpic = action$ =>
     action$.ofType(ActionTypes.CLEAR_CRASH_EVENT)
         .mergeMap((action) =>
             postRequest('/datasimulation/updatestatus', {...action.payload, status: 'AREA_CLEARED'})
-                .map(() => ({type: ActionTypes.CLEAR_CRASH_EVENT_POSTED}))
+                .map(() => ({type: ActionTypes.CLEAR_CRASH_EVENT_POSTED, payload: action.payload}))
         );
 
 const clearEmergencyServiceNotifications = action$ =>

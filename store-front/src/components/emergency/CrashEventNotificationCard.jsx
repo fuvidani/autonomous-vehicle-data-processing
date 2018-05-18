@@ -23,12 +23,12 @@ const CrashEventNotificationCard = (props) => (
                 />
             </List>
         </CardText>
-        <CardActions>
-            <FlatButton primary={true} label="Arrive"
-                        onClick={() => props.arriveToCrashEvent(props.notification.accidentId, new Date().getTime())}/>
-            <FlatButton primary={true} label="Clear"
-                        onClick={() => props.clearCrashEvent(props.notification.accidentId, new Date().getTime())}/>
-        </CardActions>
+        {!props.notification.cleared && <CardActions>
+            {!props.notification.arrived && <FlatButton primary={true} label="Arrive"
+                        onClick={() => props.arriveToCrashEvent(props.notification.accidentId, new Date().getTime())}/>}
+            {props.notification.arrived && !props.notification.cleared && <FlatButton primary={true} label="Clear"
+                        onClick={() => props.clearCrashEvent(props.notification.accidentId, new Date().getTime())}/>}
+        </CardActions>}
     </Card>
 );
 

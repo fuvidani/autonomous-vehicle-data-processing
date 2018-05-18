@@ -11,7 +11,9 @@ export default function reducer(state = {
                 lon: 16.376349
             },
             model: "1972 Ford Mustang",
-            passengers: 4
+            passengers: 4,
+            arrived: false,
+            cleared: false
         }
     ]
 }, action) {
@@ -36,14 +38,26 @@ export default function reducer(state = {
             };
 
         case ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED: {
-            // TODO update notification arrived flag
+            for (let i = 0; i < state.crashEventNotifications.length; i++) {
+                if (state.crashEventNotifications[i].accidentId === action.payload) {
+                    state.crashEventNotifications[i].arrived = true;
+                    break;
+                }
+            }
+
             return {
                 ...state
             };
         }
 
         case ActionTypes.CLEAR_CRASH_EVENT_POSTED: {
-            // TODO update notification cleared flag
+            for (let i = 0; i < state.crashEventNotifications.length; i++) {
+                if (state.crashEventNotifications[i].accidentId === action.payload) {
+                    state.crashEventNotifications[i].cleared = true;
+                    break;
+                }
+            }
+
             return {
                 ...state
             };
