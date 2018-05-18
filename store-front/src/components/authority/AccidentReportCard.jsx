@@ -39,7 +39,7 @@ const AccidentReportCard = (props) => (
                     disabled={true}
                 />
                 <ListItem
-                    primaryText={"Duration of site clearing in " + (props.report.durationOfSiteClearingInMillis / 60000).toFixed(2) + " min"}
+                    primaryText={"Site clearing in " + (props.report.durationOfSiteClearingInMillis / 60000).toFixed(2) + " min"}
                     disabled={true}
                 />
             </List>

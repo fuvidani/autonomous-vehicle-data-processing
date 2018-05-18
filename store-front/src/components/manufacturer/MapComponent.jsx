@@ -9,7 +9,7 @@ const MapComponent = compose(
     withProps({
         googleMapURL: "https://maps.googleapis.com/maps/api/js?key=" + ApiKeys.GOOGLE_MAPS_API_KEY + "&v=3.exp&libraries=geometry,drawing,places",
         loadingElement: <div style={{height: `100%`}}/>,
-        containerElement: <div style={{height: `500px`, margin: `10px 0`}}/>,
+        containerElement: <div style={{height: `850px`, margin: `10px 0`}}/>,
         mapElement: <div style={{height: `100%`}}/>,
     }),
     withScriptjs,
@@ -25,12 +25,18 @@ const MapComponent = compose(
             lng: props.vehicleTrackingInformation[Object.keys(props.vehicleTrackingInformation)[0]].location.lon
         }}
     >
-        {Object.keys(props.vehicleTrackingInformation).map(function (key) {
-            return <Marker key={key} position={{
-                lat: props.vehicleTrackingInformation[key].location.lat,
-                lng: props.vehicleTrackingInformation[key].location.lon
-            }} icon={{url: icon}}/>;
-        })}
+        {
+            Object.keys(props.vehicleTrackingInformation).map(function (key) {
+                return <Marker key={key} position={{
+                    lat: props.vehicleTrackingInformation[key].location.lat,
+                    lng: props.vehicleTrackingInformation[key].location.lon
+                }} icon={{url: icon}}/>;
+            })
+        }
+        {
+            props.notifications.filter((notification, i) => !props.notShownNotificationIds.includes(i)).map((notification, i) =>
+                <Marker key={i} position={{lat: notification.location.lat, lng: notification.location.lon}} label={notification.eventInfo[0]}/>)
+        }
     </GoogleMap>
 );
 

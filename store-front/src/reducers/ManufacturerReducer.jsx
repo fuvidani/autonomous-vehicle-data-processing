@@ -28,7 +28,7 @@ export default function reducer(state = {
             location: {
                 lat: 48.172450,
                 lon: 16.376432
-            },
+            }
         }
     },
     vehicles: {
@@ -43,6 +43,18 @@ export default function reducer(state = {
             manufacturerId: "manufacturerId",
             model: "2012 Audi A8",
             moving: false
+        },
+        identificationNumber3: {
+            identificationNumber: "identificationNumber3",
+            manufacturerId: "manufacturerId",
+            model: "2020 Tesla",
+            moving: false
+        },
+        identificationNumber4: {
+            identificationNumber: "identificationNumber4",
+            manufacturerId: "manufacturerId",
+            model: "1992 BMW whatever",
+            moving: false
         }
     },
     notifications: [
@@ -52,11 +64,11 @@ export default function reducer(state = {
             vehicleIdentificationNumber: "identificationNumber1",
             model: "1972 Ford Mustang",
             location: {
-                lat: 48.172450,
-                lon: 16.376432
+                lat: 48.223547,
+                lon: 16.364177
             },
             eventInfo: "NEAR_CRASH",
-            accidentId: "accident1",
+            accidentId: "accident1"
         },
         {
             id: "notification2",
@@ -64,11 +76,11 @@ export default function reducer(state = {
             vehicleIdentificationNumber: "identificationNumber2",
             model: "2012 Audi A8",
             location: {
-                lat: 46.172450,
-                lon: 14.376432
+                lat: 48.219998,
+                lon: 16.330345
             },
             eventInfo: "CRASH",
-            accidentId: "accident1",
+            accidentId: "accident1"
         }
     ]
 }, action) {
@@ -102,7 +114,7 @@ export default function reducer(state = {
         case ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED: {
             return {
                 ...state,
-                notifications: state.notifications.concat(action.payload)
+                notifications: state.notifications.concat({...action.payload, show: false})
             };
         }
 
