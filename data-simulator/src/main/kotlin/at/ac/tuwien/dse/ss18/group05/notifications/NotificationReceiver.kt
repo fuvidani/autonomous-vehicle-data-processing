@@ -31,7 +31,7 @@ class NotificationReceiver(
                     .doOnNext { notification ->
                         vehicleSimulator.setSpeedForVehicle(vehicle.identificationNumber, notification.targetSpeed)
                     }
-                    .doOnComplete { println("Completed") }
+                    .doOnComplete { logger.info("stream completed - disconnected from further notifications") }
                     .doOnError { e -> logger.log(java.util.logging.Level.SEVERE, "error while streaming incoming notifications", e) }
                     .subscribe()
         }

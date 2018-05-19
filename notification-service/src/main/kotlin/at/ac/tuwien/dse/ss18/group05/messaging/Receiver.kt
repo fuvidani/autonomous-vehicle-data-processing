@@ -43,7 +43,7 @@ class VehicleNotificationReceiver(
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val incomingVehicleNotification = gson.fromJson(message, IncomingVehicleNotification::class.java)
-        log.info("received vehicle notification $incomingVehicleNotification")
+        log.info("received notification for vehicles \nnear by: ${incomingVehicleNotification.concernedNearByVehicles} \nfar away: ${incomingVehicleNotification.concernedFarAwayVehicles}")
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
         handleFieldsForFarAwayVehicles(incomingVehicleNotification)
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)

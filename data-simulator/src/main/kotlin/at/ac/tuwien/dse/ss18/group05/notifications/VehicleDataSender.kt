@@ -15,7 +15,7 @@ class VehicleDataSender(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
-    fun sendNotification(vehicleDataRecord: VehicleDataRecord) {
+    fun sendVehicleDataRecord(vehicleDataRecord: VehicleDataRecord) {
         val json = gson.toJson(vehicleDataRecord)
         rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle.data.movement", json)
     }

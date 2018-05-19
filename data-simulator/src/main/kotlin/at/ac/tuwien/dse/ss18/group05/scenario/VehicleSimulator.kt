@@ -7,8 +7,6 @@ import at.ac.tuwien.dse.ss18.group05.notifications.VehicleDataSender
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.time.Duration
-import java.time.ZonedDateTime
 import java.util.logging.Logger
 import javax.annotation.PostConstruct
 
@@ -22,11 +20,8 @@ class VehicleSimulator(
     private val log = Logger.getLogger(this.javaClass.name)
 
     private val currentVehicleLocations = mutableMapOf<Vehicle, RouteRecord>()
-    private lateinit var startTime: ZonedDateTime
-    private var crashSimulated = false
-
-    @Value("\${datasimulator.timeDelayInSecondsForEvent}")
-    private val timeDelayInSecondsForEvent: Int = 2
+    private var eventSimulated = false
+    private var event = EventInformation.NONE
 
     @Value("\${datasimulator.speedAfterEvent}")
     private val speedAfterEvent: Double = 50.0
@@ -34,7 +29,6 @@ class VehicleSimulator(
     @PostConstruct
     fun simulate() {
         findStartingPointForVehicles()
-        startTime = ZonedDateTime.now()
     }
 
     @Scheduled(fixedDelay = 1000)
@@ -49,16 +43,15 @@ class VehicleSimulator(
             val speed = handleSpeed(eventInfo, vehicle)
             val dataRecordCreator = VehicleDataRecordCreator(vehicle, currentVehicleLocations, eventInfo, speed)
             val dataRecord = dataRecordCreator.createNotificationForVehicle()
-            vehicleDataSender.sendNotification(dataRecord)
+            vehicleDataSender.sendVehicleDataRecord(dataRecord)
         }
     }
 
     private fun handleEventInformation(vehicle: Vehicle): EventInformation {
-        val timeBetweenStartAndNow = Math.abs(Duration.between(ZonedDateTime.now(), startTime).seconds)
-        return if (!crashSimulated) {
+        return if (!eventSimulated) {
             if (vehicle.crashing) {
-                crashSimulated = true
-                EventInformation.CRASH
+                eventSimulated = true
+                event
             } else {
                 EventInformation.NONE
             }
@@ -69,7 +62,6 @@ class VehicleSimulator(
 
     private fun handleSpeed(eventInformation: EventInformation, vehicle: Vehicle): Double {
         return if (eventInformation != EventInformation.NONE) {
-            //TODO does the car which produces the near crash event get a notification with the target speed?
             speedAfterEvent
         } else {
             vehicle.speed
@@ -106,13 +98,13 @@ class VehicleSimulator(
         return route.first { record -> record.distanceToStart >= distance }
     }
 
-    fun simulateCrash() {
-        crashSimulated = false
-        startTime = ZonedDateTime.now()
+    fun simulateEvent(event: EventInformation) {
+        this.event = event
+        eventSimulated = false
     }
 
     fun setSpeedForVehicle(vehicleId: String, targetSpeed: Double?) {
-        log.info("notification received vor vehicle with id: $vehicleId and target speed: $targetSpeed")
+        log.info("notification received vor vehicle with id: $vehicleId")
         val vehicle = currentVehicleLocations.map { (k, _) -> k }
                 .find { vehicle -> vehicle.identificationNumber == vehicleId }
         if (vehicle != null && targetSpeed != null) {

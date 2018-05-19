@@ -22,7 +22,7 @@ class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleData
 
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
-        log.info("New vehicle data record arrived $message")
+        log.info("New vehicle data record arrived")
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
         processor.process(vehicleDataRecord)
     }
