@@ -1,5 +1,5 @@
 .vertical-center {
-  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100%; /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
 
   display: flex;
@@ -10,7 +10,11 @@
   padding: 5px 0;
 }
 
-.col-centered{
+.col-centered {
   float: none;
   margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
 }

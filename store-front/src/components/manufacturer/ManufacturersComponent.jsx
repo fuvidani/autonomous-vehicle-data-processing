@@ -28,7 +28,7 @@ export default class ManufacturersComponent extends React.Component {
                             this.props.manufacturers.map(manufacturer =>
                                 <div key={manufacturer.id} className="col-md-3 text-center col-home">
                                     <RaisedButton
-                                        containerElement={<Link to={"/manufacturer/" + manufacturer.id} />}
+                                        containerElement={<Link to={"/manufacturer/" + manufacturer.id}/>}
                                         data-tip={manufacturer.id}
                                         primary={true}
                                         style={styles.button}

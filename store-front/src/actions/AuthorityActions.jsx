@@ -1,5 +1,6 @@
-const fetchAccidentReports = () => ({type: 'FETCH_ACCIDENT_REPORTS'});
+import * as ActionTypes from "./ActionTypes";
 
-const cancelAccidentReports = () => ({type: 'CANCEL_ACCIDENT_REPORTS'});
+const fetchAccidentReports = () => ({type: ActionTypes.FETCH_ACCIDENT_REPORTS});
+const cancelAccidentReports = () => ({type: ActionTypes.CANCEL_ACCIDENT_REPORTS});
 
 export {fetchAccidentReports, cancelAccidentReports}
