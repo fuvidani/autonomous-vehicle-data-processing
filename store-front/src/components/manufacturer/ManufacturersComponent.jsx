@@ -26,7 +26,7 @@ export default class ManufacturersComponent extends React.Component {
                         <ReactTooltip/>
                         {
                             this.props.manufacturers.map(manufacturer =>
-                                <div key={manufacturer.id} className="col-md-3 text-center col-home">
+                                <div key={manufacturer.id} className="col-md-6 text-center col-home">
                                     <RaisedButton
                                         containerElement={<Link to={"/manufacturer/" + manufacturer.id}/>}
                                         data-tip={manufacturer.id}
