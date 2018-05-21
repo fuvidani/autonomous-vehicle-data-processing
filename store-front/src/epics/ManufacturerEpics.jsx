@@ -1,6 +1,6 @@
 import * as ActionTypes from "../actions/ActionTypes";
 import {Observable} from "rxjs/Rx";
-import {fromEventSource} from "../util/RequestHandler";
+import {fetchStream} from "../util/RequestHandler";
 
 const fetchManufacturerInformationEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_STREAMS)
@@ -15,11 +15,11 @@ const fetchManufacturerInformationEpic = action$ =>
 const fetchVehicleTrackingStreamEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_VEHICLE_TRACKING_STREAM)
         .mergeMap((action) =>
-            fromEventSource('/tracking/manufacturer/' + action.payload, 'message')
-                .filter(response => JSON.parse(response.data).id === null || JSON.parse(response.data).id === "")
+            fetchStream('/tracking/manufacturer/' + action.payload)
+                .filter(response => JSON.parse(response.data).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.VEHICLE_TRACKING_INFORMATION_FETCHED,
-                    payload: JSON.parse(response.data)
+                    payload: JSON.parse(response)
                 }))
                 .takeUntil(action$.ofType(ActionTypes.CANCEL_VEHICLE_TRACKING_STREAM))
         );
@@ -27,19 +27,19 @@ const fetchVehicleTrackingStreamEpic = action$ =>
 const fetchVehicleInformationEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_VEHICLE_INFORMATION)
         .mergeMap((action) =>
-            fromEventSource('/vehicle/' + action.payload + '/vehicles', 'message')
-                .map(response => ({type: ActionTypes.VEHICLE_INFORMATION_FETCHED, payload: JSON.parse(response.data)}))
+            fetchStream('/vehicle/' + action.payload + '/vehicles')
+                .map(response => ({type: ActionTypes.VEHICLE_INFORMATION_FETCHED, payload: JSON.parse(response)}))
                 .takeUntil(action$.ofType(ActionTypes.CANCEL_VEHICLE_INFORMATION))
         );
 
 const fetchManufacturerNotificationsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_NOTIFICATIONS)
         .mergeMap((action) =>
-            fromEventSource('/notifications/manufacturer/' + action.payload, 'message')
-                .filter(response => JSON.parse(response.data).id === null || JSON.parse(response.data).id === "")
+            fetchStream('/notifications/manufacturer/' + action.payload)
+                .filter(response => JSON.parse(response.data).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED,
-                    payload: JSON.parse(response.data)
+                    payload: JSON.parse(response)
                 }))
                 .takeUntil(action$.ofType(ActionTypes.CANCEL_MANUFACTURER_NOTIFICATIONS))
         );

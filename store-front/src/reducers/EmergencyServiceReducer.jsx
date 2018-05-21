@@ -1,21 +1,7 @@
 import * as ActionTypes from "../actions/ActionTypes";
 
 export default function reducer(state = {
-    crashEventNotifications: [
-        {
-            id: "notification1",
-            timeStamp: 1526474808321,
-            accidentId: "accident1",
-            location: {
-                lat: 48.172762,
-                lon: 16.376349
-            },
-            model: "1972 Ford Mustang",
-            passengers: 4,
-            arrived: false,
-            cleared: false
-        }
-    ]
+    crashEventNotifications: []
 }, action) {
 
     switch (action.type) {
@@ -38,28 +24,32 @@ export default function reducer(state = {
             };
 
         case ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED: {
-            for (let i = 0; i < state.crashEventNotifications.length; i++) {
-                if (state.crashEventNotifications[i].accidentId === action.payload) {
-                    state.crashEventNotifications[i].arrived = true;
-                    break;
+            const updatedCrashEventNotifications = state.crashEventNotifications.map(notification => {
+                if (notification.accidentId === action.payload) {
+                    return {...notification, arrived: true}
                 }
-            }
+                return notification;
+
+            });
 
             return {
-                ...state
+                ...state,
+                crashEventNotifications: updatedCrashEventNotifications
             };
         }
 
         case ActionTypes.CLEAR_CRASH_EVENT_POSTED: {
-            for (let i = 0; i < state.crashEventNotifications.length; i++) {
-                if (state.crashEventNotifications[i].accidentId === action.payload) {
-                    state.crashEventNotifications[i].cleared = true;
-                    break;
+            const updatedCrashEventNotifications = state.crashEventNotifications.map(notification => {
+                if (notification.accidentId === action.payload) {
+                    return {...notification, cleared: true}
                 }
-            }
+                return notification;
+
+            });
 
             return {
-                ...state
+                ...state,
+                crashEventNotifications: updatedCrashEventNotifications
             };
         }
 

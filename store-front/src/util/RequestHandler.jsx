@@ -1,27 +1,40 @@
-import {fromEvent} from "rxjs/observable/fromEvent";
 import {Observable} from "rxjs/Rx";
 import {serverConfig} from "../config/serverConfig";
 import {ajax} from 'rxjs/observable/dom/ajax';
 
-const fromEventSource = (mapping, event) => {
-    const url = serverConfig.url + mapping;
+const fetchStream = (mapping) => {
+    const url = serverConfig.gatewayUrl + mapping;
 
     return new Observable(observer => {
         const source = new EventSource(url);
-        const message$ = fromEvent(source, event);
-        const subscription = message$.subscribe(observer);
+
+        const onError = event => {
+            if (event.eventPhase === EventSource.CLOSED) {
+                observer.complete();
+            } else {
+                observer.error(event);
+            }
+        };
+
+        const onMessage = event => {
+            observer.next(event.data);
+        };
+
+        source.addEventListener('error', onError, false);
+        source.addEventListener('message', onMessage, false);
 
         return () => {
-            subscription.unsubscribe();
+            source.removeEventListener('error', onError, false);
+            source.removeEventListener('message', onMessage, false);
             source.close();
         };
     });
 };
 
 const postRequest = (mapping, payload) => {
-    const url = serverConfig.url + mapping;
+    const url = serverConfig.dataSimulatorUrl + mapping;
 
     return ajax.post(url, payload, {'Content-Type': 'application/json'});
 };
 
-export {fromEventSource, postRequest}
+export {fetchStream, postRequest}

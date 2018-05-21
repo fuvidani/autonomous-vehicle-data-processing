@@ -1,5 +1,7 @@
 export const serverConf = {
-    url: "http://localhost",
-    port: "4000",
+    gatewayUrl: "http://localhost",
+    gatewayPort: "4000",
+    dataSimulatorUrl: "http://localhost",
+    dataSimulatorPort: "10000",
     logging: false
 };
