@@ -22,6 +22,7 @@ import java.util.logging.Logger
  * @version 1.0.0
  * @since 1.0.0
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/vehicle")
 class VehicleController(private val vehicleService: IVehicleService) {

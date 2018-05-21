@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.util.*
 import java.util.logging.Logger
 
 /**
@@ -43,7 +44,7 @@ class VehicleNotificationReceiver(
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val incomingVehicleNotification = gson.fromJson(message, IncomingVehicleNotification::class.java)
-        log.info("received notification for vehicles \nnear by: ${incomingVehicleNotification.concernedNearByVehicles} \nfar away: ${incomingVehicleNotification.concernedFarAwayVehicles}")
+        log.info("received notification for vehicles near by: ${Arrays.toString(incomingVehicleNotification.concernedNearByVehicles)} far away: ${Arrays.toString(incomingVehicleNotification.concernedFarAwayVehicles)}")
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
         handleFieldsForFarAwayVehicles(incomingVehicleNotification)
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
@@ -78,7 +79,7 @@ class EmsNotificationReceiver(
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
         val emergencyServiceNotification = gson.fromJson(message, EmergencyServiceNotification::class.java)
-        log.info("received ems notification $emergencyServiceNotification")
+        log.info("EMS - received notification $emergencyServiceNotification")
         repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
     }
 
@@ -102,7 +103,6 @@ class ManufacturerNotifictionReceiver(
         log.info("received manufacturer notification")
         repository.save(notification).subscribe { processor.onNext(it) }
     }
-
     override fun notificationStream(): Flux<ManufacturerNotification> {
         return processor
     }

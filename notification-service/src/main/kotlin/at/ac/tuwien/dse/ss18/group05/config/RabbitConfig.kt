@@ -23,17 +23,17 @@ class RabbitConfig {
 
     @Bean
     fun vehicleQueue(): Queue {
-        return Queue("vehicleQueueNotification", false)
+        return Queue("vehicleQueueNotifications", false)
     }
 
     @Bean
     fun emsQueue(): Queue {
-        return Queue("emsQueue", false)
+        return Queue("emsQueueNotifications", false)
     }
 
     @Bean
     fun manufacturerQueue(): Queue {
-        return Queue("manufacturerQueue", false)
+        return Queue("manufacturerQueueNotifications", false)
     }
 
     @Bean

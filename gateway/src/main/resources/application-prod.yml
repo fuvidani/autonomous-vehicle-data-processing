@@ -1,0 +1,50 @@
+server:
+  port: 4000
+  servlet:
+    context-path: ""
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    gateway:
+      routes:
+      - id: vehicle_route
+        uri: http://vs:5000
+        predicates:
+        - Path=/vehicle/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/vehicleFallback
+      - id: tracker_route
+        uri: http://ts:6000
+        predicates:
+        - Path=/tracking/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/trackingFallback
+      - id: notifications_route
+        uri: http://ns:7000
+        predicates:
+        - Path=/notifications/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/notificationFallback
+      - id: statistics_route
+        uri: http://ss:8000
+        predicates:
+        - Path=/statistics/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/statisticsFallback
