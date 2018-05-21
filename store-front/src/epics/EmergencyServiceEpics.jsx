@@ -5,7 +5,7 @@ const fetchEmergencyServiceCrashEventNotificationsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS)
         .mergeMap(() =>
             fetchStream('/notifications/ems')
-                .filter(response => JSON.parse(response.data).id !== "ping" && JSON.parse(response).id !== "")
+                .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATION_FETCHED,
                     payload: JSON.parse(response)

@@ -28,8 +28,8 @@ export default function reducer(state = {
                 if (notification.accidentId === action.payload) {
                     return {...notification, arrived: true}
                 }
-                return notification;
 
+                return notification;
             });
 
             return {
@@ -43,8 +43,8 @@ export default function reducer(state = {
                 if (notification.accidentId === action.payload) {
                     return {...notification, cleared: true}
                 }
-                return notification;
 
+                return notification;
             });
 
             return {

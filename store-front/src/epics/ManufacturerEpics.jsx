@@ -16,7 +16,7 @@ const fetchVehicleTrackingStreamEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_VEHICLE_TRACKING_STREAM)
         .mergeMap((action) =>
             fetchStream('/tracking/manufacturer/' + action.payload)
-                .filter(response => JSON.parse(response.data).id !== "ping" && JSON.parse(response).id !== "")
+                .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.VEHICLE_TRACKING_INFORMATION_FETCHED,
                     payload: JSON.parse(response)
@@ -36,7 +36,7 @@ const fetchManufacturerNotificationsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_NOTIFICATIONS)
         .mergeMap((action) =>
             fetchStream('/notifications/manufacturer/' + action.payload)
-                .filter(response => JSON.parse(response.data).id !== "ping" && JSON.parse(response).id !== "")
+                .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED,
                     payload: JSON.parse(response)
