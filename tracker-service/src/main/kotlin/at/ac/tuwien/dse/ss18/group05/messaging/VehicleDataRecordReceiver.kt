@@ -33,10 +33,10 @@ class VehicleDataRecordReceiver(
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
-        if(vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH){
+        if (vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             log.info("vehicle data record with event information received $vehicleDataRecord")
-        }else{
-            if(lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())){
+        } else {
+            if (lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())) {
                 println()
                 log.info("vehicle data record $vehicleDataRecord")
                 lastLog = ZonedDateTime.now()

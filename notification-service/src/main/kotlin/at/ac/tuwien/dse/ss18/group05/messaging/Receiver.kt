@@ -1,4 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
+/* ktlint-disable no-wildcard-imports */
 
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
 import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification

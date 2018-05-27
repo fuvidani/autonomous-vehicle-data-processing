@@ -1,4 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.web
+/* ktlint-disable no-wildcard-imports */
 
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerDataRecord
