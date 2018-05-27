@@ -22,10 +22,10 @@ class VehicleDataSender(
     fun sendVehicleDataRecord(vehicleDataRecord: VehicleDataRecord) {
         val json = gson.toJson(vehicleDataRecord)
 
-        if(vehicleDataRecord.eventInformation == EventInformation.CRASH){
+        if (vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             println()
             log.info("vehicle data record $vehicleDataRecord")
-        }else if(lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())){
+        } else if (lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())) {
             println()
             log.info("vehicle data record $vehicleDataRecord")
             lastLog = ZonedDateTime.now()

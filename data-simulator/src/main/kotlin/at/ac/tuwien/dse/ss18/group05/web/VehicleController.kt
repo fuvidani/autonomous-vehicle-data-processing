@@ -14,7 +14,6 @@ class VehicleController(private val vehicleSimulator: VehicleSimulator) {
 
     private val log = Logger.getLogger(this.javaClass.name)
 
-
     @PostMapping("/datasimulation/simulatecrash")
     fun simulateCrash(): HttpStatus {
         log.info("simulating crash event")

@@ -15,10 +15,11 @@ class RootConfig {
 
     private val log = Logger.getLogger(this.javaClass.name)
 
-
     @Bean
-    fun client(@Value("\${notification.service.host}") host: String,
-               @Value("\${notification.service.port}") port: String): WebClient {
+    fun client(
+        @Value("\${notification.service.host}") host: String,
+        @Value("\${notification.service.port}") port: String
+    ): WebClient {
 
         log.info("webclient base url: $host:$port/")
         return WebClient.create("http://$host:$port/")

@@ -29,7 +29,7 @@ class TrackerServiceController(private val trackerService: ITrackerService) {
             .startWith(pingManufacturerDataRecord)
     }
 
-    @GetMapping("history/manufacturer/{manufacturerId}")
+    @GetMapping("/history/manufacturer/{manufacturerId}")
     fun getVehiclesTrackingHistory(@PathVariable("manufacturerId") manufacturerId: String): Flux<ManufacturerDataRecord> {
         return trackerService.getTrackingHistoryForManufacturer(manufacturerId)
     }

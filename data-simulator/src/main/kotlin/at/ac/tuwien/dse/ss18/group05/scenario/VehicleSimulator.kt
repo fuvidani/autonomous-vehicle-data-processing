@@ -6,18 +6,15 @@ import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
 import at.ac.tuwien.dse.ss18.group05.notifications.VehicleDataSender
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
-import javax.annotation.PostConstruct
 
 @Component
 class VehicleSimulator(
     private val vehicles: List<Vehicle>,
     private val route: List<RouteRecord>,
     private val vehicleDataSender: VehicleDataSender
-) : CommandLineRunner{
-
+) : CommandLineRunner {
 
     private val log = Logger.getLogger(this.javaClass.name)
 
@@ -39,12 +36,11 @@ class VehicleSimulator(
     }
 
     private fun handleVehicleSimulation() {
-        while(true){
-            calculateCurrentVehicleData()
+        while (true) {
             driveCarsToNextPoint()
-            Thread.sleep(3000)
+            calculateCurrentVehicleData()
+            Thread.sleep(1000)
         }
-
     }
 
     private fun calculateCurrentVehicleData() {

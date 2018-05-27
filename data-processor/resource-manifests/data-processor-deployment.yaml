@@ -31,6 +31,6 @@ spec:
             - name: VEHICLE_SERVICE_HOST
               value: "gateway-service"
             - name: VEHICLE_SERVICE_PORT
-              value: "5000"
+              value: "4000"
           ports:
             - containerPort: 9000
