@@ -28,10 +28,10 @@ class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleData
     override fun receiveMessage(message: String) {
 
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
-        if(vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH){
+        if (vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             log.info("CRASH - vehicle data record with event information received $vehicleDataRecord")
-        }else{
-            if(lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())){
+        } else {
+            if (lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())) {
                 println()
                 log.info("vehicle data record $vehicleDataRecord")
                 lastLog = ZonedDateTime.now()
