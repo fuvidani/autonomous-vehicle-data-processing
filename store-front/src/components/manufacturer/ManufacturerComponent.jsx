@@ -19,7 +19,7 @@ const styles = {
     }
 };
 
-let manufacturerId;
+let manufacturerId = null;
 
 export default class ManufacturerComponent extends React.Component {
     constructor(props) {

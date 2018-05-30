@@ -4,10 +4,10 @@
   "description": "Autonomous Vehicle Data Processing Store Front",
   "main": "webpack.config.js",
   "scripts": {
-    "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "dev-server": "webpack-dev-server --mode development --open",
-    "start": "webpack-serve --port 8069 --no-hot"
+    "start": "webpack-dev-server --mode development --open",
+    "test": "jest",
+    "eslint": "eslint src/**/*.jsx"
   },
   "repository": {
     "type": "git",
@@ -42,6 +42,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.3",
     "babel-jest": "^23.0.0-alpha.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-module-resolver": "^3.0.0",
@@ -69,6 +70,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
     "react-test-renderer": "*",
+    "serve": "^7.1.2",
     "style-loader": "^0.20.3",
     "url-loader": "^1.0.1",
     "webpack": "^4.2.0",
