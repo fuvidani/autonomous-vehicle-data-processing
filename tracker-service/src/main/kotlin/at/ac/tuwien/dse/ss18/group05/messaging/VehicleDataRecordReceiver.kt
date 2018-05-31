@@ -31,7 +31,7 @@ class VehicleDataRecordReceiver(
     override fun receiveMessage(message: String) {
         log.info("New vehicle data record arrived")
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
-        repository.save(vehicleDataRecord).subscribe { processor.onNext(it) }
+        processor.onNext(repository.save(vehicleDataRecord).block()!!)
     }
 
     override fun recordStream(): Flux<VehicleDataRecord> {
