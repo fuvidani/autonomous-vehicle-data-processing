@@ -1,11 +1,9 @@
 matrix:
   include:
     - language: java
-      jdk:
-        - oraclejdk8
+      jdk: oraclejdk8
     - language: node_js
-      node_js:
-      - 8.9.3
+      node_js: 8.9.3
       install:
         - npm i -g npm5
         - npm install
