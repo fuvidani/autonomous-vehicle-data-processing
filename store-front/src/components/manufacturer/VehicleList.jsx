@@ -1,6 +1,6 @@
 import React from "react";
 import {Card, CardText, CardTitle, Divider, List, ListItem} from "material-ui";
-import {AvPlayArrow, AvStop, ImageLens} from "material-ui/svg-icons/index.es";
+import {ImageLens} from "material-ui/svg-icons/index.es";
 
 const VehicleList = (props) => (
     <Card style={props.cardStyles}>
