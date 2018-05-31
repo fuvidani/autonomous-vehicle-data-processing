@@ -12,6 +12,7 @@ export default function reducer(state = {
         }
     ],
     vehicleTrackingInformation: {},
+    vehicleHistoryInformation: {},
     vehicles: {},
     notifications: [],
     clickedNotification: {
@@ -36,10 +37,17 @@ export default function reducer(state = {
             let newVehicles = Object.assign({}, state.vehicles);
             if (newVehicles[action.payload.vehicleIdentificationNumber]) newVehicles[action.payload.vehicleIdentificationNumber].moving = true;
 
+            let newVehicleHistoryInformation = Object.assign({}, state.vehicleHistoryInformation);
+            newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber].push({
+                lat: action.payload.location.lat,
+                lng: action.payload.location.lon
+            });
+
             return {
                 ...state,
                 vehicles: newVehicles,
-                vehicleTrackingInformation: newVehicleTrackingInformation
+                vehicleTrackingInformation: newVehicleTrackingInformation,
+                vehicleHistoryInformation: newVehicleHistoryInformation
             };
         }
 

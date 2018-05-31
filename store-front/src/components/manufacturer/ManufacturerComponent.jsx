@@ -72,7 +72,8 @@ export default class ManufacturerComponent extends React.Component {
                 <div className="col-md-6">
                     <MapComponent vehicleTrackingInformation={this.props.vehicleTrackingInformation}
                                   notShownNotificationIds={this.state.notShownNotificationIds}
-                                  notifications={this.props.notifications}/>
+                                  notifications={this.props.notifications}
+                                  vehicleHistoryInformation={this.props.vehicleHistoryInformation}/>
                 </div>
                 <div className="col-md-3">
                     <NotificationList notifications={this.props.notifications}
