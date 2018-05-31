@@ -1,4 +1,3 @@
-import React from 'react';
 import * as ActionTypes from "../../actions/ActionTypes";
 import {
     cancelManufacturerStreams, clickNotification,

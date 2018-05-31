@@ -1,4 +1,3 @@
-import React from 'react';
 import {cancelAccidentReports, fetchAccidentReports} from "../../actions/AuthorityActions";
 import * as ActionTypes from "../../actions/ActionTypes";
 
