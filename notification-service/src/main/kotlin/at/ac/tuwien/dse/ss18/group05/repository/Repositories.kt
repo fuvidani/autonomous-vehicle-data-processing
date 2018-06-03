@@ -24,7 +24,7 @@ interface VehicleNotificationRepository : ReactiveCrudRepository<VehicleNotifica
 }
 
 @Repository
-interface EmergencyServiceNotificationRepository : ReactiveCrudRepository<EmergencyServiceNotification, String>{
+interface EmergencyServiceNotificationRepository : ReactiveCrudRepository<EmergencyServiceNotification, String> {
 
     fun findByAccidentId(id: String): Mono<EmergencyServiceNotification>
 }

@@ -36,9 +36,9 @@ interface Receiver<T> {
 
 @Component
 class VehicleNotificationReceiver(
-        private val repository: VehicleNotificationRepository,
-        private val processor: TopicProcessor<VehicleNotification>,
-        private val gson: Gson
+    private val repository: VehicleNotificationRepository,
+    private val processor: TopicProcessor<VehicleNotification>,
+    private val gson: Gson
 ) : Receiver<VehicleNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)
@@ -71,9 +71,9 @@ class VehicleNotificationReceiver(
 
 @Component
 class EmsNotificationReceiver(
-        private val repository: EmergencyServiceNotificationRepository,
-        private val processor: TopicProcessor<EmergencyServiceNotification>,
-        private val gson: Gson
+    private val repository: EmergencyServiceNotificationRepository,
+    private val processor: TopicProcessor<EmergencyServiceNotification>,
+    private val gson: Gson
 ) : Receiver<EmergencyServiceNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)
@@ -87,10 +87,9 @@ class EmsNotificationReceiver(
         if (existingNotification != null) {
             existingNotification.status = emergencyServiceNotification.status
             repository.save(existingNotification).subscribe { processor.onNext(it) }
-        }else{
+        } else {
             repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
         }
-
     }
 
     override fun notificationStream(): Flux<EmergencyServiceNotification> {
@@ -100,9 +99,9 @@ class EmsNotificationReceiver(
 
 @Component
 class ManufacturerNotifictionReceiver(
-        private val repository: ManufacturerNotificationRepository,
-        private val processor: TopicProcessor<ManufacturerNotification>,
-        private val gson: Gson
+    private val repository: ManufacturerNotificationRepository,
+    private val processor: TopicProcessor<ManufacturerNotification>,
+    private val gson: Gson
 ) : Receiver<ManufacturerNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)

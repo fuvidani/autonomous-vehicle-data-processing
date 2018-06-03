@@ -36,7 +36,7 @@ class VehicleDataRecordReceiver(
 
         if (vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             log.info("(NEAR) CRASH received $vehicleDataRecord")
-        }else{
+        } else {
             if (lastLog.plusSeconds(1).isBefore(ZonedDateTime.now())) {
                 println()
                 log.info("vehicle data record $vehicleDataRecord")
