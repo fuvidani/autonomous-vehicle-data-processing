@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration
 class RabbitConfig {
 
     val topicExchange = "vehicle-data-exchange"
-    val queueName = "traffic"
+    val queueName = "vehicleDataSimulation"
     val routingKey = "notifications.#"
 
     @Bean

@@ -23,7 +23,7 @@ class EmergencyServiceMessageReceiver(private val processor: DataProcessor<Emerg
 
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
-        log.info("New emergency service message arrived")
+        log.info("New emergency service message arrived $message")
         val serviceMessage = gson.fromJson<EmergencyServiceMessage>(message, EmergencyServiceMessage::class.java)
         processor.process(serviceMessage)
     }

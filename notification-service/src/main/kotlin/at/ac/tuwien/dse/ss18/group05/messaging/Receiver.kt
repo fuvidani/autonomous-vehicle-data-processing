@@ -1,5 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
+/* ktlint-disable no-wildcard-imports */
+
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
 import at.ac.tuwien.dse.ss18.group05.dto.IncomingVehicleNotification
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
@@ -12,6 +14,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.util.*
 import java.util.logging.Logger
 
 /**
@@ -43,7 +46,7 @@ class VehicleNotificationReceiver(
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val incomingVehicleNotification = gson.fromJson(message, IncomingVehicleNotification::class.java)
-        log.info("received vehicle notification $incomingVehicleNotification")
+        log.info("received notification for vehicles near by: ${Arrays.toString(incomingVehicleNotification.concernedNearByVehicles)} far away: ${Arrays.toString(incomingVehicleNotification.concernedFarAwayVehicles)}")
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedNearByVehicles)
         handleFieldsForFarAwayVehicles(incomingVehicleNotification)
         handleNotifications(incomingVehicleNotification, incomingVehicleNotification.concernedFarAwayVehicles)
@@ -78,8 +81,15 @@ class EmsNotificationReceiver(
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
         val emergencyServiceNotification = gson.fromJson(message, EmergencyServiceNotification::class.java)
-        log.info("received ems notification $emergencyServiceNotification")
-        repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
+        log.info("EMS - received notification $emergencyServiceNotification")
+
+        val existingNotification = repository.findByAccidentId(emergencyServiceNotification.accidentId).block()
+        if (existingNotification != null) {
+            existingNotification.status = emergencyServiceNotification.status
+            repository.save(existingNotification).subscribe { processor.onNext(it) }
+        } else {
+            repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
+        }
     }
 
     override fun notificationStream(): Flux<EmergencyServiceNotification> {

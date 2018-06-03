@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class DataSimulatorApplication {
 
     companion object {
+
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(DataSimulatorApplication::class.java, *args)

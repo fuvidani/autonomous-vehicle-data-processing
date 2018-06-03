@@ -3,6 +3,7 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.NotificationServiceTestApplication
 import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
+import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.messaging.EmsNotificationReceiver
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
@@ -38,7 +39,7 @@ import java.time.Duration
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class EmergencyServiceNotificationControllerDocumentationTest {
 
-    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0)
+    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0, status = EmergencyServiceStatus.UNKNOWN)
 
     @Suppress("unused")
     @MockBean
@@ -120,7 +121,10 @@ class EmergencyServiceNotificationControllerDocumentationTest {
                                                 .description("the type of the model - for first responders of interest (electric vehicles)"),
                                         fieldWithPath("passengers")
                                                 .type(JsonFieldType.NUMBER)
-                                                .description("the number of passengers - for first responders of interest")
+                                                .description("the number of passengers - for first responders of interest"),
+                                        fieldWithPath("status")
+                                                .type(JsonFieldType.STRING)
+                                                .description("the status of the notification")
                                 )
                         )
                 )
@@ -166,7 +170,10 @@ class EmergencyServiceNotificationControllerDocumentationTest {
                                                 .description("the type of the model - for first responders of interest (electric vehicles)"),
                                         fieldWithPath("passengers")
                                                 .type(JsonFieldType.NUMBER)
-                                                .description("the number of passengers - for first responders of interest")
+                                                .description("the number of passengers - for first responders of interest"),
+                                        fieldWithPath("status")
+                                                .type(JsonFieldType.STRING)
+                                                .description("the status of the notification")
                                 )
                         )
                 )

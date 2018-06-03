@@ -9,7 +9,7 @@ vehicles:
   manufacturerId: "Acura"
   model: "1995 Acura Integra"
   crashing: true
-  startingAtKm: 2
+  startingAtKm: 1
   passengers: 2
 - identificationNumber: "JH4DA3350JS000592"
   manufacturerId: "Acura"
