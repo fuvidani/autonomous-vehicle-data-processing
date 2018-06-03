@@ -3,6 +3,7 @@ package at.ac.tuwien.dse.ss18.group05.web
 import at.ac.tuwien.dse.ss18.group05.NotificationServiceTestApplication
 import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
+import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.EmergencyServiceNotificationRepository
@@ -30,7 +31,7 @@ import java.time.Duration
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class EmergencyServiceNotificationControllerTest {
 
-    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0)
+    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0,status = EmergencyServiceStatus.UNKNOWN)
 
     @Suppress("unused")
     @MockBean

@@ -13,11 +13,11 @@ class TestDataGenerator {
     private val secondManufacturer = "man_b_id"
 
     fun getFirstEMSNotification(): EmergencyServiceNotification {
-        return EmergencyServiceNotification(id = "first_id", accidentId = "first_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 5)
+        return EmergencyServiceNotification(id = "first_id", accidentId = "first_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 5, status = EmergencyServiceStatus.UNKNOWN)
     }
 
     fun getSecondEMSNotification(): EmergencyServiceNotification {
-        return EmergencyServiceNotification(id = "second_id", accidentId = "second_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 1)
+        return EmergencyServiceNotification(id = "second_id", accidentId = "second_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 1,status = EmergencyServiceStatus.UNKNOWN)
     }
 
     fun getAllEMSNotifications(): Array<EmergencyServiceNotification> {
