@@ -159,7 +159,8 @@ class TestDataProvider {
                 1526135842408,
                 GpsLocation(48.2089816, 16.3732133),
                 "Tesla Model X",
-                4
+                4,
+                EmergencyServiceStatus.UNKNOWN
             )
         }
 

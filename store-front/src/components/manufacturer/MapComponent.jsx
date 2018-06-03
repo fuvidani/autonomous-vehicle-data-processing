@@ -1,4 +1,4 @@
-import {GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps"
+import {GoogleMap, Marker, Polyline, withGoogleMap, withScriptjs} from "react-google-maps"
 import React from "react";
 import {withProps, compose} from "recompose";
 import {ApiKeys} from "../../config/ApiKeys";
@@ -36,6 +36,11 @@ const MapComponent = compose(
         {
             props.notifications.filter((notification, i) => !props.notShownNotificationIds.includes(i)).map((notification, i) =>
                 <Marker key={i} position={{lat: notification.location.lat, lng: notification.location.lon}} label={notification.eventInfo[0]}/>)
+        }
+        {
+            Object.keys(props.vehicleHistoryInformation).map(function (key) {
+                return <Polyline key={key} path={props.vehicleHistoryInformation[key]}/>;
+            })
         }
     </GoogleMap>
 );

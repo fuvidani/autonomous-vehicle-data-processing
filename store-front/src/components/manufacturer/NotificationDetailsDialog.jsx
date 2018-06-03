@@ -7,6 +7,7 @@ const NotificationDetailsDialog = (props) => (
         modal={false}
         actions={[
             <FlatButton
+                key={0}
                 label="Cancel"
                 primary={true}
                 onClick={props.handleDialogClose}

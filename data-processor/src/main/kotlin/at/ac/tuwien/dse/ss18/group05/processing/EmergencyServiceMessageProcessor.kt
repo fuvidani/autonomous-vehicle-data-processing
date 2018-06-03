@@ -46,7 +46,7 @@ class EmergencyServiceMessageProcessor(
     private fun handleSiteClearing(data: EmergencyServiceMessage) {
         val currentAccident = accidentRepository.findById(data.accidentId).block()
         if (currentAccident?.id != null) {
-            accidentRepository.delete(currentAccident).subscribe()
+            accidentRepository.delete(currentAccident).block()
             val accident = currentAccident.withSiteClearing(data.timestamp)
             val vehicles = vehicleLocationService.findVehiclesInRadius(accident.location).block()!!
             notifier.notifyVehiclesOfAccidentUpdate(

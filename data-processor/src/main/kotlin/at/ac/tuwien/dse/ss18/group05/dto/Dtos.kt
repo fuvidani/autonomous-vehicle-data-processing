@@ -126,7 +126,8 @@ data class EmergencyServiceNotification(
     val timeStamp: Long,
     val location: GpsLocation,
     val model: String,
-    val passengers: Int
+    val passengers: Int,
+    val status: EmergencyServiceStatus
 )
 
 @Document(collection = "locations")
@@ -223,7 +224,8 @@ fun VehicleDataRecord.toEmergencyServiceNotification(accidentId: String): Emerge
         this.timestamp,
         this.sensorInformation.location,
         this.metaData.model,
-        this.sensorInformation.passengers
+        this.sensorInformation.passengers,
+        EmergencyServiceStatus.UNKNOWN
     )
 }
 

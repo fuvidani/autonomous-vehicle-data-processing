@@ -9,7 +9,8 @@ const mapStateToProps = (state) => {
         vehicleTrackingInformation: state.ManufacturerReducer.vehicleTrackingInformation,
         vehicles: state.ManufacturerReducer.vehicles,
         notifications: state.ManufacturerReducer.notifications,
-        clickedNotification: state.ManufacturerReducer.clickedNotification
+        clickedNotification: state.ManufacturerReducer.clickedNotification,
+        vehicleHistoryInformation: state.ManufacturerReducer.vehicleHistoryInformation
     };
 };
 

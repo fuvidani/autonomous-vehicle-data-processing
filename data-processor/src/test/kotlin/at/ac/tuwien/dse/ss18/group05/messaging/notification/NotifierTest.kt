@@ -69,7 +69,8 @@ class NotifierTest {
             dataRecord.timestamp,
             dataRecord.sensorInformation.location,
             dataRecord.metaData.model,
-            dataRecord.sensorInformation.passengers
+            dataRecord.sensorInformation.passengers,
+            EmergencyServiceStatus.UNKNOWN
         )
         notifier.notifyEmergencyService(dataRecord, "someGeneratedAccidentId")
         Mockito.verify(sender).sendMessage(expectedNotification, "notifications.ems")

@@ -23,7 +23,7 @@ export default class AuthorityComponent extends React.Component {
     }
 
     render() {
-        return <div>
+        return <div className="authorityContainer">
             <GeneralComponent/>
             <div className="container">
                 <div className="row">
