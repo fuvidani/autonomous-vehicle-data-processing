@@ -38,10 +38,16 @@ export default function reducer(state = {
             if (newVehicles[action.payload.vehicleIdentificationNumber]) newVehicles[action.payload.vehicleIdentificationNumber].moving = true;
 
             let newVehicleHistoryInformation = Object.assign({}, state.vehicleHistoryInformation);
-            newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber].push({
+            const newHistoryLocation = {
                 lat: action.payload.location.lat,
                 lng: action.payload.location.lon
-            });
+            };
+
+            if (!newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber]) {
+                newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber] = [newHistoryLocation]
+            } else {
+                newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber].push(newHistoryLocation);
+            }
 
             return {
                 ...state,
