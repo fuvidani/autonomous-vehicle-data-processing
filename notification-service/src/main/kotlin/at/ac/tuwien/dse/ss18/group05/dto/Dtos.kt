@@ -92,7 +92,8 @@ data class EmergencyServiceNotification(
     val timeStamp: Long,
     val location: GpsLocation,
     val model: String,
-    val passengers: Int
+    val passengers: Int,
+    var status: EmergencyServiceStatus
 ) : Serializable
 
 @Document(collection = "vehicle_notifications")

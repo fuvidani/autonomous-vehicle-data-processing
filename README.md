@@ -14,7 +14,8 @@ Data processing of autonomous vehicles in a fault-tolerant, resilient and asynch
 * vehicle		5000
 * rabbit-mq	15672 | 5672 
 * frontend 	8069
-* eu.gcr.io/dse-group-05/
+* eu.gcr.io/dse-group-05/***
+* pushing to google cloud registry: gcloud docker -- push eu.gcr.io/dse-group-05/***
 
 
 # Development

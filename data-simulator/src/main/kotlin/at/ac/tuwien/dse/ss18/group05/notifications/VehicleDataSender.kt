@@ -25,7 +25,7 @@ class VehicleDataSender(
         if (vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             println()
             log.info("vehicle data record $vehicleDataRecord")
-        } else if (lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())) {
+        } else if (lastLog.plusSeconds(1).isBefore(ZonedDateTime.now())) {
             println()
             log.info("vehicle data record $vehicleDataRecord")
             lastLog = ZonedDateTime.now()

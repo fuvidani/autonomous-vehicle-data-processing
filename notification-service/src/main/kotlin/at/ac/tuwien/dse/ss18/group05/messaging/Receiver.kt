@@ -1,4 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
+
 /* ktlint-disable no-wildcard-imports */
 
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
@@ -35,9 +36,9 @@ interface Receiver<T> {
 
 @Component
 class VehicleNotificationReceiver(
-    private val repository: VehicleNotificationRepository,
-    private val processor: TopicProcessor<VehicleNotification>,
-    private val gson: Gson
+        private val repository: VehicleNotificationRepository,
+        private val processor: TopicProcessor<VehicleNotification>,
+        private val gson: Gson
 ) : Receiver<VehicleNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)
@@ -70,9 +71,9 @@ class VehicleNotificationReceiver(
 
 @Component
 class EmsNotificationReceiver(
-    private val repository: EmergencyServiceNotificationRepository,
-    private val processor: TopicProcessor<EmergencyServiceNotification>,
-    private val gson: Gson
+        private val repository: EmergencyServiceNotificationRepository,
+        private val processor: TopicProcessor<EmergencyServiceNotification>,
+        private val gson: Gson
 ) : Receiver<EmergencyServiceNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)
@@ -81,7 +82,15 @@ class EmsNotificationReceiver(
     override fun receiveMessage(message: String) {
         val emergencyServiceNotification = gson.fromJson(message, EmergencyServiceNotification::class.java)
         log.info("EMS - received notification $emergencyServiceNotification")
-        repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
+
+        val existingNotification = repository.findByAccidentId(emergencyServiceNotification.accidentId).block()
+        if (existingNotification != null) {
+            existingNotification.status = emergencyServiceNotification.status
+            repository.save(existingNotification).subscribe { processor.onNext(it) }
+        }else{
+            repository.save(emergencyServiceNotification).subscribe { processor.onNext(it) }
+        }
+
     }
 
     override fun notificationStream(): Flux<EmergencyServiceNotification> {
@@ -91,9 +100,9 @@ class EmsNotificationReceiver(
 
 @Component
 class ManufacturerNotifictionReceiver(
-    private val repository: ManufacturerNotificationRepository,
-    private val processor: TopicProcessor<ManufacturerNotification>,
-    private val gson: Gson
+        private val repository: ManufacturerNotificationRepository,
+        private val processor: TopicProcessor<ManufacturerNotification>,
+        private val gson: Gson
 ) : Receiver<ManufacturerNotification> {
 
     private val log = Logger.getLogger(this.javaClass.name)
@@ -104,6 +113,7 @@ class ManufacturerNotifictionReceiver(
         log.info("received manufacturer notification")
         repository.save(notification).subscribe { processor.onNext(it) }
     }
+
     override fun notificationStream(): Flux<ManufacturerNotification> {
         return processor
     }

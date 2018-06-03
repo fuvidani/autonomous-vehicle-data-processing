@@ -1,6 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.web
 
 import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceNotification
+import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.service.IEmergencyServiceNotificationService
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -23,7 +24,7 @@ import reactor.core.publisher.Flux
 @RequestMapping("/notifications/ems")
 class EmergencyServiceNotificationController(private val service: IEmergencyServiceNotificationService) {
 
-    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0)
+    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0, status = EmergencyServiceStatus.UNKNOWN)
 
     @GetMapping
     fun getNotifications(): Flux<EmergencyServiceNotification> {

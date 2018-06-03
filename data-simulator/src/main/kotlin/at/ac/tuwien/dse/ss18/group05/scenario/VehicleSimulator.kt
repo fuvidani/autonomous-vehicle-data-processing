@@ -86,7 +86,7 @@ class VehicleSimulator(
 
     private fun calculateNextLocationIndex(currentIndex: Int): Int {
         //if on last position stay there
-        return if (currentIndex == route.size) {
+        return if (currentIndex == route.size -1) {
             currentIndex
         } else {
             currentIndex + 1

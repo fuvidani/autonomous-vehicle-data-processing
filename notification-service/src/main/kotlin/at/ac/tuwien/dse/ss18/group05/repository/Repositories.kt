@@ -6,6 +6,7 @@ import at.ac.tuwien.dse.ss18.group05.dto.VehicleNotification
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 /**
  * <h4>About this class</h4>
@@ -23,7 +24,10 @@ interface VehicleNotificationRepository : ReactiveCrudRepository<VehicleNotifica
 }
 
 @Repository
-interface EmergencyServiceNotificationRepository : ReactiveCrudRepository<EmergencyServiceNotification, String>
+interface EmergencyServiceNotificationRepository : ReactiveCrudRepository<EmergencyServiceNotification, String>{
+
+    fun findByAccidentId(id: String): Mono<EmergencyServiceNotification>
+}
 
 @Repository
 interface ManufacturerNotificationRepository : ReactiveCrudRepository<ManufacturerNotification, String> {

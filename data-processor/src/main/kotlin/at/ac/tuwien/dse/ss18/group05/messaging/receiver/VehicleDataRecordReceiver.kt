@@ -31,7 +31,7 @@ class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleData
         if (vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             log.info("CRASH - vehicle data record with event information received $vehicleDataRecord")
         } else {
-            if (lastLog.plusSeconds(3).isBefore(ZonedDateTime.now())) {
+            if (lastLog.plusSeconds(1).isBefore(ZonedDateTime.now())) {
                 println()
                 log.info("vehicle data record $vehicleDataRecord")
                 lastLog = ZonedDateTime.now()
