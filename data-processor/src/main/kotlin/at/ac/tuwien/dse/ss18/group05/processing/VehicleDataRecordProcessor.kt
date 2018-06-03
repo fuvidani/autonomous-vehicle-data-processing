@@ -38,7 +38,7 @@ class VehicleDataRecordProcessor(
             data.metaData.identificationNumber,
             GeoJsonPoint(data.sensorInformation.location.lon, data.sensorInformation.location.lat)
         )
-        vehicleLocationService.save(location).subscribe()
+        vehicleLocationService.save(location).block()
     }
 
     private fun checkAndHandleCrashEvent(data: VehicleDataRecord) {

@@ -140,7 +140,7 @@ class CompleteIntegrationTest {
         )
         val expectedServiceNotification = EmergencyServiceNotification(
             null, storedLiveAccident.id!!, crashDataRecord.timestamp, crashDataRecord.sensorInformation.location,
-            crashDataRecord.metaData.model, crashDataRecord.sensorInformation.passengers
+            crashDataRecord.metaData.model, crashDataRecord.sensorInformation.passengers, EmergencyServiceStatus.UNKNOWN
         )
         val expectedVehicleNotification = VehicleNotification(
             arrayOf("1G1AS58H497251672", "1FTFW1EFXEFB07248", "4T1BG22K5XU921742"),
