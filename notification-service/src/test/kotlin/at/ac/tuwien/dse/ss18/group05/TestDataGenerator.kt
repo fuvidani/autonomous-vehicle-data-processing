@@ -17,7 +17,7 @@ class TestDataGenerator {
     }
 
     fun getSecondEMSNotification(): EmergencyServiceNotification {
-        return EmergencyServiceNotification(id = "second_id", accidentId = "second_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 1,status = EmergencyServiceStatus.UNKNOWN)
+        return EmergencyServiceNotification(id = "second_id", accidentId = "second_accident", timeStamp = getTimeStamp(), location = accidentLocation, model = "some_model", passengers = 1, status = EmergencyServiceStatus.UNKNOWN)
     }
 
     fun getAllEMSNotifications(): Array<EmergencyServiceNotification> {

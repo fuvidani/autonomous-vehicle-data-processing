@@ -39,7 +39,7 @@ import java.time.Duration
 @SpringBootTest(value = ["application.yml"], classes = [NotificationServiceTestApplication::class])
 class EmergencyServiceNotificationControllerDocumentationTest {
 
-    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0,status = EmergencyServiceStatus.UNKNOWN)
+    private val pingNotification = EmergencyServiceNotification(id = "", accidentId = "", timeStamp = 0L, location = GpsLocation(0.0, 0.0), model = "", passengers = 0, status = EmergencyServiceStatus.UNKNOWN)
 
     @Suppress("unused")
     @MockBean
