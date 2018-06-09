@@ -16,7 +16,7 @@ Data processing of autonomous vehicles in a fault-tolerant, resilient and asynch
 * frontend 	8069
 * eu.gcr.io/dse-group-05/***
 * pushing to google cloud registry: gcloud docker -- push eu.gcr.io/dse-group-05/***
-
+gcloud container clusters get-credentials dse-cluster --zone us-central1-a --project dse-group-05
 
 # Development
 
