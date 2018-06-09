@@ -12,7 +12,7 @@ with them.
 [NOTE]
 Endpoint: `GET /vehicle/{manufacturerId}/vehicles`
 
-Tha API requires an existing manufacturer ID in the request path for which all the currently stored vehicles
+The API requires an existing manufacturer ID in the request path for which all the currently stored vehicles
 will be returned. Note that this endpoint supports streaming, this means you may call it with one of the following
 accept headers:
 
@@ -66,7 +66,27 @@ include::{snippets}/add-new-vehicle-invalid/http-request.adoc[]
 Response:
 include::{snippets}/add-new-vehicle-invalid/http-response.adoc[]
 
+== Get all vehicles
 
+[NOTE]
+Endpoint: `GET /vehicle/vehicles`
+
+This endpoint simply returns a stream of all stored vehicles and should only be invoked by other services that have privilege to do so.
+Note that this endpoint supports streaming, this means you may call it with one of the following
+accept headers:
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting all vehicles using the latter header:
+include::{snippets}/all-vehicles/http-request.adoc[]
+
+HTTP response:
+include::{snippets}/all-vehicles/http-response.adoc[]
+
+The above example response returns a stream of 6 different vehicles. Each json can be de-serialized into a valid
+`Vehicle` object:
+include::{snippets}/all-vehicles/response-fields.adoc[]
 
 
 

@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: data-simulator
+spec:
+  replicas: 1
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: data-simulator
+    spec:
+      containers:
+        - image: data-simulator:1
+          imagePullPolicy: Never
+          name: data-simulator
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbitmq"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_DATA_MONGODB_HOST
+              value: "dse-mongo-db"
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+            - name: NOTIFICATION_SERVICE_HOST
+              value: "ns"
+            - name: NOTIFICATION_SERVICE_PORT
+              value: "7000"
+          ports:
+            - containerPort: 10000

@@ -1,13 +1,9 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.core.TopicExchange
-import org.springframework.amqp.rabbit.connection.ConnectionFactory
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -24,12 +20,20 @@ import org.springframework.context.annotation.Configuration
 class RabbitConfig {
 
     val topicExchange = "vehicle-data-exchange"
-    val queueName = "traffic"
-    val routingKey = "notifications.#"
 
     @Bean
-    fun queue(): Queue {
-        return Queue(queueName, false)
+    fun vehicleQueue(): Queue {
+        return Queue("vehicleQueueNotifications", false)
+    }
+
+    @Bean
+    fun emsQueue(): Queue {
+        return Queue("emsQueueNotifications", false)
+    }
+
+    @Bean
+    fun manufacturerQueue(): Queue {
+        return Queue("manufacturerQueueNotifications", false)
     }
 
     @Bean
@@ -38,24 +42,17 @@ class RabbitConfig {
     }
 
     @Bean
-    fun binding(queue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(queue).to(topicExchange).with(routingKey)
+    fun vehicleBinding(vehicleQueue: Queue, topicExchange: TopicExchange): Binding {
+        return BindingBuilder.bind(vehicleQueue).to(topicExchange).with("notifications.vehicle")
     }
 
     @Bean
-    fun container(
-        connectionFactory: ConnectionFactory,
-        listenerAdapter: MessageListenerAdapter
-    ): SimpleMessageListenerContainer {
-        val container = SimpleMessageListenerContainer()
-        container.connectionFactory = connectionFactory
-        container.setQueueNames(queueName)
-        container.setMessageListener(listenerAdapter)
-        return container
+    fun emsBinding(emsQueue: Queue, topicExchange: TopicExchange): Binding {
+        return BindingBuilder.bind(emsQueue).to(topicExchange).with("notifications.ems")
     }
 
     @Bean
-    fun listenerAdapter(receiver: Receiver<out Any>): MessageListenerAdapter {
-        return MessageListenerAdapter(receiver, "receiveMessage")
+    fun manufacturerBinding(manufacturerQueue: Queue, topicExchange: TopicExchange): Binding {
+        return BindingBuilder.bind(manufacturerQueue).to(topicExchange).with("notifications.manufacturer")
     }
 }

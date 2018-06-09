@@ -2080,9 +2080,15 @@
             <div class="paragraph">
                 <p>Tha API requires an existing manufacturer ID in the request path for which vehicle data records will
                     be streamed down whenever available.
-                    Not that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and
-                    depends on the live traffic.
-                    You may invoke this endpoint with one of these headers:</p>
+                    <strong>Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not
+                        determined and depends on the live traffic.</strong> It very well
+                    may be the case, that upon subscription no data will arrive until a corresponding vehicle emits a
+                    new tracking record. If you prefer
+                    to get all the tracking data up to this point, use the other endpoint described in the next section.
+                </p>
+            </div>
+            <div class="paragraph">
+                <p>You may invoke this endpoint with one of these headers:</p>
             </div>
             <div class="ulist">
                 <ul>
@@ -2354,7 +2360,7 @@ Content-Length: 483
 </div>
 <div id="footer">
     <div id="footer-text">
-        Last updated 2018-05-12 22:11:42 +02:00
+        Last updated 2018-06-09 15:14:41 +02:00
     </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

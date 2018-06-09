@@ -15,7 +15,7 @@ ext {
 }
 
 test {
-    runWithMongoDb = false
+    runWithMongoDb = true
     outputs.dir snippetsDir
 }
 
@@ -28,3 +28,10 @@ asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+//bootJar {
+//    dependsOn asciidoctor
+//    from ("${asciidoctor.outputDir}/html5") {
+//        into 'static/docs'
+//    }
+//}

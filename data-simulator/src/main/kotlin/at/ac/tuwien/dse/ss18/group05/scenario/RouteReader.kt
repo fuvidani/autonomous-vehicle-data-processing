@@ -18,7 +18,7 @@ class RouteReader(private val filePath: String) {
     private fun extractRecords(records: CSVParser): List<RouteRecord> {
         val routeRecords = mutableListOf<RouteRecord>()
         records.forEach { record -> routeRecords.add(extractRecord(record)) }
-        return routeRecords
+        return routeRecords.distinct()
     }
 
     private fun extractRecord(record: CSVRecord): RouteRecord {

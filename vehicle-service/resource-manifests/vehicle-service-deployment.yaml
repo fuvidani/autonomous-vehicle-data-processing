@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vehicle-service
+spec:
+  replicas: 1
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: vehicle-service
+    spec:
+      containers:
+        - image: eu.gcr.io/dse-group-05/vehicle-service
+          imagePullPolicy: Always
+          name: vehicle-service
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbitmq"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_DATA_MONGODB_HOST
+              value: "dse-mongo-db"
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+          ports:
+            - containerPort: 5000

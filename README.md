@@ -3,6 +3,21 @@
  
 Data processing of autonomous vehicles in a fault-tolerant, resilient and asynchronous microservice environment. Featuring Kotlin, Spring Boot, Spring 5, MongoDB, RabbitMQ, Docker, Kubernetes.
 
+# Useful shortcuts
+
+* data-processor	9000
+* data-simulator	10000
+* gateway		4000
+* notification	7000
+* statistic	8000
+* tracker		6000
+* vehicle		5000
+* rabbit-mq	15672 | 5672 
+* frontend 	8069
+* eu.gcr.io/dse-group-05/***
+* pushing to google cloud registry: gcloud docker -- push eu.gcr.io/dse-group-05/***
+
+
 # Development
 
 ### Start Mongo (Docker)
@@ -17,10 +32,10 @@ And run:
 
 Additionally, you can test the connection to the different databases through
 the mongo shell:
-- `mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u 'vehicleService' -p 'vehicleDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/trackerDatabase -u 'trackerService' -p 'trackerDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u 'statisticsService' -p 'statisticsDatabasePassword'`
-- `mongo YOUR_LOCAL_IP:27017/notificationDatabase -u 'notificationService' -p 'notificationDatabasePassword'`
+- `mongo YOUR_LOCAL_IP:27017/vehicleDatabase -u "vehicleService" -p "vehicleDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/trackerDatabase -u "trackerService" -p "trackerDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/statisticsDatabase -u "statisticsService" -p "statisticsDatabasePassword"`
+- `mongo YOUR_LOCAL_IP:27017/notificationDatabase -u "notificationService" -p "notificationDatabasePassword"`
 
 ### Start RabbitMQ (Docker)
 `docker run -p 5672:5672 -p 15672:15672 --hostname localhost rabbitmq:3-management` (change `localhost` accordingly)

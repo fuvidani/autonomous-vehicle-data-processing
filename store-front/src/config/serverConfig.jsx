@@ -1,6 +1,7 @@
 import {serverConf} from "./localServerConfig";
 
 export const serverConfig = {
-  url: serverConf.url + ":" + serverConf.port,
-  logging: serverConf.logging,
+    gatewayUrl: serverConf.gatewayUrl + ":" + serverConf.gatewayPort,
+    dataSimulatorUrl: serverConf.dataSimulatorUrl + ":" + serverConf.dataSimulatorPort,
+    logging: serverConf.logging,
 };
