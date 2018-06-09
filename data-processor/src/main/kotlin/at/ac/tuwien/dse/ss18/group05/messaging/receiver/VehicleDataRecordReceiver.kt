@@ -24,10 +24,20 @@ class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleData
 
     private var lastLog = ZonedDateTime.now()
 
+    /**
+     * Abstract operation for receiving and presumably handling an incoming arbitrary message.
+     *
+     * @param message an arbitrary message in String format. Converters might be needed depending on the
+     * encoding the message uses.
+     */
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
-
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
+        logMessageIfNecessary(vehicleDataRecord)
+        processor.process(vehicleDataRecord)
+    }
+
+    private fun logMessageIfNecessary(vehicleDataRecord: VehicleDataRecord) {
         if (vehicleDataRecord.eventInformation == EventInformation.NEAR_CRASH || vehicleDataRecord.eventInformation == EventInformation.CRASH) {
             log.info("CRASH - vehicle data record with event information received $vehicleDataRecord")
         } else {
@@ -37,6 +47,5 @@ class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleData
                 lastLog = ZonedDateTime.now()
             }
         }
-        processor.process(vehicleDataRecord)
     }
 }

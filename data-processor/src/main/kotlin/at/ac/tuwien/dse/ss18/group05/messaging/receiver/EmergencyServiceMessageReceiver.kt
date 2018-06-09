@@ -21,6 +21,12 @@ import org.springframework.stereotype.Component
 class EmergencyServiceMessageReceiver(private val processor: DataProcessor<EmergencyServiceMessage>, gson: Gson) :
     Receiver(gson) {
 
+    /**
+     * Abstract operation for receiving and presumably handling an incoming arbitrary message.
+     *
+     * @param message an arbitrary message in String format. Converters might be needed depending on the
+     * encoding the message uses.
+     */
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
         log.info("New emergency service message arrived $message")
