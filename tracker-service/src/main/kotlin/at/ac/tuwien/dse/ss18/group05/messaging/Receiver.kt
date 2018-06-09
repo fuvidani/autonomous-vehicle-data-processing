@@ -14,7 +14,18 @@ import reactor.core.publisher.Flux
  */
 interface Receiver {
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     fun receiveMessage(message: String)
 
+    /**
+     * Returns a stream of vehicle data records received by this
+     * receiver.
+     *
+     * @return Flux of vehicle data records
+     */
     fun recordStream(): Flux<VehicleDataRecord>
 }

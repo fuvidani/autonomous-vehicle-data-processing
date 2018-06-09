@@ -13,5 +13,11 @@ import at.ac.tuwien.dse.ss18.group05.dto.Vehicle
  */
 interface VehicleServiceClient {
 
+    /**
+     * Retrieves the list of all available vehicles from a
+     * source outside this service.
+     *
+     * @return list of all available vehicles in the system
+     */
     fun getAllVehicles(): List<Vehicle>
 }
