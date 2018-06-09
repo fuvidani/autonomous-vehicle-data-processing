@@ -17,5 +17,13 @@ import reactor.core.publisher.Flux
  */
 interface VehicleLocationRepository : ReactiveCrudRepository<VehicleLocation, String> {
 
+    /**
+     * Returns a stream of VehicleLocations that fall into the radius specified by
+     * the point and distance parameters.
+     *
+     * @param point a geo-spatial point value
+     * @param distance a distance metric e.g. 1 kilometres, 50 metres...
+     * @return Flux stream of location entries matching the radius
+     */
     fun findByLocationNear(point: Point, distance: Distance): Flux<VehicleLocation>
 }
