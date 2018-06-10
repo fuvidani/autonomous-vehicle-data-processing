@@ -1,6 +1,5 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
-import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleDataRecordRepository
 import com.google.gson.Gson
@@ -8,7 +7,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
-import java.time.ZonedDateTime
 import java.util.logging.Logger
 
 /**
