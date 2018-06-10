@@ -1,12 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
-import org.springframework.amqp.rabbit.connection.ConnectionFactory
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.amqp.core.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -23,37 +18,29 @@ import org.springframework.context.annotation.Configuration
 class RabbitConfig {
 
     val topicExchange = "vehicle-data-exchange"
-    val queueName = "vehicleDataSimulation"
-    val routingKey = "notifications.#"
 
     @Bean
-    fun queue(): Queue {
-        return Queue(queueName, false)
+    fun vehicleMovementQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun topicExchange(): TopicExchange {
-        return TopicExchange(topicExchange)
+    fun emsNotificationQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun binding(queue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(queue).to(topicExchange).with(routingKey)
+    fun direct(): DirectExchange {
+        return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun container(
-        connectionFactory: ConnectionFactory
-    ): SimpleMessageListenerContainer {
-        val container = SimpleMessageListenerContainer()
-        container.connectionFactory = connectionFactory
-        container.setQueueNames(queueName)
-        container.setMessageListener(MessageListenerAdapter(DummyReceiver(), "receiveMessage"))
-        return container
+    fun movementBinding(vehicleMovementQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleMovementQueue).to(direct).with("vehicle-data-movement")
     }
-}
 
-class DummyReceiver {
-    fun receiveMessage(message: String) {
+    @Bean
+    fun emsNotificationBinding(emsNotificationQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(emsNotificationQueue).to(direct).with("ems-notification")
     }
 }

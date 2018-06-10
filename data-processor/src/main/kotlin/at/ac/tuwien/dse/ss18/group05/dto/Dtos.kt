@@ -150,6 +150,15 @@ data class LiveAccident(
     val timestampOfSiteClearing: Long?
 )
 
+/**
+ * Creates a new LiveAccident object from this and sets the timestamp of the
+ * service's arrival to the provided one.
+ *
+ * @param timestampOfServiceArrival timestamp of the emergency service's arrival
+ *
+ * @return a new immutable LiveAccident object same as this with the exception being
+ * the timestampOfServiceArrival attribute
+ */
 fun LiveAccident.withServiceArrival(timestampOfServiceArrival: Long): LiveAccident {
     return LiveAccident(
         this.id,
@@ -162,6 +171,15 @@ fun LiveAccident.withServiceArrival(timestampOfServiceArrival: Long): LiveAccide
     )
 }
 
+/**
+ * Creates a new LiveAccident object from this and sets the timestamp of the event
+ * when the accident's are has been cleared.
+ *
+ * @param timestampOfSiteClearing timestamp when the accident's are has been cleared
+ *
+ * @return a new immutable LiveAccident object same as this with the exception being
+ * the timestampOfSiteClearing attribute
+ */
 fun LiveAccident.withSiteClearing(timestampOfSiteClearing: Long): LiveAccident {
     return LiveAccident(
         this.id,
@@ -189,6 +207,16 @@ data class ConcernedVehicles(
     val concernedNearByVehicles: List<String>
 )
 
+/**
+ * Transforms this VehicleDataRecord into a ManufacturerNotification, used when an accident
+ * occurs.
+ *
+ * @param manufacturerId ID of the manufacturer the vehicle-record's vehicle belongs to
+ * @param accidentId optional accident ID if the record is about a crash event; in case of
+ * a near-crash event the accident ID may be null
+ *
+ * @return a valid, immutable ManufacturerNotification about the (near-) crash event
+ */
 fun VehicleDataRecord.toManufacturerNotification(
     manufacturerId: String,
     accidentId: String?
@@ -205,6 +233,13 @@ fun VehicleDataRecord.toManufacturerNotification(
     )
 }
 
+/**
+ * Transforms this VehicleDataRecord into a default LiveAccident object, used when an accident
+ * occurs.
+
+ * @return a valid, immutable LiveAccident object containing the accident's information gathered up
+ * to this point
+ */
 fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
     return LiveAccident(
         null,
@@ -217,6 +252,14 @@ fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
     )
 }
 
+/**
+ * Transforms this VehicleDataRecord into an EmergencyServiceNotification, used when an accident
+ * occurs.
+ *
+ * @param accidentId unique ID of the occurred accident
+ *
+ * @return a valid, immutable EmergencyServiceNotification to signal a new accident
+ */
 fun VehicleDataRecord.toEmergencyServiceNotification(accidentId: String): EmergencyServiceNotification {
     return EmergencyServiceNotification(
         null,
@@ -229,6 +272,21 @@ fun VehicleDataRecord.toEmergencyServiceNotification(accidentId: String): Emerge
     )
 }
 
+/**
+ * Transforms this VehicleDataRecord into a VehicleNotification, used to notify vehicles about
+ * accidents, emergency service updates.
+ *
+ * @param accidentId unique ID of the accident this notification corresponds to
+ * @param emergencyServiceStatus the status of the emergency service
+ * @param nearVehiclesList the list of vehicle IDs in the close perimeter of the accident
+ * @param farVehiclesList the list of vehicle IDs in the wide perimeter of the accident
+ * @param specialWarning optional flag that indicates whether there is a special warning projected on the accident's
+ * scene. Only vehicles in close perimeter may be notified about this.
+ * @param targetSpeed the objective speed all the vehicles close to the accident need to meet.
+ * Only vehicles in close perimeter may be notified about this.
+ *
+ * @return a valid, immutable VehicleNotification
+ */
 fun VehicleDataRecord.toVehicleNotification(
     accidentId: String,
     emergencyServiceStatus: EmergencyServiceStatus,
@@ -249,6 +307,13 @@ fun VehicleDataRecord.toVehicleNotification(
     )
 }
 
+/**
+ * Transforms this closed accident into an AccidentReport object. Although this function can
+ * be invoked even if the LiveAccident is still on-going, it does not make sense. Use only, if
+ * the accident already has timestamps for the service arrival and the clearing of the site.
+ *
+ * @return a valid, immutable AccidentReport
+ */
 fun LiveAccident.toAccidentReport(): AccidentReport {
     return AccidentReport(
         null,

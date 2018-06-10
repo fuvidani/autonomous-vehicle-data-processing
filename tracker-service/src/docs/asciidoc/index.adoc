@@ -13,7 +13,10 @@ with them.
 Endpoint: `GET /tracking/manufacturer/{manufacturerId}`
 
 Tha API requires an existing manufacturer ID in the request path for which vehicle data records will be streamed down whenever available.
-Not that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.
+**Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.** It very well
+may be the case, that upon subscription no data will arrive until a corresponding vehicle emits a new tracking record. If you prefer
+to get all the tracking data up to this point, use the other endpoint described in the next section.
+
 You may invoke this endpoint with one of these headers:
 
 * `text/event-stream`

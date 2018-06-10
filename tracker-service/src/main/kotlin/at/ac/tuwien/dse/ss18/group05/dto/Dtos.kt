@@ -62,6 +62,11 @@ data class ManufacturerDataRecord(
     val location: GpsLocation
 )
 
+/**
+ * Transforms this VehicleDataRecord into a ManufacturerDataRecord.
+ *
+ * @return a valid, immutable ManufacturerDataRecord
+ */
 fun VehicleDataRecord.toManufacturerDataRecord(): ManufacturerDataRecord {
     return ManufacturerDataRecord(
         this.id,

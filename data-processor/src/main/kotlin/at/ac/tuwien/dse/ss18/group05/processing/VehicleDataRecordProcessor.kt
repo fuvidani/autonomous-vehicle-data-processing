@@ -28,6 +28,13 @@ class VehicleDataRecordProcessor(
 
     private val vehicleToManufacturerMap: Map<String, String> by lazy { initializeVehicleToManufacturerMap() }
 
+    /**
+     * Abstract operation which processes the provided data of a generic type.
+     * Implementations have the responsibility to know how to process their type
+     * of data.
+     *
+     * @param data the data to process
+     */
     override fun process(data: VehicleDataRecord) {
         updateVehicleLocation(data)
         checkAndHandleCrashEvent(data)
@@ -50,12 +57,16 @@ class VehicleDataRecordProcessor(
     }
 
     private fun handleCrashEvent(data: VehicleDataRecord) {
-        val accident = accidentRepository.save(data.toDefaultLiveAccident()).block()
-        if (accident?.id != null) {
+        val newAccident = accidentRepository.save(data.toDefaultLiveAccident()).block()
+        if (newAccident?.id != null) {
             val vehicles = vehicleLocationService.findVehiclesInRadius(data.sensorInformation.location).block()!!
-            notifyManufacturer(data, accident.id)
-            notifier.notifyEmergencyService(data, accident.id)
-            notifier.notifyVehiclesOfNewAccident(data, accident.id, ConcernedVehicles(vehicles.second, vehicles.first))
+            notifyManufacturer(data, newAccident.id)
+            notifier.notifyEmergencyService(data, newAccident.id)
+            notifier.notifyVehiclesOfNewAccident(
+                data,
+                newAccident.id,
+                ConcernedVehicles(vehicles.second, vehicles.first)
+            )
         }
     }
 

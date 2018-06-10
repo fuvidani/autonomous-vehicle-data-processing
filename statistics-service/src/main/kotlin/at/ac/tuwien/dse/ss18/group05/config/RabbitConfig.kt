@@ -1,9 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.amqp.core.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -23,16 +21,16 @@ class RabbitConfig {
 
     @Bean
     fun statisticsQueue(): Queue {
-        return Queue("statisticsQueue", false)
+        return AnonymousQueue()
     }
 
     @Bean
-    fun topicExchange(): TopicExchange {
-        return TopicExchange(topicExchange)
+    fun direct(): DirectExchange {
+        return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun statisticsBinding(statisticsQueue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(statisticsQueue).to(topicExchange).with("statistics.#")
+    fun statisticsBinding(statisticsQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(statisticsQueue).to(direct).with("statistics")
     }
 }
