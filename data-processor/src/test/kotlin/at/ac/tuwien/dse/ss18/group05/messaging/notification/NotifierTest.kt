@@ -44,7 +44,7 @@ class NotifierTest {
             dataRecord.sensorInformation.location, EventInformation.NEAR_CRASH, null
         )
         notifier.notifyManufacturer(dataRecord, null, "Tesla")
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.manufacturer")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-manufacturer")
     }
 
     @Test
@@ -57,7 +57,7 @@ class NotifierTest {
             dataRecord.sensorInformation.location, EventInformation.CRASH, "someGeneratedAccidentId"
         )
         notifier.notifyManufacturer(dataRecord, "someGeneratedAccidentId", "Tesla")
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.manufacturer")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-manufacturer")
     }
 
     @Test
@@ -73,7 +73,7 @@ class NotifierTest {
             EmergencyServiceStatus.UNKNOWN
         )
         notifier.notifyEmergencyService(dataRecord, "someGeneratedAccidentId")
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.ems")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-ems")
     }
 
     @Test
@@ -92,7 +92,7 @@ class NotifierTest {
             1000 * 60 * 10
         )
         notifier.notifyStatisticsService(resolvedAccident)
-        Mockito.verify(sender).sendMessage(expectedReport, "statistics.report")
+        Mockito.verify(sender).sendMessage(expectedReport, "statistics")
     }
 
     @Test
@@ -110,7 +110,7 @@ class NotifierTest {
             10.0
         )
         notifier.notifyVehiclesOfNewAccident(dataRecord, "someGeneratedAccidentId", concernedVehicles)
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.vehicle")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-vehicle")
     }
 
     @Test
@@ -130,7 +130,7 @@ class NotifierTest {
             10.0
         )
         notifier.notifyVehiclesOfAccidentUpdate(updatedAccident, EmergencyServiceStatus.ARRIVED, concernedVehicles)
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.vehicle")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-vehicle")
     }
 
     @Test
@@ -150,6 +150,6 @@ class NotifierTest {
             10.0
         )
         notifier.notifyVehiclesOfAccidentUpdate(updatedAccident, EmergencyServiceStatus.AREA_CLEARED, concernedVehicles)
-        Mockito.verify(sender).sendMessage(expectedNotification, "notifications.vehicle")
+        Mockito.verify(sender).sendMessage(expectedNotification, "notifications-vehicle")
     }
 }

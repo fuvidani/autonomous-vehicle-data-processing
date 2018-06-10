@@ -96,7 +96,7 @@ class CompleteIntegrationTest {
         )
         recordReceiver.receiveMessage(gson.toJson(dataRecordNearCrash))
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications.manufacturer", gson.toJson(expectedNotification))
+            .convertAndSend("vehicle-data-exchange", "notifications-manufacturer", gson.toJson(expectedNotification))
         verifyNoMessagePublishedToMessageQueue()
     }
 
@@ -156,13 +156,13 @@ class CompleteIntegrationTest {
         Mockito.verify(rabbitTemplate, times(1))
             .convertAndSend(
                 "vehicle-data-exchange",
-                "notifications.manufacturer",
+                "notifications-manufacturer",
                 gson.toJson(expectedManufacturerNotification)
             )
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications.ems", gson.toJson(expectedServiceNotification))
+            .convertAndSend("vehicle-data-exchange", "notifications-ems", gson.toJson(expectedServiceNotification))
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications.vehicle", gson.toJson(expectedVehicleNotification))
+            .convertAndSend("vehicle-data-exchange", "notifications-vehicle", gson.toJson(expectedVehicleNotification))
 
         // SERVICE ARRIVES
         val serviceArrival = now.plus(10, ChronoUnit.MINUTES).toEpochMilli()
@@ -183,7 +183,7 @@ class CompleteIntegrationTest {
         Mockito.verify(rabbitTemplate, times(1))
             .convertAndSend(
                 "vehicle-data-exchange",
-                "notifications.vehicle",
+                "notifications-vehicle",
                 gson.toJson(expectedVehicleNotificationOfArrival)
             )
 
@@ -210,11 +210,11 @@ class CompleteIntegrationTest {
         Mockito.verify(rabbitTemplate, times(1))
             .convertAndSend(
                 "vehicle-data-exchange",
-                "notifications.vehicle",
+                "notifications-vehicle",
                 gson.toJson(expectedVehicleNotificationOfClearance)
             )
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "statistics.report", gson.toJson(expectedAccidentReport))
+            .convertAndSend("vehicle-data-exchange", "statistics", gson.toJson(expectedAccidentReport))
         verifyNoMessagePublishedToMessageQueue()
     }
 
