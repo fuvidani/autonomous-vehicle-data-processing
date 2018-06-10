@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="Asciidoctor 1.5.3">
     <meta name="author" content="DSE Group 05 - Version 1.0.0.RELEASE">
-    <title>Tracker Service Documentation</title>
+    <title>Spring REST Docs Notification Service</title>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
     <style>
@@ -2047,7 +2047,7 @@
 </head>
 <body class="book">
 <div id="header">
-    <h1>Tracker Service Documentation</h1>
+    <h1>Spring REST Docs Notification Service</h1>
     <div class="details">
         <span id="author" class="author">DSE Group 05 - Version 1.0.0.RELEASE</span><br>
     </div>
@@ -2056,102 +2056,70 @@
     <div id="preamble">
         <div class="sectionbody">
             <div class="paragraph">
-                <p>This documentation describes the the available endpoints of the Tracker Service API and how to
-                    interact
-                    with them.</p>
-            </div>
-        </div>
-    </div>
-    <div class="sect1">
-        <h2 id="_live_stream_vehicles_data_of_a_manufacturer">Live-stream vehicles' data of a manufacturer</h2>
-        <div class="sectionbody">
-            <div class="admonitionblock note">
-                <table>
-                    <tr>
-                        <td class="icon">
-                            <i class="fa icon-note" title="Note"></i>
-                        </td>
-                        <td class="content">
-                            Endpoint: <code>GET /tracking/manufacturer/{manufacturerId}</code>
-                        </td>
-                    </tr>
-                </table>
+                <p>Sample application demonstrating how to use Spring REST Docs with Spring Framework&#8217;s
+                    WebTestClient.</p>
             </div>
             <div class="paragraph">
-                <p>Tha API requires an existing manufacturer ID in the request path for which vehicle data records will
-                    be streamed down whenever available.
-                    <strong>Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not
-                        determined and depends on the live traffic.</strong> It very well
-                    may be the case, that upon subscription no data will arrive until a corresponding vehicle emits a
-                    new tracking record. If you prefer
-                    to get all the tracking data up to this point, use the other endpoint described in the next section.
-                </p>
-            </div>
-            <div class="paragraph">
-                <p>You may invoke this endpoint with one of these headers:</p>
-            </div>
-            <div class="ulist">
-                <ul>
-                    <li>
-                        <p><code>text/event-stream</code></p>
-                    </li>
-                    <li>
-                        <p><code>application/stream+json</code></p>
-                    </li>
-                </ul>
-            </div>
-            <div class="paragraph">
-                <p>Example request for getting the stream for Tesla using the latter header:</p>
+                <p><code>SampleWebTestClientApplicationTests</code> makes a call to a very simple service. Six
+                    snippets are produced. One showing how to make a request using cURL:</p>
             </div>
             <div class="listingblock">
                 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">GET /tracking/manufacturer/Tesla HTTP/1.1
-Accept: application/stream+json
-Host: tracker-service.com</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/notifications/vehicleId' -i \
+    -H 'Accept: application/stream+json'</code></pre>
                 </div>
             </div>
-            <table class="tableblock frame-all grid-all spread">
-                <caption class="title">Table 1. /manufacturer/{manufacturerId}</caption>
-                <colgroup>
-                    <col style="width: 50%;">
-                    <col style="width: 50%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Parameter</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>manufacturerId</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the manufacturer</p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
             <div class="paragraph">
-                <p>HTTP response:</p>
+                <p>One showing how to make a request using HTTPie:</p>
+            </div>
+            <div class="listingblock">
+                <div class="content">
+<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ http GET 'http://localhost:8080/notifications/vehicleId' \
+    'Accept:application/stream+json'</code></pre>
+                </div>
+            </div>
+            <div class="paragraph">
+                <p>One showing the HTTP request:</p>
+            </div>
+            <div class="listingblock">
+                <div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">GET /notifications/vehicleId HTTP/1.1
+Accept: application/stream+json
+Host: localhost:8080</code></pre>
+                </div>
+            </div>
+            <div class="paragraph">
+                <p>One showing the request body:</p>
+            </div>
+            <div class="listingblock">
+                <div class="content">
+                    <pre class="highlightjs highlight nowrap"><code></code></pre>
+                </div>
+            </div>
+            <div class="paragraph">
+                <p>One showing the HTTP response:</p>
             </div>
             <div class="listingblock">
                 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/stream+json;charset=UTF-8
-Content-Length: 606
+Content-Length: 100
 
-{"id":"ping","timestamp":0,"vehicleIdentificationNumber":"","model":"","location":{"lat":0.0,"lon":0.0}}
-{"id":"5af74ba806c8801af35447fa","timestamp":1526135842408,"vehicleIdentificationNumber":"4T4BE46K19R123050","model":"Tesla Model X","location":{"lat":0.0,"lon":0.0}}
-{"id":"5af74baa06c8801af35447fb","timestamp":1526135842408,"vehicleIdentificationNumber":"4T4BE46K19R123050","model":"Tesla Model X","location":{"lat":0.0,"lon":0.0}}
-{"id":"5af74bac06c8801af35447fc","timestamp":1526135842408,"vehicleIdentificationNumber":"4T4BE46K19R123050","model":"Tesla Model X","location":{"lat":0.0,"lon":0.0}}</code></pre>
+{"id":"ping","concernedVehicles":[],"message":"ping"}
+{"id":"","concernedVehicles":[],"message":""}</code></pre>
                 </div>
             </div>
             <div class="paragraph">
-                <p>The above example response returns a stream of three vehicle data records with a ping data record at
-                    the beginning. The ping data is only
-                    sent once at the very beginning in order to keep the connection alive. Clients should simply ignore
-                    this first record. Each json can be de-serialized into a valid
-                    object:</p>
+                <p>And one showing the response body:</p>
+            </div>
+            <div class="listingblock">
+                <div class="content">
+<pre class="highlightjs highlight nowrap"><code>{"id":"ping","concernedVehicles":[],"message":"ping"}
+{"id":"","concernedVehicles":[],"message":""}</code></pre>
+                </div>
+            </div>
+            <div class="paragraph">
+                <p>Response fields:</p>
             </div>
             <table class="tableblock frame-all grid-all spread">
                 <colgroup>
@@ -2170,188 +2138,21 @@ Content-Length: 606
                 <tr>
                     <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
                     <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The data record&#8217;s ID</p>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock">The notification&#8217;s ID</p>
                     </td>
                 </tr>
                 <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>timestamp</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">Time of recording in
-                        milliseconds (UTC)</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>vehicleIdentificationNumber</code>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>concernedVehicles</code>
                     </p></td>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock">List of vehicle IDs as
+                        recipients</p></td>
+                </tr>
+                <tr>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
                     <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The vehicle&#8217;s world-wide
-                        unique Vehicle Identification Number</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The vehicle&#8217;s type of
-                        model</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.lat</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The latitude coordinate of the
-                        vehicle at the moment of recording</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.lon</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The longitude coordinate of the
-                        vehicle at the moment of recording</p></td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="paragraph">
-                <p>Important: This endpoint will never close its end, meaning it&#8217;s the client&#8217;s
-                    responsibility to unsubscribe from the stream if
-                    they aren&#8217;t interested anymore.</p>
-            </div>
-        </div>
-    </div>
-    <div class="sect1">
-        <h2 id="_get_all_stored_vehicle_data_record_of_a_manufacturer">Get all stored vehicle data record of a
-            manufacturer</h2>
-        <div class="sectionbody">
-            <div class="admonitionblock note">
-                <table>
-                    <tr>
-                        <td class="icon">
-                            <i class="fa icon-note" title="Note"></i>
-                        </td>
-                        <td class="content">
-                            Endpoint: <code>GET /tracking/history/manufacturer/{manufacturerId}</code>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="paragraph">
-                <p>Tha API requires an existing manufacturer ID in the request path for which all the currently stored
-                    vehicle data
-                    records will be returned. In other words, the client will receive the history (every data record up
-                    to this point) of their
-                    vehicle&#8217;s records. Note that this endpoint supports streaming, this means you may call it with
-                    one of the following
-                    accept headers:</p>
-            </div>
-            <div class="ulist">
-                <ul>
-                    <li>
-                        <p><code>text/event-stream</code></p>
-                    </li>
-                    <li>
-                        <p><code>application/stream+json</code></p>
-                    </li>
-                </ul>
-            </div>
-            <div class="paragraph">
-                <p>Example request for getting all the vehicle data records of Audi using the latter header:</p>
-            </div>
-            <div class="listingblock">
-                <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">GET /tracking/history/manufacturer/Audi HTTP/1.1
-Accept: application/stream+json
-Host: tracker-service.com</code></pre>
-                </div>
-            </div>
-            <table class="tableblock frame-all grid-all spread">
-                <caption class="title">Table 2. /history/manufacturer/{manufacturerId}</caption>
-                <colgroup>
-                    <col style="width: 50%;">
-                    <col style="width: 50%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Parameter</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>manufacturerId</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the manufacturer</p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="paragraph">
-                <p>HTTP response:</p>
-            </div>
-            <div class="listingblock">
-                <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Content-Type: application/stream+json;charset=UTF-8
-Content-Length: 483
-
-{"id":"5af74ba006c8801af35447f7","timestamp":1526135828502,"vehicleIdentificationNumber":"3GCPCSE03BG366866","model":"Audi TT","location":{"lat":0.0,"lon":0.0}}
-{"id":"5af74ba106c8801af35447f8","timestamp":1526135828502,"vehicleIdentificationNumber":"3GCPCSE03BG366866","model":"Audi TT","location":{"lat":0.0,"lon":0.0}}
-{"id":"5af74ba106c8801af35447f9","timestamp":1526135828502,"vehicleIdentificationNumber":"3GCPCSE03BG366866","model":"Audi TT","location":{"lat":0.0,"lon":0.0}}</code></pre>
-                </div>
-            </div>
-            <div class="paragraph">
-                <p>The above example response returns a stream of three vehicle data records. Each json can be
-                    de-serialized into a valid
-                    object:</p>
-            </div>
-            <table class="tableblock frame-all grid-all spread">
-                <colgroup>
-                    <col style="width: 33%;">
-                    <col style="width: 33%;">
-                    <col style="width: 33%;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th class="tableblock halign-left valign-top">Path</th>
-                    <th class="tableblock halign-left valign-top">Type</th>
-                    <th class="tableblock halign-left valign-top">Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The data record&#8217;s ID</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>timestamp</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">Time of recording in
-                        milliseconds (UTC)</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>vehicleIdentificationNumber</code>
-                    </p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The vehicle&#8217;s world-wide
-                        unique Vehicle Identification Number</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>model</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The vehicle&#8217;s type of
-                        model</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.lat</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The latitude coordinate of the
-                        vehicle at the moment of recording</p></td>
-                </tr>
-                <tr>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>location.lon</code></p>
-                    </td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-                    <td class="tableblock halign-left valign-top"><p class="tableblock">The longitude coordinate of the
-                        vehicle at the moment of recording</p></td>
+                    <td class="tableblock halign-left valign-top"><p class="tableblock">The notification&#8217;s
+                        message</p></td>
                 </tr>
                 </tbody>
             </table>
@@ -2360,7 +2161,7 @@ Content-Length: 483
 </div>
 <div id="footer">
     <div id="footer-text">
-        Last updated 2018-06-09 15:14:41 +02:00
+        Last updated 2018-04-15 13:33:23 +02:00
     </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

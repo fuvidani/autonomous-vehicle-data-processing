@@ -22,6 +22,13 @@ class Sender(
 
     private val log: Logger = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Places an arbitrary message on the asynchronous message queue with the specified
+     * routing key.
+     *
+     * @param message an arbitrary message that must be published
+     * @param routingKey the routing key defining the destination of the message (topic)
+     */
     fun sendMessage(message: Any, routingKey: String) {
         log.info("Placing message of type ${message.javaClass.simpleName} on bus")
         val json = gson.toJson(message)

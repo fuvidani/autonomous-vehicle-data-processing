@@ -14,7 +14,21 @@ import reactor.core.publisher.Flux
  */
 interface ITrackerService {
 
+    /**
+     * Returns a hot (i.e. infinite) stream of data records that belong to the
+     * manufacturer specified by its ID.
+     *
+     * @param manufacturerId the unique ID of the manufacturer to use as filter in the stream
+     * @return hot Flux of tracking data records
+     */
     fun getTrackingStreamForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord>
 
+    /**
+     * Returns all the tracking data records of a manufacturer collected up to this point as a stream, i.e.
+     * the history. Consequently, this stream is finite and an onComplete() invocation is guaranteed.
+     *
+     * @param manufacturerId the unique ID of the manufacturer to use as filter in the stream
+     * @return Flux of tracking data records
+     */
     fun getTrackingHistoryForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord>
 }

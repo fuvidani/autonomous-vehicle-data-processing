@@ -1,5 +1,6 @@
 package at.ac.tuwien.dse.ss18.group05.messaging
 
+import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
 import at.ac.tuwien.dse.ss18.group05.repository.VehicleDataRecordRepository
 import com.google.gson.Gson
@@ -7,6 +8,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
 import reactor.core.publisher.TopicProcessor
+import java.time.ZonedDateTime
 import java.util.logging.Logger
 
 /**
@@ -27,6 +29,11 @@ class VehicleDataRecordReceiver(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
@@ -35,6 +42,12 @@ class VehicleDataRecordReceiver(
         processor.onNext(repository.save(vehicleDataRecord).block()!!)
     }
 
+    /**
+     * Returns a stream of vehicle data records received by this
+     * receiver.
+     *
+     * @return Flux of vehicle data records
+     */
     override fun recordStream(): Flux<VehicleDataRecord> {
         return processor
     }

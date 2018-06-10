@@ -20,12 +20,33 @@ class ServiceException(message: String) : Exception(message)
 
 interface IVehicleService {
 
+    /**
+     * Returns a finite stream of vehicles that belong to the manufacturer
+     * specified by the manufacturer ID.
+     *
+     * @param manufacturerId unique ID of the manufacturer
+     * @return Flux emitting the vehicles
+     * @throws ServiceException if the provided manufacturer ID is invalid
+     */
     @Throws(ServiceException::class)
     fun findAllVehiclesByManufacturerId(manufacturerId: String): Flux<Vehicle>
 
+    /**
+     * Persists a new vehicle if it is possible.
+     *
+     * @param vehicle valid Vehicle object to persist
+     * @return Mono emitting the persisted Vehicle
+     * @throws ServiceException if there is already a vehicle with the same
+     * identification number
+     */
     @Throws(ServiceException::class)
     fun registerNewVehicle(vehicle: Vehicle): Mono<Vehicle>
 
+    /**
+     * Returns a finite stream of all the persisted vehicles.
+     *
+     * @return Flux emitting vehicle elements
+     */
     fun findAll(): Flux<Vehicle>
 }
 
