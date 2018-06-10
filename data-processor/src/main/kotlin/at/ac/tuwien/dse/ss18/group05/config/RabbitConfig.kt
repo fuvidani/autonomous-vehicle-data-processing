@@ -1,9 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.amqp.core.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -22,27 +20,27 @@ class RabbitConfig {
     private val topicExchange = "vehicle-data-exchange"
 
     @Bean
-    fun vehicleQueue(): Queue {
-        return Queue("vehicleQueueProcessing", false)
+    fun vehicleMovementQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun emsQueue(): Queue {
-        return Queue("emsQueueProcessing", false)
+    fun emsNotificationQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun topicExchange(): TopicExchange {
-        return TopicExchange(topicExchange)
+    fun direct(): DirectExchange {
+        return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun vehicleBinding(vehicleQueue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(vehicleQueue).to(topicExchange).with("vehicle.data.#")
+    fun movementBinding(vehicleMovementQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleMovementQueue).to(direct).with("vehicle-data-movement")
     }
 
     @Bean
-    fun emsBinding(emsQueue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(emsQueue).to(topicExchange).with("ems.notification")
+    fun emsNotificationBinding(emsNotificationQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(emsNotificationQueue).to(direct).with("ems-notification")
     }
 }

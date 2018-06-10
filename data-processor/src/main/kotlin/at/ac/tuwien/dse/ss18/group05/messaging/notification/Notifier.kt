@@ -30,7 +30,7 @@ class Notifier(private val sender: Sender) : INotifier {
             true,
             10.0
         )
-        sender.sendMessage(notification, "notifications.vehicle")
+        sender.sendMessage(notification, "notifications-vehicle")
     }
 
     override fun notifyVehiclesOfAccidentUpdate(
@@ -48,22 +48,22 @@ class Notifier(private val sender: Sender) : INotifier {
             true,
             10.0
         )
-        sender.sendMessage(notification, "notifications.vehicle")
+        sender.sendMessage(notification, "notifications-vehicle")
     }
 
     override fun notifyManufacturer(record: VehicleDataRecord, accidentId: String?, manufacturerId: String) {
         val notification = record.toManufacturerNotification(manufacturerId, accidentId)
-        sender.sendMessage(notification, "notifications.manufacturer")
+        sender.sendMessage(notification, "notifications-manufacturer")
     }
 
     override fun notifyEmergencyService(record: VehicleDataRecord, accidentId: String) {
         val notification = record.toEmergencyServiceNotification(accidentId)
-        sender.sendMessage(notification, "notifications.ems")
+        sender.sendMessage(notification, "notifications-ems")
     }
 
     override fun notifyStatisticsService(accident: LiveAccident) {
         val report = accident.toAccidentReport()
-        sender.sendMessage(report, "statistics.report")
+        sender.sendMessage(report, "statistics")
     }
 
     private fun getMatchingTimestamp(accident: LiveAccident, status: EmergencyServiceStatus): Long {

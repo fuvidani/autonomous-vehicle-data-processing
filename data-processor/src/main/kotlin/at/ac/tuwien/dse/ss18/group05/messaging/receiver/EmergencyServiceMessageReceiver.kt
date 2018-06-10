@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 class EmergencyServiceMessageReceiver(private val processor: DataProcessor<EmergencyServiceMessage>, gson: Gson) :
     Receiver(gson) {
 
-    @RabbitListener(queues = ["#{emsQueue.name}"])
+    @RabbitListener(queues = ["#{emsNotificationQueue.name}"])
     override fun receiveMessage(message: String) {
         log.info("New emergency service message arrived $message")
         val serviceMessage = gson.fromJson<EmergencyServiceMessage>(message, EmergencyServiceMessage::class.java)
