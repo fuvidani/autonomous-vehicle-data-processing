@@ -17,3 +17,15 @@ vehicles:
   crashing: false
   startingAtKm: 13
   passengers: 4
+- identificationNumber: "1GTEK14Z36E235938"
+  manufacturerId: "Ford Europe"
+  model: "Ford Fiesta"
+  crashing: false
+  startingAtKm: 15
+  passengers: 2
+- identificationNumber: "1J4RR5GT9AC101848"
+  manufacturerId: "Acura"
+  model: "Acura MDX"
+  crashing: false
+  startingAtKm: 5
+  passengers: 4

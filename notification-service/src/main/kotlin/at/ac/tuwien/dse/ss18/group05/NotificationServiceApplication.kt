@@ -38,11 +38,12 @@ class NotificationServiceApplication : WebFluxConfigurer {
 
     @Bean
     fun vehicleNotificationProcessor(): TopicProcessor<VehicleNotification> {
+        val bufferSize = Math.pow(2.0, 12.0)
         return TopicProcessor.builder<VehicleNotification>()
                 .autoCancel(false)
                 .share(true)
                 .name("vehicle_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
+                .bufferSize(bufferSize.toInt())
                 .build()
     }
 

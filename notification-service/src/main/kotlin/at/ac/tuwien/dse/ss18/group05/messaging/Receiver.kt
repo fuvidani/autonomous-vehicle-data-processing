@@ -17,7 +17,6 @@ import reactor.core.publisher.TopicProcessor
 import java.util.*
 import java.util.logging.Logger
 
-
 /**
  * receiver interface for all possible concrete receivers
  * need to be able to actualy receive messages and also

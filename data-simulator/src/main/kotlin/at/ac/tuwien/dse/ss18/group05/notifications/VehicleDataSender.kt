@@ -24,8 +24,6 @@ class VehicleDataSender(
     @Synchronized
     fun sendVehicleDataRecord(vehicleDataRecord: VehicleDataRecord) {
         val json = gson.toJson(vehicleDataRecord)
-        println()
-        log.info("vehicle data record $vehicleDataRecord")
         //use two separate routing keys for data-processor and tracker service because
         rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle-data-movement", json)
         rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle-data-tracking", json)

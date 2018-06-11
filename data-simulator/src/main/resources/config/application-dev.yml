@@ -5,7 +5,7 @@ server:
 
 spring:
   rabbitmq:
-    host: 104.197.74.75
+    host: localhost
     port: 5672
     username: guest
     password: guest
@@ -14,3 +14,7 @@ notification:
   service:
     host: localhost
     port: 4000
+
+
+simulation:
+  pauseBetweenSimulationsInMS: 1000

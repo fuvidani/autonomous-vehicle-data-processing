@@ -7,7 +7,6 @@ import reactor.core.publisher.Flux
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import java.util.logging.Logger
 
-
 interface IEmergencyServiceNotificationService {
 
     /**

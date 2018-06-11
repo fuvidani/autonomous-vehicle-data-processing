@@ -29,6 +29,9 @@ class VehicleSimulator(
     @Value("\${datasimulator.speedAfterEvent}")
     private val speedAfterEvent: Double = 50.0
 
+    @Value("\${simulation.pauseBetweenSimulationsInMS}")
+    private val pauseBetweenSimulationsInMs: Long = 1000L
+
     override fun run(vararg args: String?) {
         simulate()
     }
@@ -43,7 +46,7 @@ class VehicleSimulator(
         while (true) {
             driveCarsToNextPoint()
             calculateCurrentVehicleData()
-            Thread.sleep(1000)
+            Thread.sleep(pauseBetweenSimulationsInMs)
         }
     }
 
@@ -96,7 +99,6 @@ class VehicleSimulator(
             currentIndex + 1
         }
     }
-
 
     private fun setStartingPointForVehicles() {
         for (vehicle in vehicles) {
