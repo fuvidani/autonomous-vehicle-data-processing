@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.ExceptionHandler
 import reactor.core.publisher.Flux
+import java.util.logging.Logger
 
 /**
  * <h4>About this class</h4>
@@ -28,8 +29,11 @@ import reactor.core.publisher.Flux
 @RequestMapping("/statistics")
 class StatisticsController(private val statisticsService: IStatisticsService) {
 
+    private val log = Logger.getLogger(this.javaClass.name)
+
     @GetMapping("/accidents")
     fun getAllAccidentReports(): Flux<AccidentReport> {
+        log.info("retrieving all accident statistics")
         return statisticsService.findAll()
     }
 

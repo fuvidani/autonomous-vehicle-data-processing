@@ -9,6 +9,7 @@ import HomeComponent from "./components/HomeComponent";
 import EmergencyServiceContainer from "./containers/EmergencyServiceContainer";
 import ManufacturerContainer from "./containers/ManufacturerContainer";
 import ManufacturersContainer from "./containers/ManufacturersContainer";
+import NotFound from "./components/NotFound";
 
 const Routes = () => (
     <Router>
@@ -18,7 +19,8 @@ const Routes = () => (
                 <Route exact path="/authority" component={AuthorityContainer}/>
                 <Route exact path="/emergency" component={EmergencyServiceContainer}/>
                 <Route exact path="/manufacturer" component={ManufacturersContainer}/>
-                <Route path="/manufacturer/:id" component={ManufacturerContainer}/>
+                <Route exact path="/manufacturer/:id" component={ManufacturerContainer}/>
+                <Route path="*" component={NotFound} />
             </Switch>
         </div>
     </Router>

@@ -1,12 +1,10 @@
 package at.ac.tuwien.dse.ss18.group05.web
+/* ktlint-disable no-wildcard-imports */
 
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerDataRecord
 import at.ac.tuwien.dse.ss18.group05.service.ITrackerService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 
 /**
@@ -18,6 +16,7 @@ import reactor.core.publisher.Flux
  * @version 1.0.0
  * @since 1.0.0
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/tracking")
 class TrackerServiceController(private val trackerService: ITrackerService) {
@@ -31,7 +30,7 @@ class TrackerServiceController(private val trackerService: ITrackerService) {
             .startWith(pingManufacturerDataRecord)
     }
 
-    @GetMapping("history/manufacturer/{manufacturerId}")
+    @GetMapping("/history/manufacturer/{manufacturerId}")
     fun getVehiclesTrackingHistory(@PathVariable("manufacturerId") manufacturerId: String): Flux<ManufacturerDataRecord> {
         return trackerService.getTrackingHistoryForManufacturer(manufacturerId)
     }

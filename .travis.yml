@@ -1,6 +1,21 @@
-language: java
-jdk:
-  - oraclejdk8
+matrix:
+  include:
+    - language: java
+      jdk: oraclejdk8
+    - language: node_js
+      node_js: 8.9.3
+      install:
+        - npm i -g npm5
+      before_script:
+        - cd store-front
+        - npm install
+      script:
+        - npm run eslint
+        - npm run test
+      cache:
+        directories:
+        - node_modules
+
 notifications:
   email:
     recipients:

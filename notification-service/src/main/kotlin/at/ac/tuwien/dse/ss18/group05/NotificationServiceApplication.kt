@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.context.annotation.Bean
+import org.springframework.http.CacheControl
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 import reactor.core.publisher.TopicProcessor
 import reactor.util.concurrent.Queues
 
@@ -24,7 +27,7 @@ import reactor.util.concurrent.Queues
 @EnableAutoConfiguration
 @EnableCircuitBreaker
 @EnableScheduling
-class NotificationServiceApplication {
+class NotificationServiceApplication : WebFluxConfigurer {
 
     companion object {
         @JvmStatic
@@ -61,5 +64,15 @@ class NotificationServiceApplication {
                 .name("manufacturer_notification_processor")
                 .bufferSize(Queues.SMALL_BUFFER_SIZE)
                 .build()
+    }
+
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/notifications/resources/**")
+            .addResourceLocations("classpath:/static/docs/")
+            .setCacheControl(CacheControl.noStore())
     }
 }

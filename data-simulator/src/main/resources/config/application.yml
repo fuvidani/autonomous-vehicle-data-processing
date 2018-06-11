@@ -3,5 +3,4 @@ spring:
     active: dev
 
 datasimulator:
-  timeDelayInSecondsForEvent: 5
-  speedAfterEvent: 30.0
+  speedAfterEvent: 10.0

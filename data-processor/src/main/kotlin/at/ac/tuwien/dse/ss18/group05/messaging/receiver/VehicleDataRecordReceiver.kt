@@ -20,10 +20,18 @@ import org.springframework.stereotype.Component
 @Qualifier("VehicleDataRecordReceiver")
 class VehicleDataRecordReceiver(private val processor: DataProcessor<VehicleDataRecord>, gson: Gson) : Receiver(gson) {
 
-    @RabbitListener(queues = ["#{vehicleQueue.name}"])
+    /**
+     * Abstract operation for receiving and presumably handling an incoming arbitrary message.
+     *
+     * @param message an arbitrary message in String format. Converters might be needed depending on the
+     * encoding the message uses.
+     */
+    @RabbitListener(queues = ["#{vehicleMovementQueue.name}"])
     override fun receiveMessage(message: String) {
-        log.info("New vehicle data record arrived")
+
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
+        println()
+        log.info("vehicle data record $vehicleDataRecord")
         processor.process(vehicleDataRecord)
     }
 }

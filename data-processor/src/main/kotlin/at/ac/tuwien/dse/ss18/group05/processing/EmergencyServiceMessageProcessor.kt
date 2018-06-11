@@ -23,6 +23,13 @@ class EmergencyServiceMessageProcessor(
     notifier: INotifier
 ) : DataProcessor<EmergencyServiceMessage>(vehicleLocationService, accidentRepository, notifier) {
 
+    /**
+     * Abstract operation which processes the provided data of a generic type.
+     * Implementations have the responsibility to know how to process their type
+     * of data.
+     *
+     * @param data the data to process
+     */
     override fun process(data: EmergencyServiceMessage) {
         if (data.status == EmergencyServiceStatus.ARRIVED) {
             handleArrival(data)
@@ -34,10 +41,10 @@ class EmergencyServiceMessageProcessor(
     private fun handleArrival(data: EmergencyServiceMessage) {
         val currentAccident = accidentRepository.findById(data.accidentId).block()
         if (currentAccident?.id != null) {
-            val accident = accidentRepository.save(currentAccident.withServiceArrival(data.timestamp)).block()!!
-            val vehicles = vehicleLocationService.findVehiclesInRadius(accident.location).block()!!
+            val updatedAccident = accidentRepository.save(currentAccident.withServiceArrival(data.timestamp)).block()!!
+            val vehicles = vehicleLocationService.findVehiclesInRadius(updatedAccident.location).block()!!
             notifier.notifyVehiclesOfAccidentUpdate(
-                accident, EmergencyServiceStatus.ARRIVED,
+                updatedAccident, EmergencyServiceStatus.ARRIVED,
                 ConcernedVehicles(vehicles.second, vehicles.first)
             )
         }
@@ -46,14 +53,14 @@ class EmergencyServiceMessageProcessor(
     private fun handleSiteClearing(data: EmergencyServiceMessage) {
         val currentAccident = accidentRepository.findById(data.accidentId).block()
         if (currentAccident?.id != null) {
-            accidentRepository.delete(currentAccident).subscribe()
-            val accident = currentAccident.withSiteClearing(data.timestamp)
-            val vehicles = vehicleLocationService.findVehiclesInRadius(accident.location).block()!!
+            accidentRepository.delete(currentAccident).block()
+            val clearedAccident = currentAccident.withSiteClearing(data.timestamp)
+            val vehicles = vehicleLocationService.findVehiclesInRadius(clearedAccident.location).block()!!
             notifier.notifyVehiclesOfAccidentUpdate(
-                accident, EmergencyServiceStatus.AREA_CLEARED,
+                clearedAccident, EmergencyServiceStatus.AREA_CLEARED,
                 ConcernedVehicles(vehicles.second, vehicles.first)
             )
-            notifier.notifyStatisticsService(accident)
+            notifier.notifyStatisticsService(clearedAccident)
         }
     }
 }

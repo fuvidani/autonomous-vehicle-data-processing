@@ -27,13 +27,25 @@ class VehicleDataRecordReceiver(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
-        log.info("New vehicle data record arrived")
         val vehicleDataRecord = gson.fromJson<VehicleDataRecord>(message, VehicleDataRecord::class.java)
-        repository.save(vehicleDataRecord).subscribe { processor.onNext(it) }
+        println()
+        log.info("vehicle data record $vehicleDataRecord")
+        processor.onNext(repository.save(vehicleDataRecord).block()!!)
     }
 
+    /**
+     * Returns a stream of vehicle data records received by this
+     * receiver.
+     *
+     * @return Flux of vehicle data records
+     */
     override fun recordStream(): Flux<VehicleDataRecord> {
         return processor
     }

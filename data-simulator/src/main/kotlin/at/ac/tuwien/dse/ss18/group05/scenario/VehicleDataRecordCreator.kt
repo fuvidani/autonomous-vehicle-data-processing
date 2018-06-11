@@ -24,7 +24,7 @@ class VehicleDataRecordCreator(
     }
 
     private fun getSensorInformationForVehicle(): SensorInformation {
-        val currentPosition = currentVehicleLocations[vehicle]
+        val currentPosition = getCurrentPositionForVehicle()
         if (currentPosition != null) {
             val gpsLocation = getGpsLocation(currentPosition)
             val proximityInformation = getProximityInformation(currentPosition)
@@ -33,6 +33,15 @@ class VehicleDataRecordCreator(
         } else {
             throw IllegalStateException("there is no current position for the vehicle")
         }
+    }
+
+    private fun getCurrentPositionForVehicle(): RouteRecord? {
+        currentVehicleLocations.entries.forEach {
+            if (it.key.identificationNumber == vehicle.identificationNumber) {
+                return it.value
+            }
+        }
+        return null
     }
 
     private fun getGpsLocation(currentPosition: RouteRecord): GpsLocation {

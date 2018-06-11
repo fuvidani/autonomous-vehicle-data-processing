@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 10000
   servlet:
     context-path: ""
 
@@ -9,3 +9,8 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+notification:
+  service:
+    host: localhost
+    port: 4000

@@ -1,9 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.amqp.core.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -23,16 +21,16 @@ class RabbitConfig {
 
     @Bean
     fun vehicleQueue(): Queue {
-        return Queue("vehicleQueue", false)
+        return AnonymousQueue()
     }
 
     @Bean
-    fun topicExchange(): TopicExchange {
-        return TopicExchange(topicExchange)
+    fun direct(): DirectExchange {
+        return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun vehicleBinding(vehicleQueue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(vehicleQueue).to(topicExchange).with("vehicle.data.#")
+    fun vehicleBinding(vehicleQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleQueue).to(direct).with("vehicle-data-tracking")
     }
 }

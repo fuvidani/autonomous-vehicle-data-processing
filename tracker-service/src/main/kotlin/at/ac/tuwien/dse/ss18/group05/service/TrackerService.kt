@@ -26,6 +26,13 @@ class TrackerService(
 
     private val vehicleToManufacturerMap: Map<String, String> by lazy { initializeVehicleToManufacturerMap() }
 
+    /**
+     * Returns a hot (i.e. infinite) stream of data records that belong to the
+     * manufacturer specified by its ID.
+     *
+     * @param manufacturerId the unique ID of the manufacturer to use as filter in the stream
+     * @return hot Flux of tracking data records
+     */
     override fun getTrackingStreamForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return receiver
             .recordStream()
@@ -33,6 +40,13 @@ class TrackerService(
             .filter { vehicleToManufacturerMap[it.vehicleIdentificationNumber] == manufacturerId }
     }
 
+    /**
+     * Returns all the tracking data records of a manufacturer collected up to this point as a stream, i.e.
+     * the history. Consequently, this stream is finite and an onComplete() invocation is guaranteed.
+     *
+     * @param manufacturerId the unique ID of the manufacturer to use as filter in the stream
+     * @return Flux of tracking data records
+     */
     override fun getTrackingHistoryForManufacturer(manufacturerId: String): Flux<ManufacturerDataRecord> {
         return repository
             .findAll()

@@ -19,7 +19,7 @@ const styles = {
     }
 };
 
-let manufacturerId;
+let manufacturerId = null;
 
 export default class ManufacturerComponent extends React.Component {
     constructor(props) {
@@ -33,7 +33,7 @@ export default class ManufacturerComponent extends React.Component {
     }
 
     componentWillMount() {
-        // this.props.fetchManufacturerStreams(manufacturerId);
+        this.props.fetchManufacturerStreams(manufacturerId);
     }
 
     componentWillUnmount() {
@@ -72,7 +72,8 @@ export default class ManufacturerComponent extends React.Component {
                 <div className="col-md-6">
                     <MapComponent vehicleTrackingInformation={this.props.vehicleTrackingInformation}
                                   notShownNotificationIds={this.state.notShownNotificationIds}
-                                  notifications={this.props.notifications}/>
+                                  notifications={this.props.notifications}
+                                  vehicleHistoryInformation={this.props.vehicleHistoryInformation}/>
                 </div>
                 <div className="col-md-3">
                     <NotificationList notifications={this.props.notifications}
