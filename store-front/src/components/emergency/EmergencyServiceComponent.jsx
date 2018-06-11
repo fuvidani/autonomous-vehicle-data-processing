@@ -16,6 +16,7 @@ export default class EmergencyServiceComponent extends React.Component {
 
     componentWillMount() {
         this.props.fetchCrashEventNotifications();
+        this.props.fetchCrashEventNotificationsHistory();
     }
 
     componentWillUnmount() {

@@ -3,7 +3,7 @@ import EmergencyServiceComponent from "../components/emergency/EmergencyServiceC
 import {
     fetchCrashEventNotifications,
     cancelCrashEventNotifications,
-    clearCrashEvent, arriveToCrashEvent
+    clearCrashEvent, arriveToCrashEvent, fetchCrashEventNotificationsHistory
 } from "../actions/EmergencyServiceActions";
 
 const mapStateToProps = (state) => {
@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchCrashEventNotifications: () => dispatch(fetchCrashEventNotifications()),
+        fetchCrashEventNotificationsHistory: () => dispatch(fetchCrashEventNotificationsHistory()),
         cancelCrashEventNotifications: () => dispatch(cancelCrashEventNotifications()),
         arriveToCrashEvent: (accidentId, timestamp) => dispatch(arriveToCrashEvent(accidentId, timestamp)),
         clearCrashEvent: (accidentId, timestamp) => dispatch(clearCrashEvent(accidentId, timestamp))

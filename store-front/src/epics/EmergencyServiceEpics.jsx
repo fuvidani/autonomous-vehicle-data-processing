@@ -13,6 +13,18 @@ const fetchEmergencyServiceCrashEventNotificationsEpic = action$ =>
                 .takeUntil(action$.ofType(ActionTypes.CANCEL_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS))
         );
 
+const fetchEmergencyServiceCrashEventNotificationsHistoryEpic = action$ =>
+    action$.ofType(ActionTypes.FETCH_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS_HISTORY)
+        .mergeMap(() =>
+            fetchStream('/notifications/ems/findAllHistoryNotifications')
+                .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
+                .map(response => ({
+                    type: ActionTypes.EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATION_FETCHED,
+                    payload: JSON.parse(response)
+                }))
+                .takeUntil(action$.ofType(ActionTypes.CANCEL_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS))
+        );
+
 const postEmergencyServiceArrivedEpic = action$ =>
     action$.ofType(ActionTypes.ARRIVE_TO_CRASH_EVENT)
         .mergeMap((action) =>
@@ -34,6 +46,7 @@ const clearEmergencyServiceNotifications = action$ =>
 export {
     clearEmergencyServiceNotifications,
     fetchEmergencyServiceCrashEventNotificationsEpic,
+    fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
     postEmergencyServiceArrivedEpic,
     postEmergencyServiceClearedEpic
 }

@@ -16,17 +16,13 @@ export default function reducer(state = {
         case ActionTypes.EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATION_FETCHED:
             return {
                 ...state,
-                crashEventNotifications: state.crashEventNotifications.concat({
-                    ...action.payload,
-                    arrived: false,
-                    cleared: false
-                })
+                crashEventNotifications: state.crashEventNotifications.concat(action.payload)
             };
 
         case ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED: {
-            const updatedCrashEventNotifications = state.crashEventNotifications.map(notification => {
+            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().map(notification => {
                 if (notification.accidentId === action.payload) {
-                    return {...notification, arrived: true}
+                    return {...notification, status: "ARRIVED"}
                 }
 
                 return notification;
@@ -39,9 +35,9 @@ export default function reducer(state = {
         }
 
         case ActionTypes.CLEAR_CRASH_EVENT_POSTED: {
-            const updatedCrashEventNotifications = state.crashEventNotifications.map(notification => {
+            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().map(notification => {
                 if (notification.accidentId === action.payload) {
-                    return {...notification, cleared: true}
+                    return {...notification, status: "AREA_CLEARED"}
                 }
 
                 return notification;

@@ -13,6 +13,7 @@ import {
 import {
     clearEmergencyServiceNotifications,
     fetchEmergencyServiceCrashEventNotificationsEpic,
+    fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
     postEmergencyServiceArrivedEpic,
     postEmergencyServiceClearedEpic
 } from "./EmergencyServiceEpics";
@@ -27,6 +28,7 @@ export default combineEpics(
     fetchVehicleInformationEpic,
     fetchVehicleTrackingStreamEpic,
     fetchEmergencyServiceCrashEventNotificationsEpic,
+    fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
     postEmergencyServiceArrivedEpic,
     postEmergencyServiceClearedEpic
 );
