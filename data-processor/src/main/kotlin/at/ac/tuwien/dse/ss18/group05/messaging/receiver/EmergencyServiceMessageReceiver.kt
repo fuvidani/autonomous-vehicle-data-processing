@@ -27,7 +27,7 @@ class EmergencyServiceMessageReceiver(private val processor: DataProcessor<Emerg
      * @param message an arbitrary message in String format. Converters might be needed depending on the
      * encoding the message uses.
      */
-    @RabbitListener(queues = ["#{emsQueue.name}"])
+    @RabbitListener(queues = ["#{emsNotificationQueue.name}"])
     override fun receiveMessage(message: String) {
         log.info("New emergency service message arrived $message")
         val serviceMessage = gson.fromJson<EmergencyServiceMessage>(message, EmergencyServiceMessage::class.java)
