@@ -3,6 +3,9 @@ package at.ac.tuwien.dse.ss18.group05.scenario
 
 import at.ac.tuwien.dse.ss18.group05.dto.*
 
+/**
+ * helper class with calculations of current position and information needed to post on messaging stream
+ */
 class VehicleDataRecordCreator(
     private val vehicle: Vehicle,
     private val currentVehicleLocations: Map<Vehicle, RouteRecord>,
@@ -28,9 +31,9 @@ class VehicleDataRecordCreator(
         if (currentPosition != null) {
             val gpsLocation = getGpsLocation(currentPosition)
             val proximityInformation = getProximityInformation(currentPosition)
-
             return SensorInformation(location = gpsLocation, proximityInformation = proximityInformation, passengers = vehicle.passengers, speed = currentSpeed)
         } else {
+            //this can only happen if the map map was not initialized properly or the equals/hash code method are not overwritten
             throw IllegalStateException("there is no current position for the vehicle")
         }
     }
@@ -54,6 +57,12 @@ class VehicleDataRecordCreator(
         return ProximityInformation(distanceToNextVehicle, distanceToPreviousVehicle)
     }
 
+    /**
+     * streaming through all the current vehicle locations
+     * filtering only those who are in front of the current car
+     *
+     * @param currentDistance the distance of the current vehicle
+     */
     private fun findNextVehicle(currentDistance: Double): Double {
         val nextDistance = currentVehicleLocations
                 .map { (k, v) -> v.distanceToStart }
@@ -62,6 +71,12 @@ class VehicleDataRecordCreator(
         return calculateDistanceBetweenCars(currentDistance, nextDistance)
     }
 
+    /**
+     * streaming through all the current vehicle locations
+     * filtering only those who are behind the current car
+     *
+     * @param currentDistance the distance of the current vehicle
+     */
     private fun findPreviousVehicle(currentDistance: Double): Double {
         val previousDistance = currentVehicleLocations
                 .map { (k, v) -> v.distanceToStart }

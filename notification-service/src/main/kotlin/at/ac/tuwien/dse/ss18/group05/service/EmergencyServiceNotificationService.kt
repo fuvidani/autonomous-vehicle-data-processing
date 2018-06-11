@@ -7,10 +7,17 @@ import reactor.core.publisher.Flux
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import java.util.logging.Logger
 
+
 interface IEmergencyServiceNotificationService {
 
+    /**
+     * finding all notifications which occurred and the emergency service stored
+     */
     fun findAllHistoryNotifications(): Flux<EmergencyServiceNotification>
 
+    /**
+     * streaming the notifications via hot flux to the client
+     */
     fun streamEmsNotifications(): Flux<EmergencyServiceNotification>
 }
 

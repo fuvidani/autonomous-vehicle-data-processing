@@ -19,6 +19,10 @@ class NotificationReceiver(
 
     private val logger = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * opening the connection/stream to the notification service after the object creation
+     * receiving all notifications for vehicles here and passing them to the simulator
+     */
     @PostConstruct
     fun receive() {
         logger.info("notification receiver instantiated")
@@ -28,6 +32,7 @@ class NotificationReceiver(
                     .accept(MediaType.TEXT_EVENT_STREAM)
                     .retrieve()
                     .bodyToFlux(VehicleNotification::class.java)
+                    //next element which arrives gets passed to simulator
                     .doOnNext { notification ->
                         vehicleSimulator.setSpeedForVehicle(vehicle.identificationNumber, notification.targetSpeed)
                     }

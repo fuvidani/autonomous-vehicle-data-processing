@@ -17,23 +17,28 @@ import reactor.core.publisher.TopicProcessor
 import java.util.*
 import java.util.logging.Logger
 
-/**
- * <h4>About this class</h4>
- *
- * <p>Description</p>
- *
- * @author Daniel Fuevesi
- * @version 1.0.0
- * @since 1.0.0
- */
 
+/**
+ * receiver interface for all possible concrete receivers
+ * need to be able to actualy receive messages and also
+ * expose the received messages as a flux
+ */
 interface Receiver<T> {
 
+    /**
+     * receive the message in string format and then further process it
+     */
     fun receiveMessage(message: String)
 
+    /**
+     * stream all the notifications of the class as a flux object
+     */
     fun notificationStream(): Flux<T>
 }
 
+/**
+ * handling all vehicle specific notifications here
+ */
 @Component
 class VehicleNotificationReceiver(
     private val repository: VehicleNotificationRepository,
@@ -43,6 +48,11 @@ class VehicleNotificationReceiver(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     @RabbitListener(queues = ["#{vehicleQueue.name}"])
     override fun receiveMessage(message: String) {
         val incomingVehicleNotification = gson.fromJson(message, IncomingVehicleNotification::class.java)
@@ -69,6 +79,9 @@ class VehicleNotificationReceiver(
     }
 }
 
+/**
+ * handling all emergency service specific notifications here
+ */
 @Component
 class EmsNotificationReceiver(
     private val repository: EmergencyServiceNotificationRepository,
@@ -78,6 +91,11 @@ class EmsNotificationReceiver(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     @RabbitListener(queues = ["#{emsQueue.name}"])
     override fun receiveMessage(message: String) {
         val emergencyServiceNotification = gson.fromJson(message, EmergencyServiceNotification::class.java)
@@ -97,6 +115,9 @@ class EmsNotificationReceiver(
     }
 }
 
+/**
+ * handling all manufacturer specific notifications here
+ */
 @Component
 class ManufacturerNotifictionReceiver(
     private val repository: ManufacturerNotificationRepository,
@@ -106,6 +127,11 @@ class ManufacturerNotifictionReceiver(
 
     private val log = Logger.getLogger(this.javaClass.name)
 
+    /**
+     * Receives the provided message.
+     *
+     * @param message an arbitrary message in String format
+     */
     @RabbitListener(queues = ["#{manufacturerQueue.name}"])
     override fun receiveMessage(message: String) {
         val notification = gson.fromJson(message, ManufacturerNotification::class.java)

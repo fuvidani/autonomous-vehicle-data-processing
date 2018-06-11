@@ -11,6 +11,9 @@ import org.springframework.core.env.PropertiesPropertySource
 import org.springframework.core.io.ClassPathResource
 import java.util.*
 
+/**
+ * simple reader class which uses the newly introduced property source from spring boot 2.0
+ */
 class VehiclesReader(private val filePath: String) {
 
     fun getVehicles(): List<Vehicle> {

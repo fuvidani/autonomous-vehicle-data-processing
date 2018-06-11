@@ -7,20 +7,21 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import java.util.logging.Logger
 
-/**
- * <h4>About this class</h4>
- *
- * <p>Description</p>
- *
- * @author Daniel Fuevesi
- * @version 1.0.0
- * @since 1.0.0
- */
 
 interface IVehicleNotificationService {
 
+    /**
+     * finding all notifications which occurred and the vehicle service stored
+     *
+     * @param id the id for which vehicle the notifications are searched
+     */
     fun findHistoryNotificationsForVehicle(id: String): Flux<VehicleNotification>
 
+    /**
+     * streaming the notifications via hot flux to the client
+     *
+     * @param id the id for which vehicle the notifications are streamed
+     */
     fun getStreamForVehicle(id: String): Flux<VehicleNotification>
 }
 

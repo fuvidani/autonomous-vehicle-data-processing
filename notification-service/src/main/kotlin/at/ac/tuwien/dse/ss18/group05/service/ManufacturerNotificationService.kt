@@ -9,8 +9,18 @@ import java.util.logging.Logger
 
 interface IManufacturerNotificationService {
 
+    /**
+     * finding all notifications which occurred and the manufacturer service stored
+     *
+     * @param id the manufacturer identifier to search all history notifications
+     */
     fun findAllHistoryNotifications(id: String): Flux<ManufacturerNotification>
 
+    /**
+     * streaming the notifications via hot flux to the client
+     *
+     * @param id the manufacturer identifier to stream the notifications for
+     */
     fun streamManufacturerNotifications(id: String): Flux<ManufacturerNotification>
 }
 
