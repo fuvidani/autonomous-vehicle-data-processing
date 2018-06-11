@@ -1,11 +1,12 @@
 package at.ac.tuwien.dse.ss18.group05.dto
 
+/* ktlint-disable no-wildcard-imports */
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexType
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.Arrays
+import java.util.*
 
 /**
  * <h4>About this class</h4>
@@ -161,13 +162,13 @@ data class LiveAccident(
  */
 fun LiveAccident.withServiceArrival(timestampOfServiceArrival: Long): LiveAccident {
     return LiveAccident(
-        this.id,
-        this.vehicleMetaData,
-        this.location,
-        this.passengers,
-        this.timestampOfAccident,
-        timestampOfServiceArrival,
-        this.timestampOfSiteClearing
+            this.id,
+            this.vehicleMetaData,
+            this.location,
+            this.passengers,
+            this.timestampOfAccident,
+            timestampOfServiceArrival,
+            this.timestampOfSiteClearing
     )
 }
 
@@ -182,13 +183,13 @@ fun LiveAccident.withServiceArrival(timestampOfServiceArrival: Long): LiveAccide
  */
 fun LiveAccident.withSiteClearing(timestampOfSiteClearing: Long): LiveAccident {
     return LiveAccident(
-        this.id,
-        this.vehicleMetaData,
-        this.location,
-        this.passengers,
-        this.timestampOfAccident,
-        this.timestampOfServiceArrival,
-        timestampOfSiteClearing
+            this.id,
+            this.vehicleMetaData,
+            this.location,
+            this.passengers,
+            this.timestampOfAccident,
+            this.timestampOfServiceArrival,
+            timestampOfSiteClearing
     )
 }
 
@@ -222,14 +223,14 @@ fun VehicleDataRecord.toManufacturerNotification(
     accidentId: String?
 ): ManufacturerNotification {
     return ManufacturerNotification(
-        null,
-        this.timestamp,
-        this.metaData.identificationNumber,
-        manufacturerId,
-        this.metaData.model,
-        this.sensorInformation.location,
-        this.eventInformation,
-        accidentId
+            UUID.randomUUID().toString(),
+            this.timestamp,
+            this.metaData.identificationNumber,
+            manufacturerId,
+            this.metaData.model,
+            this.sensorInformation.location,
+            this.eventInformation,
+            accidentId
     )
 }
 
@@ -242,13 +243,13 @@ fun VehicleDataRecord.toManufacturerNotification(
  */
 fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
     return LiveAccident(
-        null,
-        this.metaData,
-        GeoJsonPoint(this.sensorInformation.location.lon, this.sensorInformation.location.lat),
-        this.sensorInformation.passengers,
-        this.timestamp,
-        null,
-        null
+            UUID.randomUUID().toString(),
+            this.metaData,
+            GeoJsonPoint(this.sensorInformation.location.lon, this.sensorInformation.location.lat),
+            this.sensorInformation.passengers,
+            this.timestamp,
+            null,
+            null
     )
 }
 
@@ -262,13 +263,13 @@ fun VehicleDataRecord.toDefaultLiveAccident(): LiveAccident {
  */
 fun VehicleDataRecord.toEmergencyServiceNotification(accidentId: String): EmergencyServiceNotification {
     return EmergencyServiceNotification(
-        null,
-        accidentId,
-        this.timestamp,
-        this.sensorInformation.location,
-        this.metaData.model,
-        this.sensorInformation.passengers,
-        EmergencyServiceStatus.UNKNOWN
+            UUID.randomUUID().toString(),
+            accidentId,
+            this.timestamp,
+            this.sensorInformation.location,
+            this.metaData.model,
+            this.sensorInformation.passengers,
+            EmergencyServiceStatus.UNKNOWN
     )
 }
 
@@ -296,14 +297,14 @@ fun VehicleDataRecord.toVehicleNotification(
     targetSpeed: Double?
 ): VehicleNotification {
     return VehicleNotification(
-        farVehiclesList.toTypedArray(),
-        nearVehiclesList.toTypedArray(),
-        accidentId,
-        this.timestamp,
-        this.sensorInformation.location,
-        emergencyServiceStatus,
-        specialWarning,
-        targetSpeed
+            farVehiclesList.toTypedArray(),
+            nearVehiclesList.toTypedArray(),
+            accidentId,
+            this.timestamp,
+            this.sensorInformation.location,
+            emergencyServiceStatus,
+            specialWarning,
+            targetSpeed
     )
 }
 
@@ -316,12 +317,12 @@ fun VehicleDataRecord.toVehicleNotification(
  */
 fun LiveAccident.toAccidentReport(): AccidentReport {
     return AccidentReport(
-        null,
-        this.id!!,
-        this.vehicleMetaData,
-        GpsLocation(this.location.y, this.location.x),
-        this.passengers,
-        this.timestampOfServiceArrival!!.minus(this.timestampOfAccident),
-        this.timestampOfSiteClearing!!.minus(this.timestampOfServiceArrival)
+            UUID.randomUUID().toString(),
+            this.id!!,
+            this.vehicleMetaData,
+            GpsLocation(this.location.y, this.location.x),
+            this.passengers,
+            this.timestampOfServiceArrival!!.minus(this.timestampOfAccident),
+            this.timestampOfSiteClearing!!.minus(this.timestampOfServiceArrival)
     )
 }

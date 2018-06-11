@@ -37,11 +37,6 @@ const MapComponent = compose(
             props.notifications.filter((notification, i) => !props.notShownNotificationIds.includes(i)).map((notification, i) =>
                 <Marker key={i} position={{lat: notification.location.lat, lng: notification.location.lon}} label={notification.eventInfo[0]}/>)
         }
-        {
-            Object.keys(props.vehicleHistoryInformation).map(function (key) {
-                return <Polyline key={key} path={props.vehicleHistoryInformation[key]}/>;
-            })
-        }
     </GoogleMap>
 );
 

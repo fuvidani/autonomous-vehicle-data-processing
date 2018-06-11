@@ -4,11 +4,6 @@ server:
     context-path: ""
 
 spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
   cloud:
     gateway:
       routes:

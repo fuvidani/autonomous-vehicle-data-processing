@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitConfig {
 
-    private val topicExchange = "vehicle-data-exchange"
+    private val topicExchangeName = "vehicle-data-exchange"
 
     @Bean
     fun vehicleMovementQueue(): Queue {
@@ -30,17 +30,17 @@ class RabbitConfig {
     }
 
     @Bean
-    fun direct(): DirectExchange {
-        return DirectExchange(topicExchange)
+    fun exchange(): DirectExchange {
+        return DirectExchange(topicExchangeName)
     }
 
     @Bean
-    fun movementBinding(vehicleMovementQueue: Queue, direct: DirectExchange): Binding {
-        return BindingBuilder.bind(vehicleMovementQueue).to(direct).with("vehicle-data-movement")
+    fun vehicleBinding(vehicleMovementQueue: Queue, exchange: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleMovementQueue).to(exchange).with("vehicle-data-movement")
     }
 
     @Bean
-    fun emsNotificationBinding(emsNotificationQueue: Queue, direct: DirectExchange): Binding {
-        return BindingBuilder.bind(emsNotificationQueue).to(direct).with("ems-notification")
+    fun emsBinding(emsNotificationQueue: Queue, exchange: DirectExchange): Binding {
+        return BindingBuilder.bind(emsNotificationQueue).to(exchange).with("ems-notification")
     }
 }
