@@ -17,9 +17,10 @@ const NotificationDetailsDialog = (props) => (
         onRequestClose={props.handleDialogClose}
     >
         <List>
-            <ListItem
+            {props.clickedNotification.accidentId && <ListItem
                 primaryText={"Accident: " + props.clickedNotification.accidentId}
                 disabled={true}/>
+            }
             <ListItem
                 primaryText={"Timestamp: " + new Date(props.clickedNotification.timeStamp).toString()}
                 disabled={true}/>

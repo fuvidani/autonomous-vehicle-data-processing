@@ -1,7 +1,7 @@
 import React from "react";
-import {AppBar, Drawer, MenuItem} from "material-ui";
+import {AppBar, Divider, Drawer, MenuItem} from "material-ui";
 import {Link} from "react-router-dom";
-import {MapsLocalHospital, ActionBuild, ActionAccountBalance} from "material-ui/svg-icons/index.es";
+import {MapsLocalHospital, ActionBuild, ActionAccountBalance, AvLoop} from "material-ui/svg-icons/index.es";
 
 const styles = {
     titleLink: {
@@ -23,6 +23,11 @@ export default class GeneralComponent extends React.Component {
 
     handleToggle = () => this.setState({open: !this.state.open});
 
+    handleRestartSimulation = () => {
+        this.props.restartSimulation();
+        this.setState({open: !this.state.open});
+    };
+
     render() {
         return <div>
             <AppBar
@@ -43,6 +48,9 @@ export default class GeneralComponent extends React.Component {
                 <MenuItem style={styles.menuItem} onClick={this.handleToggle}
                           containerElement={<Link to="/manufacturer"/>}
                           leftIcon={<ActionBuild/>}>Manufacturers</MenuItem>
+                <Divider/>
+                <MenuItem style={styles.menuItem} onClick={this.handleRestartSimulation}
+                          leftIcon={<AvLoop/>}>Restart simulation</MenuItem>
             </Drawer>
         </div>;
     }

@@ -1,7 +1,7 @@
 import React from "react";
-import GeneralComponent from "../GeneralComponent";
 import AccidentReportCard from "./AccidentReportCard";
 import PlaceholderCard from "../PlaceholderCard";
+import GeneralContainer from "../../containers/GeneralContainer";
 
 const styles = {
     cardStyles: {
@@ -24,16 +24,20 @@ export default class AuthorityComponent extends React.Component {
 
     render() {
         return <div className="authorityContainer">
-            <GeneralComponent/>
+            <GeneralContainer/>
             <div className="container">
                 <div className="row">
                     <div className="col-md-7 col-centered">
-                        {this.props.accidentReports.length === 0 ? <PlaceholderCard text="No accident report to show."
-                                                                                    cardStyles={styles.cardStyles}/> : this.props.accidentReports.reverse().map((report, i) =>
-                            <AccidentReportCard key={i}
-                                                cardStyles={styles.cardStyles}
-                                                report={report}/>
-                        )}
+                        {
+                            Object.getOwnPropertyNames(this.props.accidentReports).length === 0 ?
+                                <PlaceholderCard text="No accident report to show."
+                                                 cardStyles={styles.cardStyles}/> :
+                                    Object.keys(this.props.accidentReports).sort().reverse().map(function (key) {
+                                        return <AccidentReportCard key={key}
+                                                                   cardStyles={styles.cardStyles}
+                                                                   report={this.props.accidentReports[key]}/>;
+                                    }, this)
+                        }
                     </div>
                 </div>
             </div>

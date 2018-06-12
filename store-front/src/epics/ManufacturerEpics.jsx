@@ -1,6 +1,6 @@
 import * as ActionTypes from "../actions/ActionTypes";
 import {Observable} from "rxjs/Rx";
-import {fetchStream} from "../util/RequestHandler";
+import {fetchInfiniteStream, fetchStream} from "../util/RequestHandler";
 
 const fetchManufacturerInformationEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_STREAMS)
@@ -15,7 +15,7 @@ const fetchManufacturerInformationEpic = action$ =>
 const fetchVehicleTrackingStreamEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_VEHICLE_TRACKING_STREAM)
         .mergeMap((action) =>
-            fetchStream('/tracking/manufacturer/' + action.payload)
+            fetchInfiniteStream('/tracking/manufacturer/' + action.payload)
                 .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.VEHICLE_TRACKING_INFORMATION_FETCHED,
@@ -35,7 +35,7 @@ const fetchVehicleInformationEpic = action$ =>
 const fetchManufacturerNotificationsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_MANUFACTURER_NOTIFICATIONS)
         .mergeMap((action) =>
-            fetchStream('/notifications/manufacturer/' + action.payload)
+            fetchInfiniteStream('/notifications/manufacturer/' + action.payload)
                 .filter(response => JSON.parse(response).id !== "ping" && JSON.parse(response).id !== "")
                 .map(response => ({
                     type: ActionTypes.MANUFACTURER_NOTIFICATION_FETCHED,
