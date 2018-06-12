@@ -222,7 +222,10 @@ class CompleteIntegrationTest {
         )
         val expectedAccidentReport = AccidentReport(
             null, storedLiveAccident.id!!, crashDataRecord.metaData, crashDataRecord.sensorInformation.location,
-            crashDataRecord.sensorInformation.passengers, TimeUnit.MINUTES.toMillis(10), TimeUnit.MINUTES.toMillis(20)
+            crashDataRecord.sensorInformation.passengers,
+            storedLiveAccident.timestampOfAccident,
+            TimeUnit.MINUTES.toMillis(10),
+            TimeUnit.MINUTES.toMillis(20)
         )
         Mockito.verify(rabbitTemplate, times(3))
             .convertAndSend(
@@ -282,16 +285,13 @@ class CompleteIntegrationTest {
     }
 
     private fun verifyAccidentReport(expectedReport: AccidentReport, value: String) {
-        /**
-         *  null, storedLiveAccident.id!!, crashDataRecord.metaData, crashDataRecord.sensorInformation.location,
-        crashDataRecord.sensorInformation.passengers, TimeUnit.MINUTES.toMillis(10), TimeUnit.MINUTES.toMillis(20)
-         */
         Assert.assertTrue(value.contains(expectedReport.accidentId))
         Assert.assertTrue(value.contains(expectedReport.vehicleMetaData.model))
         Assert.assertTrue(value.contains(expectedReport.vehicleMetaData.identificationNumber))
         Assert.assertTrue(value.contains(expectedReport.location.lat.toString()))
         Assert.assertTrue(value.contains(expectedReport.location.lon.toString()))
         Assert.assertTrue(value.contains(expectedReport.passengers.toString()))
+        Assert.assertTrue(value.contains(expectedReport.timestampOfAccident.toString()))
         Assert.assertTrue(value.contains(expectedReport.emergencyResponseInMillis.toString()))
         Assert.assertTrue(value.contains(expectedReport.durationOfSiteClearingInMillis.toString()))
     }

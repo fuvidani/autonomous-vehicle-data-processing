@@ -105,6 +105,7 @@ class NotifierTest {
             resolvedAccident.vehicleMetaData,
             GpsLocation(resolvedAccident.location.y, resolvedAccident.location.x),
             resolvedAccident.passengers,
+            accident.timestampOfAccident,
             1000 * 60 * 5,
             1000 * 60 * 10
         )

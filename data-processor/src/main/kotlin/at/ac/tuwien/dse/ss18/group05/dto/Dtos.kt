@@ -199,6 +199,7 @@ data class AccidentReport(
     val vehicleMetaData: MetaData,
     val location: GpsLocation,
     val passengers: Int,
+    val timestampOfAccident: Long,
     val emergencyResponseInMillis: Long,
     val durationOfSiteClearingInMillis: Long
 )
@@ -322,6 +323,7 @@ fun LiveAccident.toAccidentReport(): AccidentReport {
             this.vehicleMetaData,
             GpsLocation(this.location.y, this.location.x),
             this.passengers,
+        this.timestampOfAccident,
             this.timestampOfServiceArrival!!.minus(this.timestampOfAccident),
             this.timestampOfSiteClearing!!.minus(this.timestampOfServiceArrival)
     )

@@ -170,6 +170,7 @@ class TestDataProvider {
                 MetaData("4T4BE46K19R123050", "Tesla Model X"),
                 GpsLocation(48.2089816, 16.3732133),
                 4,
+                System.currentTimeMillis(),
                 Duration.ofMinutes(15).toMillis(),
                 Duration.ofMinutes(10).toMillis()
             )

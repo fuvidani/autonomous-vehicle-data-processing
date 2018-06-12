@@ -117,6 +117,7 @@ class DtoTests {
         Assert.assertEquals(newestAccident.location.y, report.location.lat, 0.0)
         Assert.assertEquals(newestAccident.location.x, report.location.lon, 0.0)
         Assert.assertEquals(newestAccident.passengers, report.passengers)
+        Assert.assertEquals(now, report.timestampOfAccident)
         Assert.assertEquals(1000 * 60 * 10, report.emergencyResponseInMillis)
         Assert.assertEquals(1000 * 60 * 15, report.durationOfSiteClearingInMillis)
     }
