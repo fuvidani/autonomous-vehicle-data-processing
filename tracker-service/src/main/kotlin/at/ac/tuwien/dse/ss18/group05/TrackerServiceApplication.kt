@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.CacheControl
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import reactor.core.publisher.ReplayProcessor
+import reactor.core.publisher.DirectProcessor
+import reactor.core.publisher.FluxProcessor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -49,8 +50,8 @@ class TrackerServiceApplication : WebFluxConfigurer {
     }
 
     @Bean
-    fun vehicleDataRecordStreamProcessor(): ReplayProcessor<VehicleDataRecord> {
-        return ReplayProcessor.create<VehicleDataRecord>(2)
+    fun vehicleDataRecordStreamProcessor(): FluxProcessor<VehicleDataRecord, VehicleDataRecord> {
+        return DirectProcessor.create<VehicleDataRecord>()
     }
 
     /**

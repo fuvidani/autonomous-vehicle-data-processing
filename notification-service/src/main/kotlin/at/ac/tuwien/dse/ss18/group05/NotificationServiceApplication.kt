@@ -11,7 +11,8 @@ import org.springframework.http.CacheControl
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import reactor.core.publisher.ReplayProcessor
+import reactor.core.publisher.DirectProcessor
+import reactor.core.publisher.FluxProcessor
 
 /**
  * <h4>About this class</h4>
@@ -36,18 +37,18 @@ class NotificationServiceApplication : WebFluxConfigurer {
     }
 
     @Bean
-    fun vehicleNotificationProcessor(): ReplayProcessor<VehicleNotification> {
-        return ReplayProcessor.create<VehicleNotification>(1)
+    fun vehicleNotificationProcessor(): FluxProcessor<VehicleNotification, VehicleNotification> {
+        return DirectProcessor.create()
     }
 
     @Bean
-    fun emsNotificationProcessor(): ReplayProcessor<EmergencyServiceNotification> {
-        return ReplayProcessor.create<EmergencyServiceNotification>(1)
+    fun emsNotificationProcessor(): FluxProcessor<EmergencyServiceNotification, EmergencyServiceNotification> {
+        return DirectProcessor.create()
     }
 
     @Bean
-    fun manufacturerNotificationProcessor(): ReplayProcessor<ManufacturerNotification> {
-        return ReplayProcessor.create<ManufacturerNotification>(1)
+    fun manufacturerNotificationProcessor(): FluxProcessor<ManufacturerNotification, ManufacturerNotification> {
+        return DirectProcessor.create()
     }
 
     /**

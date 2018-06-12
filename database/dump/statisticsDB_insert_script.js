@@ -17,8 +17,9 @@ db.statistics.save(
             "lon": 16.376432
         },
         "passengers": 4,
-        "emergencyResponseInMillis": 123456,
-        "durationOfSiteClearingInMillis": 654321
+        "timestampOfAccident": 1528830631183,
+        "emergencyResponseInMillis": 300000,
+        "durationOfSiteClearingInMillis": 600000
     }
 );
 
