@@ -3,6 +3,7 @@ import * as ActionTypes from "../../actions/ActionTypes";
 
 const reportObject = {
     id: "tDbdvAqCxpCQqqYXaRTC76Bm",
+    timestampOfAccident: "123456789",
     accidentId: "QgYZY8ntPurzGDhxxAcVYbYb",
     vehicleMetaData: {
         identificationNumber: "9KXfzswrhxzKEuX9uiAWcsaw",
@@ -21,7 +22,7 @@ describe('authority reducer', () => {
     it('should return the initial state', () => {
         expect(AuthorityReducer(undefined, {})).toEqual( // eslint-disable-line no-undefined
             {
-                accidentReports: []
+                accidentReports: {}
             }
         )
     });
@@ -34,7 +35,7 @@ describe('authority reducer', () => {
             })
         ).toEqual(
             {
-                accidentReports: [reportObject]
+                accidentReports: {"tDbdvAqCxpCQqqYXaRTC76Bm": reportObject}
             }
         )
     });
@@ -46,7 +47,7 @@ describe('authority reducer', () => {
             })
         ).toEqual(
             {
-                accidentReports: []
+                accidentReports: {}
             }
         )
     })
