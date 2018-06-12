@@ -14,3 +14,7 @@ notification:
   service:
     host: localhost
     port: 4000
+
+
+simulation:
+  pauseBetweenSimulationsInMS: 1000

@@ -91,6 +91,16 @@ class Notifier(private val sender: Sender) : INotifier {
     }
 
     /**
+     * Notifies the emergency service about an update of an already on-going accident. "On-going" means that
+     * the accident's occurrence has already been signalled, but is has not been resolved (cleared-up) yet.
+     *
+     * @param record a dummy emergency service notification with only the accident id and the new status to update
+     */
+    override fun notifyEMSWithUpdate(record: EmergencyServiceNotification) {
+        sender.sendMessage(record, "notifications-ems")
+    }
+
+    /**
      * Notifies the statistics service about a closed (i.e. cleared) accident by providing
      * a final report about it.
      *

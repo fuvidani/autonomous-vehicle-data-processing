@@ -12,9 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.TopicProcessor
+import reactor.core.publisher.ReplayProcessor
 import reactor.test.StepVerifier
-import reactor.util.concurrent.Queues
 import java.time.Duration
 
 /**
@@ -36,12 +35,7 @@ class ReceiverTest {
 
     @Before
     fun setUp() {
-        val processor = TopicProcessor.builder<VehicleDataRecord>()
-            .autoCancel(false)
-            .share(true)
-            .name("something")
-            .bufferSize(Queues.SMALL_BUFFER_SIZE)
-            .build()
+        val processor = ReplayProcessor.create<VehicleDataRecord>(2)
         receiver = VehicleDataRecordReceiver(gson, repository, processor)
     }
 

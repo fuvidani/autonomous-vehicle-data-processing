@@ -25,12 +25,12 @@ class RabbitConfig {
     }
 
     @Bean
-    fun direct(): DirectExchange {
+    fun exchange(): DirectExchange {
         return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun vehicleBinding(vehicleQueue: Queue, direct: DirectExchange): Binding {
-        return BindingBuilder.bind(vehicleQueue).to(direct).with("vehicle-data-tracking")
+    fun vehicleBinding(vehicleQueue: Queue, exchange: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleQueue).to(exchange).with("vehicle-data-tracking")
     }
 }

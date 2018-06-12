@@ -61,7 +61,7 @@ class DtoTests {
     fun vehicleDataRecordToDefaultLiveAccidentTest() {
         val record = TestDataProvider.testVehicleDataRecordNearCrashTesla()
         val accident = record.toDefaultLiveAccident()
-        Assert.assertEquals(null, accident.id)
+        Assert.assertNotNull(accident.id)
         Assert.assertEquals(record.metaData, accident.vehicleMetaData)
         Assert.assertEquals(record.sensorInformation.location.lon, accident.location.x, 0.0)
         Assert.assertEquals(record.sensorInformation.location.lat, accident.location.y, 0.0)
@@ -75,7 +75,7 @@ class DtoTests {
     fun vehicleDataRecordToEmergencyServiceNotification() {
         val record = TestDataProvider.testVehicleDataRecordAcura()
         val notification = record.toEmergencyServiceNotification("someAccidentId")
-        Assert.assertEquals(null, notification.id)
+        Assert.assertNotNull(notification.id)
         Assert.assertEquals("someAccidentId", notification.accidentId)
         Assert.assertEquals(record.timestamp, notification.timeStamp)
         Assert.assertEquals(record.sensorInformation.location, notification.location)
@@ -111,12 +111,13 @@ class DtoTests {
         val newAccident = accident.withServiceArrival(instant.plus(10, ChronoUnit.MINUTES).toEpochMilli())
         val newestAccident = newAccident.withSiteClearing(instant.plus(25, ChronoUnit.MINUTES).toEpochMilli())
         val report = newestAccident.toAccidentReport()
-        Assert.assertNull(report.id)
+        Assert.assertNotNull(report.id)
         Assert.assertEquals(newestAccident.id, report.accidentId)
         Assert.assertEquals(newestAccident.vehicleMetaData, report.vehicleMetaData)
         Assert.assertEquals(newestAccident.location.y, report.location.lat, 0.0)
         Assert.assertEquals(newestAccident.location.x, report.location.lon, 0.0)
         Assert.assertEquals(newestAccident.passengers, report.passengers)
+        Assert.assertEquals(now, report.timestampOfAccident)
         Assert.assertEquals(1000 * 60 * 10, report.emergencyResponseInMillis)
         Assert.assertEquals(1000 * 60 * 15, report.durationOfSiteClearingInMillis)
     }

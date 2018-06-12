@@ -34,8 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
+import reactor.core.publisher.ReplayProcessor
 import java.time.Duration
 
 @RunWith(SpringRunner::class)
@@ -62,19 +61,14 @@ class VehicleNotificationControllerDocumentationTest {
     private val generator = TestDataGenerator()
     private lateinit var client: WebTestClient
     private lateinit var service: IVehicleNotificationService
-    private lateinit var processor: TopicProcessor<VehicleNotification>
+    private lateinit var processor: ReplayProcessor<VehicleNotification>
     private lateinit var receiver: Receiver<VehicleNotification>
     private lateinit var vehicleNotificationController: VehicleNotificationController
 
     @Before
     fun setUp() {
 
-        processor = TopicProcessor.builder<VehicleNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("vehicle_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
-                .build()
+        processor = ReplayProcessor.create<VehicleNotification>(2)
 
         receiver = VehicleNotificationReceiver(repository, processor, gson)
         service = VehicleNotificationService(receiver, repository)

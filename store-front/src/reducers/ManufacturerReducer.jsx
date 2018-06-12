@@ -72,6 +72,7 @@ export default function reducer(state = {
 
         case ActionTypes.CLEAR_MANUFACTURER_INFORMATION: {
             state.vehicleTrackingInformation = {};
+            state.vehicleHistoryInformation = {};
             state.vehicles = {};
             state.notifications = [];
 

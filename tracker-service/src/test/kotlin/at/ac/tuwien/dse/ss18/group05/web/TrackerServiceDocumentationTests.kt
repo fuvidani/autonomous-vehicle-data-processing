@@ -26,8 +26,6 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
@@ -35,6 +33,7 @@ import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.ReplayProcessor
 import java.time.Duration
 
 /**
@@ -65,7 +64,7 @@ class TrackerServiceDocumentationTests {
     private lateinit var trackerServiceController: TrackerServiceController
     private lateinit var trackerService: ITrackerService
     private lateinit var receiver: Receiver
-    private lateinit var processor: TopicProcessor<VehicleDataRecord>
+    private lateinit var processor: ReplayProcessor<VehicleDataRecord>
     private lateinit var client: WebTestClient
     private lateinit var audiDataRecords: MutableList<VehicleDataRecord>
     private val gson = Gson()
@@ -78,12 +77,7 @@ class TrackerServiceDocumentationTests {
             TestDataProvider.testVehicleTesla()
         )
         Mockito.`when`(vehicleServiceClient.getAllVehicles()).thenReturn(vehicles)
-        processor = TopicProcessor.builder<VehicleDataRecord>()
-            .autoCancel(false)
-            .share(true)
-            .name("something")
-            .bufferSize(Queues.SMALL_BUFFER_SIZE)
-            .build()
+        processor = ReplayProcessor.create<VehicleDataRecord>(2)
         receiver = VehicleDataRecordReceiver(gson, repository, processor)
         trackerService = TrackerService(receiver, vehicleServiceClient, repository)
         trackerServiceController = TrackerServiceController(trackerService)

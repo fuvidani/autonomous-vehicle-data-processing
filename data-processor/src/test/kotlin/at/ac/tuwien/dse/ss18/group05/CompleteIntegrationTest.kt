@@ -9,6 +9,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
@@ -84,19 +85,22 @@ class CompleteIntegrationTest {
 
         val dataRecordNearCrash =
             TestDataProvider.testVehicleDataRecordNearCrashTesla(GpsLocation(16.3786159, 48.1739176))
-        val expectedNotification = ManufacturerNotification(
-            null,
-            dataRecordNearCrash.timestamp,
-            dataRecordNearCrash.metaData.identificationNumber,
-            "Tesla",
-            dataRecordNearCrash.metaData.model,
-            dataRecordNearCrash.sensorInformation.location,
-            EventInformation.NEAR_CRASH,
-            null
-        )
+
         recordReceiver.receiveMessage(gson.toJson(dataRecordNearCrash))
+        val argument = ArgumentCaptor.forClass(String::class.java)
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications-manufacturer", gson.toJson(expectedNotification))
+            .convertAndSend(
+                Mockito.eq("vehicle-data-exchange"),
+                Mockito.eq("notifications-manufacturer"),
+                argument.capture()
+            )
+        Assert.assertTrue(argument.value.contains(EventInformation.NEAR_CRASH.name))
+        Assert.assertTrue(argument.value.contains(dataRecordNearCrash.timestamp.toString()))
+        Assert.assertTrue(argument.value.contains(dataRecordNearCrash.metaData.identificationNumber))
+        Assert.assertTrue(argument.value.contains(dataRecordNearCrash.metaData.model))
+        Assert.assertTrue(argument.value.contains("Tesla"))
+        Assert.assertTrue(argument.value.contains(dataRecordNearCrash.sensorInformation.location.lat.toString()))
+        Assert.assertTrue(argument.value.contains(dataRecordNearCrash.sensorInformation.location.lon.toString()))
         verifyNoMessagePublishedToMessageQueue()
     }
 
@@ -153,16 +157,28 @@ class CompleteIntegrationTest {
             10.0
         )
 
+        val argument = ArgumentCaptor.forClass(String::class.java)
         Mockito.verify(rabbitTemplate, times(1))
             .convertAndSend(
-                "vehicle-data-exchange",
-                "notifications-manufacturer",
-                gson.toJson(expectedManufacturerNotification)
+                Mockito.eq("vehicle-data-exchange"),
+                Mockito.eq("notifications-manufacturer"),
+                argument.capture()
             )
+        verifyManufacturerNotification(expectedManufacturerNotification, argument.value)
+
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications-ems", gson.toJson(expectedServiceNotification))
+            .convertAndSend(
+                Mockito.eq("vehicle-data-exchange"), Mockito.eq("notifications-ems"),
+                argument.capture()
+            )
+        verifyServiceNotification(expectedServiceNotification, argument.value)
+
         Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "notifications-vehicle", gson.toJson(expectedVehicleNotification))
+            .convertAndSend(
+                Mockito.eq("vehicle-data-exchange"), Mockito.eq("notifications-vehicle"),
+                argument.capture()
+            )
+        verifyVehicleNotification(expectedVehicleNotification, argument.value)
 
         // SERVICE ARRIVES
         val serviceArrival = now.plus(10, ChronoUnit.MINUTES).toEpochMilli()
@@ -180,12 +196,13 @@ class CompleteIntegrationTest {
             true,
             10.0
         )
-        Mockito.verify(rabbitTemplate, times(1))
+        Mockito.verify(rabbitTemplate, times(2))
             .convertAndSend(
-                "vehicle-data-exchange",
-                "notifications-vehicle",
-                gson.toJson(expectedVehicleNotificationOfArrival)
+                Mockito.eq("vehicle-data-exchange"),
+                Mockito.eq("notifications-vehicle"),
+                argument.capture()
             )
+        verifyVehicleNotification(expectedVehicleNotificationOfArrival, argument.value)
 
         // SITE CLEARED
         val timestampOfClearance = now.plus(30, ChronoUnit.MINUTES).toEpochMilli()
@@ -205,22 +222,78 @@ class CompleteIntegrationTest {
         )
         val expectedAccidentReport = AccidentReport(
             null, storedLiveAccident.id!!, crashDataRecord.metaData, crashDataRecord.sensorInformation.location,
-            crashDataRecord.sensorInformation.passengers, TimeUnit.MINUTES.toMillis(10), TimeUnit.MINUTES.toMillis(20)
+            crashDataRecord.sensorInformation.passengers,
+            storedLiveAccident.timestampOfAccident,
+            TimeUnit.MINUTES.toMillis(10),
+            TimeUnit.MINUTES.toMillis(20)
         )
+        Mockito.verify(rabbitTemplate, times(3))
+            .convertAndSend(
+                Mockito.eq("vehicle-data-exchange"),
+                Mockito.eq("notifications-vehicle"),
+                argument.capture()
+            )
+        verifyVehicleNotification(expectedVehicleNotificationOfClearance, argument.value)
+
         Mockito.verify(rabbitTemplate, times(1))
             .convertAndSend(
-                "vehicle-data-exchange",
-                "notifications-vehicle",
-                gson.toJson(expectedVehicleNotificationOfClearance)
+                Mockito.eq("vehicle-data-exchange"), Mockito.eq("statistics"),
+                argument.capture()
             )
-        Mockito.verify(rabbitTemplate, times(1))
-            .convertAndSend("vehicle-data-exchange", "statistics", gson.toJson(expectedAccidentReport))
+        verifyAccidentReport(expectedAccidentReport, argument.value)
         verifyNoMessagePublishedToMessageQueue()
     }
 
     private fun verifyNoMessagePublishedToMessageQueue() {
         Mockito.verify(rabbitTemplate, never())
             .convertAndSend(any(String::class.java), any(String::class.java), any(JvmType.Object::class.java))
+    }
+
+    private fun verifyVehicleNotification(expectedVehicleNotification: VehicleNotification, value: String) {
+        Assert.assertTrue(value.contains(expectedVehicleNotification.timestamp.toString()))
+        Assert.assertTrue(value.contains(expectedVehicleNotification.location.lat.toString()))
+        Assert.assertTrue(value.contains(expectedVehicleNotification.location.lon.toString()))
+        Assert.assertTrue(value.contains(expectedVehicleNotification.emergencyServiceStatus.name))
+        Assert.assertTrue(value.contains(expectedVehicleNotification.accidentId))
+        for (vehicleId in expectedVehicleNotification.concernedNearByVehicles + expectedVehicleNotification.concernedFarAwayVehicles) {
+            Assert.assertTrue(value.contains(vehicleId))
+        }
+    }
+
+    private fun verifyServiceNotification(expectedServiceNotification: EmergencyServiceNotification, value: String) {
+        Assert.assertTrue(value.contains(expectedServiceNotification.timeStamp.toString()))
+        Assert.assertTrue(value.contains(expectedServiceNotification.passengers.toString()))
+        Assert.assertTrue(value.contains(expectedServiceNotification.model))
+        Assert.assertTrue(value.contains(expectedServiceNotification.location.lat.toString()))
+        Assert.assertTrue(value.contains(expectedServiceNotification.location.lon.toString()))
+        Assert.assertTrue(value.contains(expectedServiceNotification.status.name))
+        Assert.assertTrue(value.contains(expectedServiceNotification.accidentId))
+    }
+
+    private fun verifyManufacturerNotification(
+        expectedManufacturerNotification: ManufacturerNotification,
+        value: String
+    ) {
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.timeStamp.toString()))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.vehicleIdentificationNumber))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.manufacturerId))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.model))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.location.lat.toString()))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.location.lon.toString()))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.eventInfo.name))
+        Assert.assertTrue(value.contains(expectedManufacturerNotification.accidentId.toString()))
+    }
+
+    private fun verifyAccidentReport(expectedReport: AccidentReport, value: String) {
+        Assert.assertTrue(value.contains(expectedReport.accidentId))
+        Assert.assertTrue(value.contains(expectedReport.vehicleMetaData.model))
+        Assert.assertTrue(value.contains(expectedReport.vehicleMetaData.identificationNumber))
+        Assert.assertTrue(value.contains(expectedReport.location.lat.toString()))
+        Assert.assertTrue(value.contains(expectedReport.location.lon.toString()))
+        Assert.assertTrue(value.contains(expectedReport.passengers.toString()))
+        Assert.assertTrue(value.contains(expectedReport.timestampOfAccident.toString()))
+        Assert.assertTrue(value.contains(expectedReport.emergencyResponseInMillis.toString()))
+        Assert.assertTrue(value.contains(expectedReport.durationOfSiteClearingInMillis.toString()))
     }
 
     // Kotlin<->Java Mockito type inference workaround

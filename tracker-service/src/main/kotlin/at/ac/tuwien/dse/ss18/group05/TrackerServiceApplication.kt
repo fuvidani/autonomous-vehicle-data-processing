@@ -11,8 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.CacheControl
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
+import reactor.core.publisher.ReplayProcessor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -43,20 +42,15 @@ class TrackerServiceApplication : WebFluxConfigurer {
         @Value("\${vehicle.service.port}") port: String
     ): VehicleService {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://$host:$port/vehicle/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl("http://$host:$port/vehicle/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         return retrofit.create(VehicleService::class.java)
     }
 
     @Bean
-    fun vehicleDataRecordStreamProcessor(): TopicProcessor<VehicleDataRecord> {
-        return TopicProcessor.builder<VehicleDataRecord>()
-            .autoCancel(false)
-            .share(true)
-            .name("something")
-            .bufferSize(Queues.SMALL_BUFFER_SIZE)
-            .build()
+    fun vehicleDataRecordStreamProcessor(): ReplayProcessor<VehicleDataRecord> {
+        return ReplayProcessor.create<VehicleDataRecord>(2)
     }
 
     /**
@@ -65,7 +59,7 @@ class TrackerServiceApplication : WebFluxConfigurer {
      */
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/tracking/resources/**")
-            .addResourceLocations("classpath:/static/docs/")
-            .setCacheControl(CacheControl.noStore())
+                .addResourceLocations("classpath:/static/docs/")
+                .setCacheControl(CacheControl.noStore())
     }
 }

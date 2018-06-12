@@ -5,7 +5,7 @@ import at.ac.tuwien.dse.ss18.group05.TestDataGenerator
 import at.ac.tuwien.dse.ss18.group05.dto.EventInformation
 import at.ac.tuwien.dse.ss18.group05.dto.GpsLocation
 import at.ac.tuwien.dse.ss18.group05.dto.ManufacturerNotification
-import at.ac.tuwien.dse.ss18.group05.messaging.ManufacturerNotifictionReceiver
+import at.ac.tuwien.dse.ss18.group05.messaging.ManufacturerNotificationReceiver
 import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
 import at.ac.tuwien.dse.ss18.group05.repository.ManufacturerNotificationRepository
 import at.ac.tuwien.dse.ss18.group05.service.IManufacturerNotificationService
@@ -33,8 +33,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
+import reactor.core.publisher.ReplayProcessor
 import java.time.Duration
 
 @RunWith(SpringRunner::class)
@@ -61,21 +60,16 @@ class ManufacturerNotificationControllerDocumentationTest {
     private val generator = TestDataGenerator()
     private lateinit var client: WebTestClient
     private lateinit var service: IManufacturerNotificationService
-    private lateinit var processor: TopicProcessor<ManufacturerNotification>
+    private lateinit var processor: ReplayProcessor<ManufacturerNotification>
     private lateinit var receiver: Receiver<ManufacturerNotification>
     private lateinit var controller: ManufacturerNotificationController
 
     @Before
     fun setUp() {
 
-        processor = TopicProcessor.builder<ManufacturerNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("manufacturer_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
-                .build()
+        processor = ReplayProcessor.create<ManufacturerNotification>(2)
 
-        receiver = ManufacturerNotifictionReceiver(repository, processor, gson)
+        receiver = ManufacturerNotificationReceiver(repository, processor, gson)
         service = ManufacturerNotificationService(receiver, repository)
         controller = ManufacturerNotificationController(service)
         client = WebTestClient.bindToController(controller)

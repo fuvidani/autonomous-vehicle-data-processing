@@ -16,7 +16,7 @@ Data processing of autonomous vehicles in a fault-tolerant, resilient and asynch
 * frontend 	8069
 * docker build -t eu.gcr.io/dse-group-05/***
 * gcloud docker -- push eu.gcr.io/dse-group-05/***
-* gcloud container clusters get-credentials dse-cluster --zone europe-west1-d --project dse-group-05
+* gcloud container clusters get-credentials dse-cluster --zone us-central1-a --project dse-group-05
 
 
 # Development

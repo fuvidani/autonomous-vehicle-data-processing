@@ -6,6 +6,9 @@ import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import java.io.InputStreamReader
 
+/**
+ * simple reader class to parse the created csv file with the GPX coordinates
+ */
 class RouteReader(private val filePath: String) {
 
     fun readRecords(): List<RouteRecord> {

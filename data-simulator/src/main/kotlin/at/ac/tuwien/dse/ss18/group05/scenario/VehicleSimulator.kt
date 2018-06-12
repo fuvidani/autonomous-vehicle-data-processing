@@ -9,6 +9,10 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 
+/**
+ * actual simulation implementation with the logic to drive the vehicles
+ *
+ */
 @Component
 class VehicleSimulator(
     private val vehicles: List<Vehicle>,
@@ -25,21 +29,27 @@ class VehicleSimulator(
     @Value("\${datasimulator.speedAfterEvent}")
     private val speedAfterEvent: Double = 50.0
 
+    @Value("\${simulation.pauseBetweenSimulationsInMS}")
+    private val pauseBetweenSimulationsInMs: Long = 1000L
+
+    @Volatile
+    private var running = true
+
     override fun run(vararg args: String?) {
         simulate()
     }
 
     fun simulate() {
         log.info("starting simulation")
-        findStartingPointForVehicles()
-        handleVehicleSimulation()
+        setStartingPointForVehicles()
+        simulateVehicleMovements()
     }
 
-    private fun handleVehicleSimulation() {
-        while (true) {
+    private fun simulateVehicleMovements() {
+        while (running) {
             driveCarsToNextPoint()
             calculateCurrentVehicleData()
-            Thread.sleep(1000)
+            Thread.sleep(pauseBetweenSimulationsInMs)
         }
     }
 
@@ -68,7 +78,7 @@ class VehicleSimulator(
 
     private fun handleSpeed(eventInformation: EventInformation, vehicle: Vehicle): Double {
         return if (eventInformation != EventInformation.NONE) {
-            speedAfterEvent
+            speedAfterEvent //assume car breaks directly and does not wait for notification
         } else {
             vehicle.speed
         }
@@ -93,17 +103,28 @@ class VehicleSimulator(
         }
     }
 
-    private fun findStartingPointForVehicles() {
+    private fun setStartingPointForVehicles() {
         for (vehicle in vehicles) {
             val startingPoint = findStartingPointForVehicle(vehicle.startingAtKm)
             currentVehicleLocations[vehicle] = startingPoint
         }
     }
 
+    /**
+     * using the first operator on the route list to determine the index
+     * of the location where the car should start based on its distance to the start point
+     *
+     * @param distance the distance to the starting point of the vehicle
+     */
     private fun findStartingPointForVehicle(distance: Int): RouteRecord {
         return route.first { record -> record.distanceToStart >= distance }
     }
 
+    /**
+     * helper method to simulate an event from outside the simulator
+     *
+     * @param event the event to simulate
+     */
     fun simulateEvent(event: EventInformation) {
         this.event = event
         eventSimulated = false
@@ -116,5 +137,16 @@ class VehicleSimulator(
         if (vehicle != null && targetSpeed != null) {
             vehicle.speed = targetSpeed
         }
+    }
+
+    /**
+     * method stopping current simulation
+     * resetting vehicles to starting point and then
+     * starting simulation again
+     */
+    fun resetSimulation() {
+        this.running = false
+        setStartingPointForVehicles()
+        this.running = true
     }
 }
