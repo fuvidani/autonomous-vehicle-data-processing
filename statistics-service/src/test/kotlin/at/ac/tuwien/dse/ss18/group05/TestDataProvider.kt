@@ -24,6 +24,7 @@ class TestDataProvider {
                 GpsLocation(48.172450, 16.376432),
                 4,
                 123456,
+                123456,
                 654321
             )
         }
@@ -35,6 +36,7 @@ class TestDataProvider {
                 MetaData("3GCPCSE03BG366866", "Audi TT"),
                 GpsLocation(0.0, 0.0),
                 1,
+                545245,
                 545245,
                 75425
             )

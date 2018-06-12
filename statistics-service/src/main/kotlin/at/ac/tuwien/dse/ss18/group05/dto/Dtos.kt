@@ -30,6 +30,7 @@ data class AccidentReport(
     val vehicleMetaData: MetaData,
     val location: GpsLocation,
     val passengers: Int,
+    val timestampOfAccident: Long,
     val emergencyResponseInMillis: Long,
     val durationOfSiteClearingInMillis: Long
 )
