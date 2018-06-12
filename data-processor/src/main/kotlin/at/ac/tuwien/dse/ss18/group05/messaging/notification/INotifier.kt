@@ -1,9 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.messaging.notification
 
-import at.ac.tuwien.dse.ss18.group05.dto.ConcernedVehicles
-import at.ac.tuwien.dse.ss18.group05.dto.EmergencyServiceStatus
-import at.ac.tuwien.dse.ss18.group05.dto.LiveAccident
-import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
+/* ktlint-disable no-wildcard-imports */
+import at.ac.tuwien.dse.ss18.group05.dto.*
 
 /**
  * <h4>About this class</h4>
@@ -64,4 +62,12 @@ interface INotifier {
      * @param accident the LiveAccident object used to gather data during the accident
      */
     fun notifyStatisticsService(accident: LiveAccident)
+
+    /**
+     * Notifies the emergency service about an update of an already on-going accident. "On-going" means that
+     * the accident's occurrence has already been signalled, but is has not been resolved (cleared-up) yet.
+     *
+     * @param record a dummy emergency service notification with only the accident id and the new status to update
+     */
+    fun notifyEMSWithUpdate(record: EmergencyServiceNotification)
 }

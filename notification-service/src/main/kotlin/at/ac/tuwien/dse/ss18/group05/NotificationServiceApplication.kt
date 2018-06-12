@@ -11,8 +11,7 @@ import org.springframework.http.CacheControl
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
+import reactor.core.publisher.ReplayProcessor
 
 /**
  * <h4>About this class</h4>
@@ -37,34 +36,18 @@ class NotificationServiceApplication : WebFluxConfigurer {
     }
 
     @Bean
-    fun vehicleNotificationProcessor(): TopicProcessor<VehicleNotification> {
-        val bufferSize = Math.pow(2.0, 12.0)
-        return TopicProcessor.builder<VehicleNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("vehicle_notification_processor")
-                .bufferSize(bufferSize.toInt())
-                .build()
+    fun vehicleNotificationProcessor(): ReplayProcessor<VehicleNotification> {
+        return ReplayProcessor.create<VehicleNotification>(1)
     }
 
     @Bean
-    fun emsNotificationProcessor(): TopicProcessor<EmergencyServiceNotification> {
-        return TopicProcessor.builder<EmergencyServiceNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("ems_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
-                .build()
+    fun emsNotificationProcessor(): ReplayProcessor<EmergencyServiceNotification> {
+        return ReplayProcessor.create<EmergencyServiceNotification>(1)
     }
 
     @Bean
-    fun manufacturerNotificationProcessor(): TopicProcessor<ManufacturerNotification> {
-        return TopicProcessor.builder<ManufacturerNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("manufacturer_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
-                .build()
+    fun manufacturerNotificationProcessor(): ReplayProcessor<ManufacturerNotification> {
+        return ReplayProcessor.create<ManufacturerNotification>(1)
     }
 
     /**

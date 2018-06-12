@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
-import reactor.core.publisher.TopicProcessor
+import reactor.core.publisher.ReplayProcessor
 import java.util.*
 import java.util.logging.Logger
 
@@ -41,7 +41,7 @@ interface Receiver<T> {
 @Component
 class VehicleNotificationReceiver(
     private val repository: VehicleNotificationRepository,
-    private val processor: TopicProcessor<VehicleNotification>,
+    private val processor: ReplayProcessor<VehicleNotification>,
     private val gson: Gson
 ) : Receiver<VehicleNotification> {
 
@@ -84,7 +84,7 @@ class VehicleNotificationReceiver(
 @Component
 class EmsNotificationReceiver(
     private val repository: EmergencyServiceNotificationRepository,
-    private val processor: TopicProcessor<EmergencyServiceNotification>,
+    private val processor: ReplayProcessor<EmergencyServiceNotification>,
     private val gson: Gson
 ) : Receiver<EmergencyServiceNotification> {
 
@@ -118,9 +118,9 @@ class EmsNotificationReceiver(
  * handling all manufacturer specific notifications here
  */
 @Component
-class ManufacturerNotifictionReceiver(
+class ManufacturerNotificationReceiver(
     private val repository: ManufacturerNotificationRepository,
-    private val processor: TopicProcessor<ManufacturerNotification>,
+    private val processor: ReplayProcessor<ManufacturerNotification>,
     private val gson: Gson
 ) : Receiver<ManufacturerNotification> {
 

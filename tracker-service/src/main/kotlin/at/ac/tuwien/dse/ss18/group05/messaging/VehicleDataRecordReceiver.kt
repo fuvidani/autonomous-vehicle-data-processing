@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux
-import reactor.core.publisher.TopicProcessor
+import reactor.core.publisher.ReplayProcessor
 import java.time.ZonedDateTime
 import java.util.logging.Logger
 
@@ -24,7 +24,7 @@ import java.util.logging.Logger
 class VehicleDataRecordReceiver(
     private val gson: Gson,
     private val repository: VehicleDataRecordRepository,
-    private val processor: TopicProcessor<VehicleDataRecord>
+    private val processor: ReplayProcessor<VehicleDataRecord>
 ) : Receiver {
 
     private var lastLog = ZonedDateTime.now()

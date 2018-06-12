@@ -33,6 +33,6 @@ spec:
             - name: NOTIFICATION_SERVICE_PORT
               value: "7000"
             - name: SIMULATION_PAUSEBETWEENSIMULATIONSINMS
-              value: 500
+              value: "500"
           ports:
             - containerPort: 10000

@@ -32,6 +32,9 @@ class VehicleSimulator(
     @Value("\${simulation.pauseBetweenSimulationsInMS}")
     private val pauseBetweenSimulationsInMs: Long = 1000L
 
+    @Volatile
+    private var running = true
+
     override fun run(vararg args: String?) {
         simulate()
     }
@@ -39,11 +42,11 @@ class VehicleSimulator(
     fun simulate() {
         log.info("starting simulation")
         setStartingPointForVehicles()
-        handleVehicleSimulation()
+        simulateVehicleMovements()
     }
 
-    private fun handleVehicleSimulation() {
-        while (true) {
+    private fun simulateVehicleMovements() {
+        while (running) {
             driveCarsToNextPoint()
             calculateCurrentVehicleData()
             Thread.sleep(pauseBetweenSimulationsInMs)
@@ -134,5 +137,16 @@ class VehicleSimulator(
         if (vehicle != null && targetSpeed != null) {
             vehicle.speed = targetSpeed
         }
+    }
+
+    /**
+     * method stopping current simulation
+     * resetting vehicles to starting point and then
+     * starting simulation again
+     */
+    fun resetSimulation() {
+        this.running = false
+        setStartingPointForVehicles()
+        this.running = true
     }
 }

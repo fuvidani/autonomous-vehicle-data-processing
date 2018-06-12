@@ -31,8 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.TopicProcessor
-import reactor.util.concurrent.Queues
+import reactor.core.publisher.ReplayProcessor
 import java.time.Duration
 
 @RunWith(SpringRunner::class)
@@ -61,17 +60,12 @@ class EmergencyServiceNotificationControllerDocumentationTest {
     private lateinit var service: IEmergencyServiceNotificationService
     private lateinit var receiver: Receiver<EmergencyServiceNotification>
     private lateinit var controller: EmergencyServiceNotificationController
-    private lateinit var processor: TopicProcessor<EmergencyServiceNotification>
+    private lateinit var processor: ReplayProcessor<EmergencyServiceNotification>
 
     @Before
     fun setUp() {
 
-        processor = TopicProcessor.builder<EmergencyServiceNotification>()
-                .autoCancel(false)
-                .share(true)
-                .name("ems_notification_processor")
-                .bufferSize(Queues.SMALL_BUFFER_SIZE)
-                .build()
+        processor = ReplayProcessor.create<EmergencyServiceNotification>(2)
 
         receiver = EmsNotificationReceiver(repository, processor, gson)
         service = EmergencyServiceNotificationService(receiver, repository)

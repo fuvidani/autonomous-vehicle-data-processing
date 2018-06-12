@@ -47,6 +47,7 @@ class EmergencyServiceMessageProcessor(
                 updatedAccident, EmergencyServiceStatus.ARRIVED,
                 ConcernedVehicles(vehicles.second, vehicles.first)
             )
+            notifier.notifyEMSWithUpdate(EmergencyServiceNotification(null, currentAccident.id, 1L, GpsLocation(0.0, 0.0), "", 0, EmergencyServiceStatus.ARRIVED))
         }
     }
 
@@ -61,6 +62,7 @@ class EmergencyServiceMessageProcessor(
                 ConcernedVehicles(vehicles.second, vehicles.first)
             )
             notifier.notifyStatisticsService(clearedAccident)
+            notifier.notifyEMSWithUpdate(EmergencyServiceNotification(null, currentAccident.id, 1L, GpsLocation(0.0, 0.0), "", 0, EmergencyServiceStatus.AREA_CLEARED))
         }
     }
 }

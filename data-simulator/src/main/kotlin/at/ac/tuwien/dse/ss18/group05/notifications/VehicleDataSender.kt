@@ -25,7 +25,7 @@ class VehicleDataSender(
     fun sendVehicleDataRecord(vehicleDataRecord: VehicleDataRecord) {
         val json = gson.toJson(vehicleDataRecord)
         //use two separate routing keys for data-processor and tracker service because
-        rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle-data-movement", json)
+        rabbitTemplate.convertAndSend("vehicle-data-exchange-2", "vehicle.data.movement", json)
         rabbitTemplate.convertAndSend("vehicle-data-exchange", "vehicle-data-tracking", json)
     }
 
@@ -38,6 +38,6 @@ class VehicleDataSender(
     fun sendEmergencyStatusUpdate(message: EmergencyServiceMessage) {
         log.info("updating emergency status with message $message")
         val json = gson.toJson(message)
-        rabbitTemplate.convertAndSend("vehicle-data-exchange", "ems-notification", json)
+        rabbitTemplate.convertAndSend("vehicle-data-exchange-2", "ems.notification", json)
     }
 }

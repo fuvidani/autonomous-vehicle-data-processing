@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.http.CacheControl
 import org.springframework.web.reactive.config.ResourceHandlerRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
-import reactor.core.publisher.TopicProcessor
+import reactor.core.publisher.ReplayProcessor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -49,14 +49,8 @@ class TrackerServiceApplication : WebFluxConfigurer {
     }
 
     @Bean
-    fun vehicleDataRecordStreamProcessor(): TopicProcessor<VehicleDataRecord> {
-        val bufferSize = Math.pow(2.0, 25.0)
-        return TopicProcessor.builder<VehicleDataRecord>()
-                .autoCancel(false)
-                .share(true)
-                .name("vehicleDataRecordStream")
-                .bufferSize(bufferSize.toInt())
-                .build()
+    fun vehicleDataRecordStreamProcessor(): ReplayProcessor<VehicleDataRecord> {
+        return ReplayProcessor.create<VehicleDataRecord>(2)
     }
 
     /**
