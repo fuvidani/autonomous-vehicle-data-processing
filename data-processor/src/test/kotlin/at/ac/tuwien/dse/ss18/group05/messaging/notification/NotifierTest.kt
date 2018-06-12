@@ -4,6 +4,7 @@ import at.ac.tuwien.dse.ss18.group05.TestDataProvider
 /* ktlint-disable no-wildcard-imports */
 import at.ac.tuwien.dse.ss18.group05.dto.*
 import at.ac.tuwien.dse.ss18.group05.messaging.sender.Sender
+import io.mockk.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 /**
  * <h4>About this class</h4>
@@ -43,6 +45,11 @@ class NotifierTest {
             dataRecord.timestamp, dataRecord.metaData.identificationNumber, "Tesla", dataRecord.metaData.model,
             dataRecord.sensorInformation.location, EventInformation.NEAR_CRASH, null
         )
+        mockkStatic("at.ac.tuwien.dse.ss18.group05.dto.DtosKt")
+        every {
+            dataRecord.toManufacturerNotification("Tesla", null)
+        } returns expectedNotification
+
         notifier.notifyManufacturer(dataRecord, null, "Tesla")
         Mockito.verify(sender).sendMessage(expectedNotification, "notifications-manufacturer")
     }
@@ -56,6 +63,11 @@ class NotifierTest {
             dataRecord.timestamp, dataRecord.metaData.identificationNumber, "Tesla", dataRecord.metaData.model,
             dataRecord.sensorInformation.location, EventInformation.CRASH, "someGeneratedAccidentId"
         )
+        mockkStatic("at.ac.tuwien.dse.ss18.group05.dto.DtosKt")
+        every {
+            dataRecord.toManufacturerNotification("Tesla", "someGeneratedAccidentId")
+        } returns expectedNotification
+
         notifier.notifyManufacturer(dataRecord, "someGeneratedAccidentId", "Tesla")
         Mockito.verify(sender).sendMessage(expectedNotification, "notifications-manufacturer")
     }
@@ -72,6 +84,11 @@ class NotifierTest {
             dataRecord.sensorInformation.passengers,
             EmergencyServiceStatus.UNKNOWN
         )
+        mockkStatic("at.ac.tuwien.dse.ss18.group05.dto.DtosKt")
+        every {
+            dataRecord.toEmergencyServiceNotification("someGeneratedAccidentId")
+        } returns expectedNotification
+
         notifier.notifyEmergencyService(dataRecord, "someGeneratedAccidentId")
         Mockito.verify(sender).sendMessage(expectedNotification, "notifications-ems")
     }
@@ -91,6 +108,12 @@ class NotifierTest {
             1000 * 60 * 5,
             1000 * 60 * 10
         )
+
+        mockkStatic("at.ac.tuwien.dse.ss18.group05.dto.DtosKt")
+        every {
+            resolvedAccident.toAccidentReport()
+        } returns expectedReport
+
         notifier.notifyStatisticsService(resolvedAccident)
         Mockito.verify(sender).sendMessage(expectedReport, "statistics")
     }

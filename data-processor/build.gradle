@@ -7,6 +7,9 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.4.0'
     compile 'com.squareup.retrofit2:converter-gson:2.4.0'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.3'
+    testCompile group: 'org.mockito', name: 'mockito-inline', version: '2.15.0'
+    testImplementation "io.mockk:mockk:1.8.3"
+
 }
 
 test {

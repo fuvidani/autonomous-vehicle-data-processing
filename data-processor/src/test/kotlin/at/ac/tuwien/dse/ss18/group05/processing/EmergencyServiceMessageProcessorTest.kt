@@ -79,6 +79,11 @@ class EmergencyServiceMessageProcessorTest {
             currentAccident.withServiceArrival(123),
             EmergencyServiceStatus.ARRIVED, ConcernedVehicles(listOf("4", "5", "6"), listOf("1", "2", "3"))
         )
+        Mockito.verify(notifier, times(1)).notifyEMSWithUpdate(
+            EmergencyServiceNotification(
+                null, currentAccident.id!!, 1L, GpsLocation(0.0, 0.0), "", 0, EmergencyServiceStatus.ARRIVED
+            )
+        )
         Mockito.verifyZeroInteractions(notifier)
     }
 
@@ -107,6 +112,11 @@ class EmergencyServiceMessageProcessorTest {
             EmergencyServiceStatus.AREA_CLEARED, ConcernedVehicles(listOf("4", "5", "6"), listOf("1", "2", "3"))
         )
         Mockito.verify(notifier, times(1)).notifyStatisticsService(clearedAccident)
+        Mockito.verify(notifier, times(1)).notifyEMSWithUpdate(
+            EmergencyServiceNotification(
+                null, currentAccident.id!!, 1L, GpsLocation(0.0, 0.0), "", 0, EmergencyServiceStatus.AREA_CLEARED
+            )
+        )
         Mockito.verifyZeroInteractions(notifier)
     }
 

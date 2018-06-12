@@ -104,10 +104,11 @@ class VehicleDataRecordProcessorTest {
             accident.timestampOfServiceArrival,
             accident.timestampOfSiteClearing
         )
-        Mockito.`when`(accidentRepository.save(accident)).thenReturn(Mono.just(expectedSavedAccident))
+        Mockito.`when`(accidentRepository.save(any(LiveAccident::class.java)))
+            .thenReturn(Mono.just(expectedSavedAccident))
         processor.process(dataRecord)
         Mockito.verify(vehicleLocationService, times(1)).save(dataRecordToVehicleLocation(dataRecord))
-        Mockito.verify(accidentRepository, times(1)).save(accident)
+        Mockito.verify(accidentRepository, times(1)).save(any(LiveAccident::class.java))
         Mockito.verify(vehicleLocationService, times(1)).findVehiclesInRadius(dataRecord.sensorInformation.location)
         Mockito.verify(vehicleLocationService, Mockito.never()).findVehiclesInRadius(any(GeoJsonPoint::class.java))
         Mockito.verify(vehicleServiceClient, times(1)).getAllVehicles()
