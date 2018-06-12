@@ -1,8 +1,8 @@
 import React from "react";
-import GeneralComponent from "../GeneralComponent";
 import MapComponent from "./MapComponent";
 import VehicleList from "./VehicleList";
 import NotificationList from "./NotificationList";
+import GeneralContainer from "../../containers/GeneralContainer";
 
 const styles = {
     cardStyles: {
@@ -63,7 +63,7 @@ export default class ManufacturerComponent extends React.Component {
 
     render() {
         return <div>
-            <GeneralComponent/>
+            <GeneralContainer/>
             <div className="row p-0 m-0">
                 <div className="col-md-3">
                     <VehicleList vehicles={this.props.vehicles} cardStyles={styles.cardStyles}

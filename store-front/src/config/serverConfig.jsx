@@ -1,4 +1,4 @@
-import {serverConf} from "./localServerConfig";
+import {serverConf} from "./prodServerConfig";
 
 export const serverConfig = {
     gatewayUrl: serverConf.gatewayUrl + ":" + serverConf.gatewayPort,

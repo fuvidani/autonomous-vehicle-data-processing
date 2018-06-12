@@ -31,29 +31,22 @@ export default function reducer(state = {
 
     switch (action.type) {
         case ActionTypes.VEHICLE_TRACKING_INFORMATION_FETCHED: {
+
+            // ignore vehicle data records older than 3 seconds
+            // if ((new Date().getTime() - action.payload.timestamp) > 5000) {
+            //     return state;
+            // }
+
             let newVehicleTrackingInformation = Object.assign({}, state.vehicleTrackingInformation);
             newVehicleTrackingInformation[action.payload.vehicleIdentificationNumber] = action.payload;
 
             let newVehicles = Object.assign({}, state.vehicles);
             if (newVehicles[action.payload.vehicleIdentificationNumber]) newVehicles[action.payload.vehicleIdentificationNumber].moving = true;
 
-            let newVehicleHistoryInformation = Object.assign({}, state.vehicleHistoryInformation);
-            const newHistoryLocation = {
-                lat: action.payload.location.lat,
-                lng: action.payload.location.lon
-            };
-
-            if (!newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber]) {
-                newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber] = [newHistoryLocation]
-            } else {
-                newVehicleHistoryInformation[action.payload.vehicleIdentificationNumber].push(newHistoryLocation);
-            }
-
             return {
                 ...state,
                 vehicles: newVehicles,
-                vehicleTrackingInformation: newVehicleTrackingInformation,
-                vehicleHistoryInformation: newVehicleHistoryInformation
+                vehicleTrackingInformation: newVehicleTrackingInformation
             };
         }
 

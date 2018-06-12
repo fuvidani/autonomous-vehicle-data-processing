@@ -21,12 +21,16 @@ const CrashEventNotificationCard = (props) => (
                     primaryText={"Passengers: " + props.notification.passengers}
                     disabled={true}
                 />
+                <ListItem
+                    primaryText={"Status: " + props.notification.status}
+                    disabled={true}
+                />
             </List>
         </CardText>
-        {!props.notification.cleared && <CardActions>
-            {!props.notification.arrived && <FlatButton primary={true} label="Arrive"
+        {!(props.notification.status === "AREA_CLEARED") && <CardActions>
+            {(props.notification.status === "UNKNOWN") && <FlatButton primary={true} label="Arrive"
                         onClick={() => props.arriveToCrashEvent(props.notification.accidentId, new Date().getTime())}/>}
-            {props.notification.arrived && !props.notification.cleared && <FlatButton primary={true} label="Clear"
+            {(props.notification.status === "ARRIVED") && <FlatButton primary={true} label="Clear"
                         onClick={() => props.clearCrashEvent(props.notification.accidentId, new Date().getTime())}/>}
         </CardActions>}
     </Card>

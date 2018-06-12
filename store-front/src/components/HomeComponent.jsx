@@ -1,9 +1,9 @@
 import React from "react";
-import GeneralComponent from "./GeneralComponent";
 import {RaisedButton} from "material-ui";
 import {MapsLocalHospital, ActionBuild, ActionAccountBalance} from "material-ui/svg-icons/index.es";
 import ReactTooltip from 'react-tooltip';
 import {Link} from "react-router-dom";
+import GeneralContainer from "../containers/GeneralContainer";
 
 const styles = {
     button: {
@@ -19,7 +19,7 @@ const styles = {
 export default class HomeComponent extends React.Component {
     render() {
         return <div>
-            <GeneralComponent/>
+            <GeneralContainer/>
             <div className="vertical-center">
                 <div className="container">
                     <div className="row">

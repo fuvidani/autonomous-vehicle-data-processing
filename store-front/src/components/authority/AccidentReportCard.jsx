@@ -5,7 +5,7 @@ import StaticMapComponent from "../StaticMapComponent";
 const AccidentReportCard = (props) => (
     <Card style={props.cardStyles}>
         <CardMedia
-            mediaStyle={{maxWidth: '100%'}} overlay={<CardTitle title="Accident Report" subtitle={props.report.id}/>}
+            mediaStyle={{maxWidth: '100%'}} overlay={<CardTitle title="Accident Report" subtitle={props.report.timestampOfAccident ? new Date(props.report.timestampOfAccident).toString() : props.report.id}/>}
         >
             <StaticMapComponent
                 markers={[{location: props.report.location.lat + "," + props.report.location.lon}]}/>

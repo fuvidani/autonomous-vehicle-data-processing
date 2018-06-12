@@ -1,10 +1,10 @@
-import {fetchStream} from "../util/RequestHandler";
+import {fetchInfiniteStream} from "../util/RequestHandler";
 import * as ActionTypes from "../actions/ActionTypes";
 
 const fetchAccidentReportsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_ACCIDENT_REPORTS)
         .mergeMap(() =>
-            fetchStream('/statistics/accidents')
+            fetchInfiniteStream('/statistics/accidents')
                 .map(response => ({type: ActionTypes.ACCIDENT_REPORT_FETCHED, payload: JSON.parse(response)}))
                 .takeUntil(action$.ofType(ActionTypes.CANCEL_ACCIDENT_REPORTS))
         );

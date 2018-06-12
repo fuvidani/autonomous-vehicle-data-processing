@@ -1,8 +1,8 @@
 import React from "react";
-import GeneralComponent from "../GeneralComponent";
 import ReactTooltip from 'react-tooltip';
 import {RaisedButton} from "material-ui";
 import {Link} from "react-router-dom";
+import GeneralContainer from "../../containers/GeneralContainer";
 
 const styles = {
     button: {
@@ -19,7 +19,7 @@ export default class ManufacturersComponent extends React.Component {
 
     render() {
         return <div>
-            <GeneralComponent/>
+            <GeneralContainer/>
             <div className="vertical-center">
                 <div className="container">
                     <div className="row">
