@@ -17,6 +17,7 @@ import {
     postEmergencyServiceArrivedEpic,
     postEmergencyServiceClearedEpic
 } from "./EmergencyServiceEpics";
+import {postRestartSimulationEpic} from "./GeneralEpics";
 
 export default combineEpics(
     fetchAccidentReportsEpic,
@@ -30,5 +31,6 @@ export default combineEpics(
     fetchEmergencyServiceCrashEventNotificationsEpic,
     fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
     postEmergencyServiceArrivedEpic,
-    postEmergencyServiceClearedEpic
+    postEmergencyServiceClearedEpic,
+    postRestartSimulationEpic
 );

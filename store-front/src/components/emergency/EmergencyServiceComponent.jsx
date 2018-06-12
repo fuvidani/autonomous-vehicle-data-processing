@@ -1,7 +1,7 @@
 import React from "react";
-import GeneralComponent from "../GeneralComponent";
 import PlaceholderCard from "../PlaceholderCard";
 import CrashEventNotificationCard from "./CrashEventNotificationCard";
+import GeneralContainer from "../../containers/GeneralContainer";
 
 const styles = {
     cardStyles: {
@@ -25,7 +25,7 @@ export default class EmergencyServiceComponent extends React.Component {
 
     render() {
         return <div>
-            <GeneralComponent/>
+            <GeneralContainer/>
             <div className="container">
                 <div className="row">
                     <div className="col-md-7 col-centered">
