@@ -28,10 +28,3 @@ asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
 }
-
-//bootJar {
-//    dependsOn asciidoctor
-//    from ("${asciidoctor.outputDir}/html5") {
-//        into 'static/docs'
-//    }
-//}

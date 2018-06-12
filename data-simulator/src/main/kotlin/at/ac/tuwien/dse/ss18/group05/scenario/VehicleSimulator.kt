@@ -131,11 +131,11 @@ class VehicleSimulator(
     }
 
     fun setSpeedForVehicle(vehicleId: String, targetSpeed: Double?) {
-        log.info("notification received vor vehicle with id: $vehicleId")
         val vehicle = currentVehicleLocations.map { (k, _) -> k }
                 .find { vehicle -> vehicle.identificationNumber == vehicleId }
         if (vehicle != null && targetSpeed != null) {
             vehicle.speed = targetSpeed
+            log.info("setting target speed ($targetSpeed) because vehicle is in near proximity to crash event")
         }
     }
 
