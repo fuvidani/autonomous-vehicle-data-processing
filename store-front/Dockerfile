@@ -12,7 +12,7 @@ COPY . .
 RUN npm install
 
 RUN npm run build
-RUN npm install -g serve
+RUN npm install -g serve@6.5.8
 CMD [ "serve", "-s", "-p 8069", "public" ]
 
 # Set the command to start the node server.
