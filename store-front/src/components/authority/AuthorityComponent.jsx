@@ -32,7 +32,7 @@ export default class AuthorityComponent extends React.Component {
                             Object.getOwnPropertyNames(this.props.accidentReports).length === 0 ?
                                 <PlaceholderCard text="No accident report to show."
                                                  cardStyles={styles.cardStyles}/> :
-                                    Object.keys(this.props.accidentReports).map(function (key) {
+                                    Object.keys(this.props.accidentReports).sort().reverse().map(function (key) {
                                         return <AccidentReportCard key={key}
                                                                    cardStyles={styles.cardStyles}
                                                                    report={this.props.accidentReports[key]}/>;
