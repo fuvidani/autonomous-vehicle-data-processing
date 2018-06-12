@@ -20,13 +20,7 @@ export default function reducer(state = {
             };
 
         case ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED: {
-            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().map(notification => {
-                if (notification.accidentId === action.payload) {
-                    return {...notification, status: "ARRIVED"}
-                }
-
-                return notification;
-            });
+            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().filter(notification => { return notification.accidentId !== action.payload });
 
             return {
                 ...state,
@@ -35,17 +29,11 @@ export default function reducer(state = {
         }
 
         case ActionTypes.CLEAR_CRASH_EVENT_POSTED: {
-            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().map(notification => {
-                if (notification.accidentId === action.payload) {
-                    return {...notification, status: "AREA_CLEARED"}
-                }
-
-                return notification;
-            });
+            const updatedNotifications = state.crashEventNotifications.reverse().filter(notification => { return notification.accidentId !== action.payload});
 
             return {
                 ...state,
-                crashEventNotifications: updatedCrashEventNotifications
+                crashEventNotifications: updatedNotifications
             };
         }
 

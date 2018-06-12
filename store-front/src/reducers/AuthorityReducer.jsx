@@ -1,12 +1,12 @@
 import * as ActionTypes from "../actions/ActionTypes";
 
 export default function reducer(state = {
-    accidentReports: []
+    accidentReports: {}
 }, action) {
 
     switch (action.type) {
         case ActionTypes.CLEAR_ACCIDENT_REPORTS: {
-            state.accidentReports = [];
+            state.accidentReports = {};
 
             return {
                 ...state
@@ -14,9 +14,12 @@ export default function reducer(state = {
         }
 
         case ActionTypes.ACCIDENT_REPORT_FETCHED:
+            let newAccidentReports = Object.assign({}, state.accidentReports);
+            newAccidentReports[action.payload.id] = action.payload;
+
             return {
                 ...state,
-                accidentReports: state.accidentReports.concat(action.payload)
+                accidentReports: newAccidentReports
             };
 
         default:
