@@ -43,3 +43,12 @@ spring:
           args:
             name: fallback
             fallbackUri: forward:/statisticsFallback
+      - id: simulator_route
+        uri: http://data-simulator:10000
+        predicates:
+        - Path=/datasimulation/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/simulatorFallback

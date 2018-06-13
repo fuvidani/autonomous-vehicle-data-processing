@@ -3,7 +3,10 @@ package at.ac.tuwien.dse.ss18.group05
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.http.CacheControl
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
  * <h4>About this class</h4>
@@ -17,7 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableScheduling
-class DataSimulatorApplication {
+class DataSimulatorApplication : WebFluxConfigurer {
 
     companion object {
 
@@ -25,5 +28,15 @@ class DataSimulatorApplication {
         fun main(args: Array<String>) {
             SpringApplication.run(DataSimulatorApplication::class.java, *args)
         }
+    }
+
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/datasimulation/resources/**")
+            .addResourceLocations("classpath:/static/docs/")
+            .setCacheControl(CacheControl.noStore())
     }
 }
