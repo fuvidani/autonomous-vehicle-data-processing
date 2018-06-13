@@ -42,7 +42,7 @@ subprojects {
             mavenCentral()
         }
     }
-    version = "0.1.0"
+    version = "1.0.0.RELEASE"
     group = 'at.ac.tuwien.dse.ss18.group05'
 
     sourceCompatibility = 1.8
