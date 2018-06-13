@@ -1,5 +1,5 @@
 import * as ActionTypes from "../actions/ActionTypes";
-import {fetchInfiniteStream, fetchStream, postRequest} from "../util/RequestHandler";
+import {fetchInfiniteStream, fetchStream, getRequest} from "../util/RequestHandler";
 
 const fetchEmergencyServiceCrashEventNotificationsEpic = action$ =>
     action$.ofType(ActionTypes.FETCH_EMERGENCY_SERVICE_CRASH_EVENT_NOTIFICATIONS)
@@ -28,14 +28,14 @@ const fetchEmergencyServiceCrashEventNotificationsHistoryEpic = action$ =>
 const postEmergencyServiceArrivedEpic = action$ =>
     action$.ofType(ActionTypes.ARRIVE_TO_CRASH_EVENT)
         .mergeMap((action) =>
-            postRequest('/datasimulation/updatestatus', {...action.payload, status: 'ARRIVED'})
+            getRequest('/datasimulation/updatestatus/' + action.payload.accidentId + "/arrived")
                 .map(() => ({type: ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED, payload: action.payload.accidentId}))
         );
 
 const postEmergencyServiceClearedEpic = action$ =>
     action$.ofType(ActionTypes.CLEAR_CRASH_EVENT)
         .mergeMap((action) =>
-            postRequest('/datasimulation/updatestatus', {...action.payload, status: 'AREA_CLEARED'})
+            getRequest('/datasimulation/updatestatus' + action.payload.accidentId + "/cleared")
                 .map(() => ({type: ActionTypes.CLEAR_CRASH_EVENT_POSTED, payload: action.payload.accidentId}))
         );
 
