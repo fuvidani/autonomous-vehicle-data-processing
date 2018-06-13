@@ -1,0 +1,108 @@
+= Data Simulator Documentation
+DSE Group 05 - Version 1.0.0.RELEASE;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+This documentation describes the the available endpoints of the Data Simulator API and how to interact
+with them. **This API is meant only for presentation purposes. In a real-world scenario, operations offered
+by the data simulator would go through the message broker dispatched by vehicles on the street.**
+
+== Update emergency service's status of an accident
+
+[NOTE]
+Endpoint: `POST /datasimulation/updatestatus`
+
+This endpoint expects a valid `EmergencyServiceMessage` object in the body, which contains the time of happening, the
+ID of the accident and the status of the service. The simulation of the event is handled asynchronously,
+such that the endpoint will return "OK".
+
+Sample HTTP request:
+include::{snippets}/ems-update-status/http-request.adoc[]
+include::{snippets}/ems-update-status/request-fields.adoc[]
+
+In case the provided body is invalid, the endpoint will return `400 BAD REQUEST`.
+
+== Simulate a near crash event
+
+[NOTE]
+Endpoint: `POST /datasimulation/simulatenearcrash`
+
+The client may simply send a POST request to the endpoint above. The simulation of the event is handled asynchronously,
+such that the endpoint will return "OK".
+
+Sample HTTP request:
+[source,http,options="nowrap"]
+----
+POST /datasimulation/simulatenearcrash HTTP/1.1
+Host: data-simulator.com
+Content-Length: 0
+----
+
+Sample HTTP response:
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+"OK"
+----
+
+== Simulate a crash event
+
+[NOTE]
+Endpoint: `POST /datasimulation/simulatecrash`
+
+The client may simply send a POST request to the endpoint above. The simulation of the event is handled asynchronously,
+such that the endpoint will return "OK".
+
+Sample HTTP request:
+[source,http,options="nowrap"]
+----
+POST /datasimulation/simulatecrash HTTP/1.1
+Host: data-simulator.com
+Content-Length: 0
+----
+
+Sample HTTP response:
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+"OK"
+----
+
+== Reset simulation
+
+[NOTE]
+Endpoint: `POST /datasimulation/reset`
+
+The client may simply send a POST request to the endpoint above. This operation causes the on-going (or finished) simualation
+to start over.
+
+Sample HTTP request:
+[source,http,options="nowrap"]
+----
+POST /datasimulation/reset HTTP/1.1
+Host: data-simulator.com
+Content-Length: 0
+----
+
+Sample HTTP response:
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 4
+
+"OK"
+----
+
+
+
+
+
+

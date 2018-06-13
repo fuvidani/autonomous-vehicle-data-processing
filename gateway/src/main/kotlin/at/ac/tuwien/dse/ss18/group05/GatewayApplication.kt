@@ -56,6 +56,11 @@ class GatewayApplication : WebFluxConfigurer {
         return Mono.just("Fallback for statistics service")
     }
 
+    @RequestMapping("/simulatorFallback", produces = [MediaType.TEXT_PLAIN_VALUE])
+    fun simulatorFallback(): Mono<String> {
+        return Mono.just("Fallback for data-simulator")
+    }
+
     /**
      * Add resource handlers for serving static resources.
      * @see ResourceHandlerRegistry
