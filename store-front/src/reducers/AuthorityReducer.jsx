@@ -15,7 +15,7 @@ export default function reducer(state = {
 
         case ActionTypes.ACCIDENT_REPORT_FETCHED:
             let newAccidentReports = Object.assign({}, state.accidentReports);
-            newAccidentReports[action.payload.id] = action.payload;
+            newAccidentReports[action.payload.timestampOfAccident] = action.payload;
 
             return {
                 ...state,

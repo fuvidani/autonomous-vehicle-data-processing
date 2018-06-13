@@ -35,7 +35,7 @@ describe('authority reducer', () => {
             })
         ).toEqual(
             {
-                accidentReports: {"tDbdvAqCxpCQqqYXaRTC76Bm": reportObject}
+                accidentReports: {"123456789": reportObject}
             }
         )
     });

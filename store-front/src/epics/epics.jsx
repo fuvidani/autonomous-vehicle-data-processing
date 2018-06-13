@@ -19,18 +19,25 @@ import {
 } from "./EmergencyServiceEpics";
 import {postRestartSimulationEpic} from "./GeneralEpics";
 
-export default combineEpics(
-    fetchAccidentReportsEpic,
-    clearAccidentReportsEpic,
-    cancelAndClearManufacturerInformationEpic,
-    fetchManufacturerInformationEpic,
-    clearEmergencyServiceNotifications,
-    fetchManufacturerNotificationsEpic,
-    fetchVehicleInformationEpic,
-    fetchVehicleTrackingStreamEpic,
-    fetchEmergencyServiceCrashEventNotificationsEpic,
-    fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
-    postEmergencyServiceArrivedEpic,
-    postEmergencyServiceClearedEpic,
-    postRestartSimulationEpic
-);
+export const rootEpic = (action$, store) =>
+    combineEpics(
+        fetchAccidentReportsEpic,
+        clearAccidentReportsEpic,
+        cancelAndClearManufacturerInformationEpic,
+        fetchManufacturerInformationEpic,
+        clearEmergencyServiceNotifications,
+        fetchManufacturerNotificationsEpic,
+        fetchVehicleInformationEpic,
+        fetchVehicleTrackingStreamEpic,
+        fetchEmergencyServiceCrashEventNotificationsEpic,
+        fetchEmergencyServiceCrashEventNotificationsHistoryEpic,
+        postEmergencyServiceArrivedEpic,
+        postEmergencyServiceClearedEpic,
+        postRestartSimulationEpic
+    )(action$, store)
+        .catch((e, source) => {
+            setTimeout(() => {
+                throw e;
+            }, 0);
+            return source;
+        });
