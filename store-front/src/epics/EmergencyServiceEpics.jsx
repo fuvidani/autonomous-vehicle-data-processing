@@ -28,14 +28,14 @@ const fetchEmergencyServiceCrashEventNotificationsHistoryEpic = action$ =>
 const postEmergencyServiceArrivedEpic = action$ =>
     action$.ofType(ActionTypes.ARRIVE_TO_CRASH_EVENT)
         .mergeMap((action) =>
-            getRequest('/datasimulation/updatestatus/' + action.payload.accidentId + "/arrived")
+            getRequest('/datasimulation/updatestatus/' + action.payload.accidentId + "/arrived/" + action.payload.timestamp)
                 .map(() => ({type: ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED, payload: action.payload.accidentId}))
         );
 
 const postEmergencyServiceClearedEpic = action$ =>
     action$.ofType(ActionTypes.CLEAR_CRASH_EVENT)
         .mergeMap((action) =>
-            getRequest('/datasimulation/updatestatus' + action.payload.accidentId + "/cleared")
+            getRequest('/datasimulation/updatestatus' + action.payload.accidentId + "/cleared/" + action.payload.timestamp)
                 .map(() => ({type: ActionTypes.CLEAR_CRASH_EVENT_POSTED, payload: action.payload.accidentId}))
         );
 
