@@ -1,6 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.web
 
 import at.ac.tuwien.dse.ss18.group05.DataSimulatorApplication
+import at.ac.tuwien.dse.ss18.group05.notifications.VehicleDataSender
 import at.ac.tuwien.dse.ss18.group05.scenario.VehicleSimulator
 import org.junit.Before
 import org.junit.Rule
@@ -41,9 +42,12 @@ class VehicleControllerTest {
     private lateinit var vehicleController: VehicleController
     private lateinit var client: WebTestClient
 
+    @MockBean
+    private lateinit var vehicleDataSender: VehicleDataSender
+
     @Before
     fun setUp() {
-        vehicleController = VehicleController(simulator)
+        vehicleController = VehicleController(simulator, vehicleDataSender)
         client = WebTestClient.bindToController(vehicleController)
             .configureClient()
             .baseUrl("http://data-simulator.com/datasimulation")

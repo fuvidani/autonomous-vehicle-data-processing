@@ -1,23 +1,4 @@
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: vehicle-service
-spec:
-  replicas: 1
-  minReadySeconds: 15
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
-  template:
-    metadata:
-      labels:
-        app: vehicle-service
-    spec:
-      containers:
-        - image: eu.gcr.io/dse-group-05/vehicle-service
-          imagePullPolicy: Always
+
           name: vehicle-service
           env:
             - name: SPRING_RABBITMQ_HOST

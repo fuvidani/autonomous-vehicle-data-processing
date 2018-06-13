@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.1.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     compile 'io.projectreactor:reactor-test:3.1.6.RELEASE'
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
     testCompile 'org.springframework.restdocs:spring-restdocs-webtestclient:2.0.1.RELEASE'
