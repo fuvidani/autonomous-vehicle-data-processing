@@ -1,0 +1,54 @@
+server:
+  port: 4000
+  servlet:
+    context-path: ""
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: vehicle_route
+        uri: http://vs:5000
+        predicates:
+        - Path=/vehicle/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/vehicleFallback
+      - id: tracker_route
+        uri: http://ts:6000
+        predicates:
+        - Path=/tracking/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/trackingFallback
+      - id: notifications_route
+        uri: http://ns:7000
+        predicates:
+        - Path=/notifications/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/notificationFallback
+      - id: statistics_route
+        uri: http://ss:8000
+        predicates:
+        - Path=/statistics/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/statisticsFallback
+      - id: simulator_route
+        uri: http://data-simulator:10000
+        predicates:
+        - Path=/datasimulation/**
+        filters:
+        - name: Hystrix
+          args:
+            name: fallback
+            fallbackUri: forward:/simulatorFallback

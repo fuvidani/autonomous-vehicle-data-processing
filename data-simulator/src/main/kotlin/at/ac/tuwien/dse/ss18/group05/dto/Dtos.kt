@@ -9,14 +9,47 @@ package at.ac.tuwien.dse.ss18.group05.dto
  * @version 1.0.0
  * @since 1.0.0
  */
-@Deprecated(
-    "This is just dummy notification for API test, use VehicleNotification instead.",
-    level = DeprecationLevel.WARNING
-)
-data class Notification(
-    val id: String,
-    val concernedVehicles: List<String>,
-    val message: String
+
+data class Vehicle(
+    var identificationNumber: String = "",
+    var manufacturerId: String = "",
+    var model: String = "",
+    var crashing: Boolean = false,
+    var startingAtKm: Int = 0,
+    var passengers: Int = 1,
+    var speed: Double = 50.0
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Vehicle
+
+        if (identificationNumber != other.identificationNumber) return false
+        if (manufacturerId != other.manufacturerId) return false
+        if (model != other.model) return false
+        if (crashing != other.crashing) return false
+        if (startingAtKm != other.startingAtKm) return false
+        if (passengers != other.passengers) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = identificationNumber.hashCode()
+        result = 31 * result + manufacturerId.hashCode()
+        result = 31 * result + model.hashCode()
+        result = 31 * result + crashing.hashCode()
+        result = 31 * result + startingAtKm
+        result = 31 * result + passengers
+        return result
+    }
+}
+
+data class RouteRecord(
+    val lat: Double,
+    val lon: Double,
+    val distanceToStart: Double
 )
 
 /***************************** OUTGOING *****************************/
@@ -69,3 +102,9 @@ enum class EmergencyServiceStatus {
     AREA_CLEARED,
     UNKNOWN
 }
+
+data class EmergencyServiceMessage(
+    val timestamp: Long,
+    val accidentId: String,
+    val status: EmergencyServiceStatus
+)

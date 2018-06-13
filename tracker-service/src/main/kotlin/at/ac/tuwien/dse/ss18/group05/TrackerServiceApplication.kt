@@ -1,9 +1,20 @@
 package at.ac.tuwien.dse.ss18.group05
 
+import at.ac.tuwien.dse.ss18.group05.dto.VehicleDataRecord
+import at.ac.tuwien.dse.ss18.group05.service.client.VehicleService
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
+import org.springframework.context.annotation.Bean
+import org.springframework.http.CacheControl
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
+import reactor.core.publisher.DirectProcessor
+import reactor.core.publisher.FluxProcessor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * <h4>About this class</h4>
@@ -17,12 +28,39 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableCircuitBreaker
-class TrackerServiceApplication {
+class TrackerServiceApplication : WebFluxConfigurer {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(TrackerServiceApplication::class.java, *args)
         }
+    }
+
+    @Bean
+    fun vehicleService(
+        @Value("\${vehicle.service.host}") host: String,
+        @Value("\${vehicle.service.port}") port: String
+    ): VehicleService {
+        val retrofit = Retrofit.Builder()
+                .baseUrl("http://$host:$port/vehicle/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        return retrofit.create(VehicleService::class.java)
+    }
+
+    @Bean
+    fun vehicleDataRecordStreamProcessor(): FluxProcessor<VehicleDataRecord, VehicleDataRecord> {
+        return DirectProcessor.create<VehicleDataRecord>()
+    }
+
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/tracking/resources/**")
+                .addResourceLocations("classpath:/static/docs/")
+                .setCacheControl(CacheControl.noStore())
     }
 }

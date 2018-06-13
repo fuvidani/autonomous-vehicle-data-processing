@@ -2,13 +2,3 @@ server:
   port: 5000
   servlet:
     context-path: ""
-
-spring:
-  rabbitmq:
-      host: localhost
-      port: 5672
-      username: guest
-      password: guest
-  data:
-    mongodb:
-      host: 192.168.0.4

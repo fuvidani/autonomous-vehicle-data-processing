@@ -1,15 +1,12 @@
 package at.ac.tuwien.dse.ss18.group05
 
-import at.ac.tuwien.dse.ss18.group05.notifications.NotificationGenerator
-import com.google.gson.Gson
-import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.Bean
+import org.springframework.http.CacheControl
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.boot.CommandLineRunner
+import org.springframework.web.reactive.config.ResourceHandlerRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
  * <h4>About this class</h4>
@@ -23,24 +20,23 @@ import org.springframework.boot.CommandLineRunner
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableScheduling
-class DataSimulatorApplication {
+class DataSimulatorApplication : WebFluxConfigurer {
 
     companion object {
+
         @JvmStatic
         fun main(args: Array<String>) {
             SpringApplication.run(DataSimulatorApplication::class.java, *args)
         }
     }
 
-    @Bean
-    fun client(): WebClient {
-        return WebClient.create("http://localhost:4000/")
-    }
-
-    @Bean
-    fun run(client: WebClient, rabbitTemplate: RabbitTemplate, gson: Gson): CommandLineRunner {
-        return CommandLineRunner {
-            NotificationGenerator(client, rabbitTemplate, gson).run()
-        }
+    /**
+     * Add resource handlers for serving static resources.
+     * @see ResourceHandlerRegistry
+     */
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/datasimulation/resources/**")
+            .addResourceLocations("classpath:/static/docs/")
+            .setCacheControl(CacheControl.noStore())
     }
 }

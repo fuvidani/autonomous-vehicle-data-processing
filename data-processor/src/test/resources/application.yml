@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: test
+
+vehicle:
+  service:
+    host: 192.168.0.17
+    port: 4000

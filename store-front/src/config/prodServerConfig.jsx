@@ -1,5 +1,5 @@
 export const serverConf = {
-  url: "http://localhost",
-  port: "8182",
-  logging: false
+    gatewayUrl: "http://35.233.94.13",
+    gatewayPort: "4000",
+    logging: false
 };

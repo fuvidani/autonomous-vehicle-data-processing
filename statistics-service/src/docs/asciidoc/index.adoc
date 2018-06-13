@@ -1,0 +1,33 @@
+= Statistics Service Documentation
+DSE Group 05 - Version 1.0.0.RELEASE;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+This documentation describes the the available endpoints of the Statistics Service API and how to interact
+with them.
+
+== Live-stream and history accident reports
+
+[NOTE]
+Endpoint: `GET /statistics/accidents`
+
+The API returns a stream of all history accident reports and it stays open for streaming newly added reports as well. Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.
+
+You may invoke this endpoint with one of these headers:
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream using the latter header:
+include::{snippets}/accident-report-stream/http-request.adoc[]
+
+HTTP response:
+include::{snippets}/accident-report-stream/http-response.adoc[]
+
+The above example response returns a stream of two accident reports. Each json can be de-serialized into a valid
+object:
+include::{snippets}/accident-report-stream/response-fields.adoc[]
+
+Important: This endpoint will never close its end, meaning it's the client's responsibility to unsubscribe from the stream if
+they aren't interested anymore.

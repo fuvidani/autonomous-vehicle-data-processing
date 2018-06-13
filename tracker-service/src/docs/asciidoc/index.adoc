@@ -1,0 +1,69 @@
+= Tracker Service Documentation
+DSE Group 05 - Version 1.0.0.RELEASE;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+This documentation describes the the available endpoints of the Tracker Service API and how to interact
+with them.
+
+== Live-stream vehicles' data of a manufacturer
+
+[NOTE]
+Endpoint: `GET /tracking/manufacturer/{manufacturerId}`
+
+Tha API requires an existing manufacturer ID in the request path for which vehicle data records will be streamed down whenever available.
+**Note that this is indeed a hot stream, i.e. the sequence of how data arrives is not determined and depends on the live traffic.** It very well
+may be the case, that upon subscription no data will arrive until a corresponding vehicle emits a new tracking record. If you prefer
+to get all the tracking data up to this point, use the other endpoint described in the next section.
+
+You may invoke this endpoint with one of these headers:
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting the stream for Tesla using the latter header:
+include::{snippets}/tracking-stream-tesla/http-request.adoc[]
+include::{snippets}/tracking-stream-tesla/path-parameters.adoc[]
+
+HTTP response:
+include::{snippets}/tracking-stream-tesla/http-response.adoc[]
+
+The above example response returns a stream of three vehicle data records with a ping data record at the beginning. The ping data is only
+sent once at the very beginning in order to keep the connection alive. Clients should simply ignore this first record. Each json can be de-serialized into a valid
+object:
+include::{snippets}/tracking-stream-tesla/response-fields.adoc[]
+
+Important: This endpoint will never close its end, meaning it's the client's responsibility to unsubscribe from the stream if
+they aren't interested anymore.
+
+== Get all stored vehicle data record of a manufacturer
+
+[NOTE]
+Endpoint: `GET /tracking/history/manufacturer/{manufacturerId}`
+
+Tha API requires an existing manufacturer ID in the request path for which all the currently stored vehicle data
+records will be returned. In other words, the client will receive the history (every data record up to this point) of their
+vehicle's records. Note that this endpoint supports streaming, this means you may call it with one of the following
+accept headers:
+
+* `text/event-stream`
+* `application/stream+json`
+
+Example request for getting all the vehicle data records of Audi using the latter header:
+include::{snippets}/tracking-history-audi/http-request.adoc[]
+include::{snippets}/tracking-history-audi/path-parameters.adoc[]
+
+HTTP response:
+include::{snippets}/tracking-history-audi/http-response.adoc[]
+
+The above example response returns a stream of three vehicle data records. Each json can be de-serialized into a valid
+object:
+include::{snippets}/tracking-history-audi/response-fields.adoc[]
+
+
+
+
+
+
+

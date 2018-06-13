@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: dev
+
+datasimulator:
+  speedAfterEvent: 10.0

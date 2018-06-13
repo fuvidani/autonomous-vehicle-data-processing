@@ -1,6 +1,6 @@
-import {serverConf} from "./localServerConfig";
+import {serverConf} from "./prodServerConfig";
 
 export const serverConfig = {
-  url: serverConf.url + ":" + serverConf.port,
-  logging: serverConf.logging,
+    gatewayUrl: serverConf.gatewayUrl + ":" + serverConf.gatewayPort,
+    logging: serverConf.logging
 };

@@ -1,0 +1,120 @@
+version: '3.1'
+
+services:
+  mongo:
+    build: ./database
+    container_name: dse-mongo-db
+    ports:
+      - 27017:27017
+    restart: always
+
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: dse-rabbitmq
+    restart: always
+    hostname: dse-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  gateway:
+    build: ./gateway
+    restart: always
+    container_name: dse-gateway
+    environment:
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongo
+      - rabbit
+
+  data-processor:
+    build: ./data-processor
+    restart: always
+    container_name: dse-data-processor
+    environment:
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 9000:9000
+    depends_on:
+      - mongo
+      - rabbit
+
+  notification-service:
+    build: ./notification-service
+    restart: always
+    container_name: dse-notification-service
+    environment:
+      - SPRING_DATA_MONGODB_HOST=dse-mongo-db
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 7000:7000
+    depends_on:
+      - mongo
+      - rabbit
+
+  statistics-service:
+    build: ./statistics-service
+    restart: always
+    container_name: dse-statistics-service
+    environment:
+      - SPRING_DATA_MONGODB_HOST=dse-mongo-db
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongo
+      - rabbit
+
+  tracker-service:
+    build: ./tracker-service
+    restart: always
+    container_name: dse-tracker-service
+    links:
+      - rabbit
+    environment:
+      - SPRING_DATA_MONGODB_HOST=dse-mongo-db
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 6000:6000
+    depends_on:
+      - mongo
+      - rabbit
+
+  vehicle-service:
+    build: ./vehicle-service
+    restart: always
+    container_name: dse-vehicle-service
+    environment:
+      - SPRING_DATA_MONGODB_HOST=dse-mongo-db
+      - SPRING_RABBITMQ_HOST=dse-rabbitmq
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongo
+      - rabbit
+
+  store-front:
+    build: ./store-front
+    restart: always
+    container_name: dse-store-front
+    ports:
+      - 8069:8069
+    depends_on:
+      - mongo
+      - rabbit
+
+  # Un-comment the following lines if you wish to deploy the data-simulator as well.
+  # Be careful though! As soon as the data-simulator is up, it starts emitting data
+  # intensively, so make sure to have sufficient memory/CPU available
+  #data-simulator:
+  #  build: ./data-simulator
+  #  restart: always
+  #  container_name: dse-data-simulator
+  #  environment:
+  #    - SPRING_RABBITMQ_HOST=dse-rabbitmq
+  #  ports:
+  #    - 10000:10000
+  #  depends_on:
+  #    - rabbit

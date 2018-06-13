@@ -1,0 +1,18 @@
+          name: data-simulator
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: "rabbitmq"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_DATA_MONGODB_HOST
+              value: "dse-mongo-db"
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+            - name: NOTIFICATION_SERVICE_HOST
+              value: "ns"
+            - name: NOTIFICATION_SERVICE_PORT
+              value: "7000"
+            - name: SIMULATION_PAUSEBETWEENSIMULATIONSINMS
+              value: "1000"
+          ports:
+            - containerPort: 10000

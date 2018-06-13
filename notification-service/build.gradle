@@ -15,7 +15,7 @@ ext {
 }
 
 test {
-    runWithMongoDb = false
+    runWithMongoDb = true
     outputs.dir snippetsDir
 }
 

@@ -1,13 +1,7 @@
 package at.ac.tuwien.dse.ss18.group05.config
 
-import at.ac.tuwien.dse.ss18.group05.messaging.Receiver
-import org.springframework.amqp.core.Binding
-import org.springframework.amqp.core.BindingBuilder
-import org.springframework.amqp.core.Queue
-import org.springframework.amqp.core.TopicExchange
-import org.springframework.amqp.rabbit.connection.ConnectionFactory
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
+/* ktlint-disable no-wildcard-imports */
+import org.springframework.amqp.core.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -24,38 +18,39 @@ import org.springframework.context.annotation.Configuration
 class RabbitConfig {
 
     val topicExchange = "vehicle-data-exchange"
-    val queueName = "traffic"
-    val routingKey = "notifications.#"
 
     @Bean
-    fun queue(): Queue {
-        return Queue(queueName, false)
+    fun vehicleQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun topicExchange(): TopicExchange {
-        return TopicExchange(topicExchange)
+    fun emsQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun binding(queue: Queue, topicExchange: TopicExchange): Binding {
-        return BindingBuilder.bind(queue).to(topicExchange).with(routingKey)
+    fun manufacturerQueue(): Queue {
+        return AnonymousQueue()
     }
 
     @Bean
-    fun container(
-        connectionFactory: ConnectionFactory,
-        listenerAdapter: MessageListenerAdapter
-    ): SimpleMessageListenerContainer {
-        val container = SimpleMessageListenerContainer()
-        container.connectionFactory = connectionFactory
-        container.setQueueNames(queueName)
-        container.setMessageListener(listenerAdapter)
-        return container
+    fun direct(): DirectExchange {
+        return DirectExchange(topicExchange)
     }
 
     @Bean
-    fun listenerAdapter(receiver: Receiver<out Any>): MessageListenerAdapter {
-        return MessageListenerAdapter(receiver, "receiveMessage")
+    fun vehicleBinding(vehicleQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(vehicleQueue).to(direct).with("notifications-vehicle")
+    }
+
+    @Bean
+    fun emsBinding(emsQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(emsQueue).to(direct).with("notifications-ems")
+    }
+
+    @Bean
+    fun manufacturerBinding(manufacturerQueue: Queue, direct: DirectExchange): Binding {
+        return BindingBuilder.bind(manufacturerQueue).to(direct).with("notifications-manufacturer")
     }
 }

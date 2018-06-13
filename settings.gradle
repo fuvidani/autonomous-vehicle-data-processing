@@ -5,4 +5,5 @@ include 'tracker-service'
 include 'notification-service'
 include 'statistics-service'
 include 'data-simulator'
+include 'data-processor'
 
