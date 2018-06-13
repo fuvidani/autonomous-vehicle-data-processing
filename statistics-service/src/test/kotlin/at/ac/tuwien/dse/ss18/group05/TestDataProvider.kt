@@ -18,7 +18,7 @@ class TestDataProvider {
     companion object {
         fun testAccidentReport1(): AccidentReport {
             return AccidentReport(
-                null,
+                "123",
                 "QgYZY8ntPurzGDhxxAcVYbYb",
                 MetaData("JH4DB8590SS001561", "1995 Acura Integra"),
                 GpsLocation(48.172450, 16.376432),
@@ -31,7 +31,7 @@ class TestDataProvider {
 
         fun testAccidentReport2(): AccidentReport {
             return AccidentReport(
-                null,
+                "321",
                 "QgYZY8ntPurdfDhxxAcVYbYb",
                 MetaData("3GCPCSE03BG366866", "Audi TT"),
                 GpsLocation(0.0, 0.0),

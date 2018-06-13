@@ -64,7 +64,7 @@ const fetchStream = (mapping) => {
 };
 
 const postRequest = (mapping, payload) => {
-    const url = serverConfig.dataSimulatorUrl + mapping;
+    const url = serverConfig.gatewayUrl + mapping;
 
     return ajax.post(url, payload, {'Content-Type': 'application/json'});
 };
