@@ -20,7 +20,9 @@ export default function reducer(state = {
             };
 
         case ActionTypes.ARRIVE_TO_CRASH_EVENT_POSTED: {
-            const updatedCrashEventNotifications = state.crashEventNotifications.reverse().filter(notification => { return notification.accidentId !== action.payload });
+            const updatedCrashEventNotifications = state.crashEventNotifications.filter(notification => {
+                return notification.accidentId !== action.payload
+            });
 
             return {
                 ...state,
@@ -29,7 +31,9 @@ export default function reducer(state = {
         }
 
         case ActionTypes.CLEAR_CRASH_EVENT_POSTED: {
-            const updatedNotifications = state.crashEventNotifications.reverse().filter(notification => { return notification.accidentId !== action.payload});
+            const updatedNotifications = state.crashEventNotifications.filter(notification => {
+                return notification.accidentId !== action.payload
+            });
 
             return {
                 ...state,

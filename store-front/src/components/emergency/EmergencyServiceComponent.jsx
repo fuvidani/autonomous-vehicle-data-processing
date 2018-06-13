@@ -31,7 +31,9 @@ export default class EmergencyServiceComponent extends React.Component {
                     <div className="col-md-7 col-centered">
                         {this.props.crashEventNotifications.length === 0 ?
                             <PlaceholderCard text="No crash event notification to show."
-                                             cardStyles={styles.cardStyles}/> : this.props.crashEventNotifications.reverse().map((notification, i) =>
+                                             cardStyles={styles.cardStyles}/> : this.props.crashEventNotifications.sort(function (a, b) {
+                                return (a.timeStamp < b.timeStamp) ? 1 : ((b.timeStamp < a.timeStamp) ? -1 : 0);
+                            }).map((notification, i) =>
                                 <CrashEventNotificationCard key={i}
                                                             cardStyles={styles.cardStyles}
                                                             notification={notification}
