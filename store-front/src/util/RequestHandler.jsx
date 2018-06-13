@@ -63,10 +63,10 @@ const fetchStream = (mapping) => {
     });
 };
 
-const getRequest = (mapping) => {
+const postRequest = (mapping, payload) => {
     const url = serverConfig.gatewayUrl + mapping;
 
-    return ajax.get(url, {'Content-Type': 'application/json'});
+    return ajax.post(url, payload, {'Content-Type': 'application/json'});
 };
 
-export {fetchStream, getRequest, fetchInfiniteStream}
+export {fetchStream, postRequest, fetchInfiniteStream}
