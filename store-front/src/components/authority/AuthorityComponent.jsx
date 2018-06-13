@@ -5,7 +5,7 @@ import GeneralContainer from "../../containers/GeneralContainer";
 
 const styles = {
     cardStyles: {
-        margin: "10px 0"
+        margin: "20px 0"
     }
 };
 
