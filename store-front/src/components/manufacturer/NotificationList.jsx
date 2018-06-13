@@ -10,7 +10,7 @@ import {
     TableHeaderColumn,
     TableRow, TableRowColumn
 } from "material-ui";
-import {ActionVisibility} from "material-ui/svg-icons/index.es";
+import {ActionInfo} from "material-ui/svg-icons/index.es";
 import NotificationDetailsDialog from "./NotificationDetailsDialog";
 
 const NotificationList = (props) => (
@@ -48,7 +48,7 @@ const NotificationList = (props) => (
                                         <TableRowColumn colSpan={2}>{notification.eventInfo}</TableRowColumn>
                                         <TableRowColumn className="text-right" colSpan={1}>
                                             <span style={{cursor: "pointer"}} onClick={() => props.handleDialogOpen(notification)} >
-                                                <ActionVisibility/>
+                                                <ActionInfo/>
                                             </span>
                                             <NotificationDetailsDialog clickedNotification={props.clickedNotification} handleDialogClose={props.handleDialogClose} />
                                         </TableRowColumn>
