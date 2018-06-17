@@ -3,7 +3,7 @@ matrix:
     - language: java
       jdk: oraclejdk8
       script:
-        - ./gradlew check
+        - ./gradlew build
         - ./gradlew sonarqube
     - language: node_js
       node_js: 8.9.3
