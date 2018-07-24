@@ -41,6 +41,8 @@ What this project does not try to solve is the complex logic of the self driving
 ## Components
 The backend’s architecture is composed of a set of independent microservices which are all put behind a gateway acting as a proxy. In this section each component will be described in detail. The diagram below shows the topology of the components.
 
+![](DSE_Components.png)
+
 ### Client
 The client component is the consumer of the services and is realized through a web application written in React. The application provides an easy-to-use interface for all concerning actors, that is the **manufacturer**, the **traffic authority** and the **emergency service**. The application communicates with the backend through its REST-API exposed by the Gateway component.
 
