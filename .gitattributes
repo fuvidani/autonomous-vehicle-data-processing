@@ -1,0 +1,6 @@
+data-simulator/src/main/resources/static/docs/* linguist-documentation
+gateway/src/main/resources/static/docs/* linguist-documentation
+notification-service/src/main/resources/static/docs/* linguist-documentation
+statistics-service/src/main/resources/static/docs/* linguist-documentation
+tracker-service/src/main/resources/static/docs/* linguist-documentation
+vehicle-service/src/main/resources/static/docs/* linguist-documentation
